@@ -1,6 +1,4 @@
-.nuget
 packages
-TeamMnMGroupingWebApp.Tests
 obj
 bin
 /TeamMnMGroupingWebApp/TeamMnMGroupingWebApp/TeamMnMGroupingWebApp.csproj.user
