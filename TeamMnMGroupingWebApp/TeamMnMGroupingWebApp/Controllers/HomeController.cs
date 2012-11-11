@@ -25,16 +25,22 @@ namespace TeamMnMGroupingWebApp.Controllers
         const string MAIN = "/Home/Sample";
 
         public void Index()
-        {           
-            if (Session["access_token"] == null)
-            {
-                GetToken(MAIN);               
-            }
-            else
-            {
-                // We have an access token in session, let's redirect to app main page.
-                Response.Redirect(MAIN);
-            }
+        {
+            Response.Redirect("/Home/Index2");
+            //if (Session["access_token"] == null)
+            //{
+            //    GetToken(MAIN);               
+            //}
+            //else
+            //{
+            //    // We have an access token in session, let's redirect to app main page.
+            //    Response.Redirect(MAIN);
+            //}
+        }
+
+        public ActionResult Index2()
+        {
+            return View("Index");
         }
 
         public void AbandonSession()
