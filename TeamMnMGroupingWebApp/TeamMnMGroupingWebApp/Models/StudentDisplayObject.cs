@@ -1,4 +1,5 @@
 ﻿using SlcClient.Entities;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,24 @@ namespace TeamMnMGroupingWebApp.Models
         public IEnumerable<string> sections { get; set; }
 
         public LearningStyles learningStyles { get; set; }
+
+        public DateTime birthDate { get; set; }
+
+        public double auditoryLearning { get; set; }
+
+        public double tactileLearning { get; set; }
+
+        public double visualLearning { get; set; }
+
+        public string profileThumbnail { get; set; }
+
+        public List<RaceItemType> race { get; set; }
+
+        public SchoolFoodServicesEligibilityType schoolFoodServicesEligiblity { get; set; }
+
+        public List<Section504DisabilityItemType> section504Disablities { get; set; }
+
+        public IEnumerable<string> studentCharacteristics { get; set; }
 
         /// <summary>
         /// student info
