@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 	<head>
+        <title>Student Grouping Tool</title>
 		<link rel="stylesheet" href="~/Content/vendor/select2/css/select2.css" />		
 		<link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.min.css" />	
 		<link rel="stylesheet" href="~/Content/vendor/jqplot/css/jquery.jqplot.min.css" />
@@ -21,7 +22,7 @@
 						<div id="searchBox">
 							<input id="txtStudentSearchBox" placeholder="search by name" />
 						</div>
-						<div>							
+						<div id="studentListDiv">							
 							<ul id="studentList">
 								
 							</ul>
@@ -89,7 +90,7 @@
 		<div id="group-description-popover" class="group-popover" data-groupContainerId="-1" style="display:none">
 			<strong>Description:</strong>
 			<div id="group-description-text">
-				
+				&nbsp;
 			</div>
 			<textarea id="group-description-textarea"></textarea>
 		</div>
