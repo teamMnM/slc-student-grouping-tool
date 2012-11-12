@@ -22,20 +22,19 @@ namespace TeamMnMGroupingWebApp.Controllers
     [HandleError(ExceptionType = typeof(HttpRequestException), View = "PermissionError")]
     public class HomeController : BaseController
     {
-        const string MAIN = "/Home/Sample";
+        const string MAIN = "/Home/Index2";
 
         public void Index()
         {
-            Response.Redirect("/Home/Index2");
-            //if (Session["access_token"] == null)
-            //{
-            //    GetToken(MAIN);               
-            //}
-            //else
-            //{
-            //    // We have an access token in session, let's redirect to app main page.
-            //    Response.Redirect(MAIN);
-            //}
+            if (Session["access_token"] == null)
+            {
+                GetToken(MAIN);
+            }
+            else
+            {
+                // We have an access token in session, let's redirect to app main page.
+                Response.Redirect(MAIN);
+            }
         }
 
         public ActionResult Index2()
@@ -107,6 +106,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             
         }
 
+        [HttpGet]
         public async Task<ActionResult> Group()
         {
             var cs = new CohortService(Session["access_token"].ToString());
@@ -127,7 +127,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             data.students = students.Result;
             data.filters = FilterHelper.InitializeFilters();
 
-            return View(data);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         //public async Task<string[]> CreateCustom(CohortCustom obj)
