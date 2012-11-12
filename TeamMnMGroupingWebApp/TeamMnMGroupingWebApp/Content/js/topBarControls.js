@@ -17,13 +17,14 @@ student_grouping.topBarControls = function(){
 	/**************************
      * METHODS
      **************************/
-    this.init = function(){
+    this.init = function(groups){
     	
     	// set up the existing groups dropdown
-    	_.each(fakeAllGroups, function(group){
-    		me.groups.push(group);
+    	_.each(groups, function(group){
+    	    me.groups.push(group);
+    	    var cohortData = group.cohort;
     		$(me.findGroupDropdownElem).
-    			append("<option value='" + group.id +"'>" + group.cohortIdentifier + "</option>");
+    			append("<option value='" + cohortData.id + "'>" + cohortData.cohortIdentifier + "</option>");
     	});    	    
     	
     	// TODO get the available group colors

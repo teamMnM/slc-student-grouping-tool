@@ -18,13 +18,13 @@ student_grouping.studentsList = function(){
 	/**************************
      * METHODS
      **************************/
-	this.init = function(){		
+	this.init = function(students){		
 					
 		// temp code
-		for (var i = 0; i < fakeStudents.length; i++){
-			var fakeStudent = fakeStudents[i];
+		for (var i = 0; i < students.length; i++){
+		    var studentDisplayObject = students[i];
 			
-			var student = new student_grouping.student(fakeStudent);		
+		    var student = new student_grouping.student(studentDisplayObject);
 			$(this.studentListElem).append(student.generateTemplate());			
 			student.init();	
 			

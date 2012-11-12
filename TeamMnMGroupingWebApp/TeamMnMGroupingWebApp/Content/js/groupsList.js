@@ -12,22 +12,31 @@ student_grouping.groupsList = function(){
 	
 	this.groupClass = '.group';
 	this.groupsAreaClass = '.groups-area';
+
+    // colors for the groups
+	this.colorList = [
+        { background: '#DBFDAA', title: '#7D9D38' },
+        { background: '#A5C5FF', title: '#2F62A0' },
+        { background: '#CBB7E9', title: '#654788' },
+        { background: '#FFA5A4', title: '#A9322F' }
+	];
+	this.currentColorIndex = 0;
 	
 	/**************************
      * METHODS
      **************************/
-    this.init = function(){
+    this.init = function(groups){
     	
-		for (var i = 0; i < fakeGroups.length; i++){
-			var fakeGroup = fakeGroups[i];
-			this.addGroup(fakeGroup);			
+		for (var i = 0; i < groups.length; i++){
+			var group = groups[i];
+			this.addGroup(group);			
 		}		
 		
 		this.pubSub.subscribe('add-group', function(group){
 			me.addGroup(group);
 		});
 		
-		this.pubSub.subscribe('remove-group', function(groupId){
+		this.pubSub.subscribe('group-removed', function(groupId){
 			me.removeGroup(groupId);
 		});
 		
@@ -48,10 +57,15 @@ student_grouping.groupsList = function(){
     	}) !== undefined;
     	    	
     	if (!groupExists) {    	
-	    	var group = new student_grouping.group(newGroup);
-			$(this.groupsAreaClass).append(group.generateTemplate());
+    	    var group = new student_grouping.group(newGroup);
+    	    var color = this.colorList[this.currentColorIndex++];
+			$(this.groupsAreaClass).append(group.generateTemplate(color));
 			group.init();
 			
+			if (this.currentColorIndex >= this.colorList.length) {
+			    this.currentColorIndex = 0;
+			}
+
 			// make group droppable
 			$(group.groupContainerId).find('.group').droppable({
 				drop: function(event){

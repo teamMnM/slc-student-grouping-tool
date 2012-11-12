@@ -12,33 +12,43 @@ student_grouping.init = function(){
 		
 	var me = this;
 
-	// set up the students list --> this goes before the groupsList 
-	// because groupsList depends on the full list of students
-	this.studentsListComponent.init();
-	
-	// set up the groups list
-	this.groupsListComponent.init();
-	
-	// set up the top bar controls
-	this.topBarComponent.init();	
-	
-	// set up the filter components
-	student_grouping.filterComponent.init();	
+	$.ajax({
+        type: 'GET',
+        url: 'Group',
+        success: function (data) {
+
+
+            // set up the students list --> this goes before the groupsList 
+            // because groupsList depends on the full list of students
+            me.studentsListComponent.init(data.students);
+
+            // set up the groups list
+            me.groupsListComponent.init(data.cohorts);
+
+            // set up the top bar controls
+            me.topBarComponent.init(data.cohorts);
+
+            // set up the filter components
+            student_grouping.filterComponent.init(data.filters);
+
+
+            // set up the list controls	
+            var listStudentData = _.pluck(me.students, 'studentData');
+
+            // set up draggables and droppables
+            $(".multidraggable").multidraggable(
+            {
+                drag: function (event, ui) {
+                    student_grouping.groupsListComponent.currGrp = null;
+                },
+                revert: "invalid",
+                "helper": "clone",
+                "opacity": 0.7
+            });
+        }
+	});
 
 	
-	// set up the list controls	
-	var listStudentData = _.pluck(this.students, 'studentData');
-	
-	// set up draggables and droppables
-	$(".multidraggable").multidraggable(
-	{	
-		drag: function(event, ui){
-			student_grouping.groupsListComponent.currGrp = null;
-		},
-		revert:"invalid",
-		"helper":"clone", 
-		"opacity":0.7 
-	});
 }
 
 // initialize module

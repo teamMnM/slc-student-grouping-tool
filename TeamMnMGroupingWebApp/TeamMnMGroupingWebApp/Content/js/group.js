@@ -5,9 +5,11 @@ student_grouping.group = function(groupData){
 	this.pubSub = PubSub;
 	
 	this.dirty = false;
-	this.groupData = groupData;
-	this.students = [];
-	
+	this.group = groupData;
+	this.groupData = groupData.cohort;
+	this.students = groupData.students;
+	this.color = null;
+
 	this.groupContainerId = '';
 	this.groupContainerClass = '.group-container';
 	this.groupClass = '.group';
@@ -133,7 +135,7 @@ student_grouping.group = function(groupData){
 		this.originalRightMargin = parseInt($(this.groupContainerId).css('margin-right').replace('px',''));
 
 		// render students assigned to this group
-		var studentIds = this.groupData.students;
+		var studentIds = this.students;
 		_.each(studentIds, function(studentId){
 			
 			// TODO refactor dependency on studentsList
@@ -173,7 +175,7 @@ student_grouping.group = function(groupData){
 			
 			// add student to list of students
 			this.students.push(student);			
-			student.addGroupIndicator(this.groupData.id, this.groupData.color);					
+			student.addGroupIndicator(this.groupData.id, this.color.background);					
 		}
 	}
 	
@@ -186,15 +188,16 @@ student_grouping.group = function(groupData){
 		var studentElem = $(this.groupContainerId).find('.dropped-elem[data-studentId="'+ studentId + '"]');
 		
 		// find student object from list 
-		var student = _.find(this.students, function(s){
-			return s.studentData.id === studentId;
+		var student = _.find(this.students, function(id){
+			return id === studentId;
 		});
 		
-		student.removeGroupIndicator(this.groupData.id);
+        // tell student it has been removed from this group
+		this.pubSub.publish('remove-group-indicator', studentId, this.groupData.id);
 		
 		// remove from list of students
-		this.students = _.filter(this.students, function(s){
-			return s.studentData.id !== studentId;
+		this.students = _.filter(this.students, function(id){
+			return id !== studentId;
 		});
 		
 		// remove the student inside the group
@@ -247,8 +250,8 @@ student_grouping.group = function(groupData){
 		$("#gc" + me.groupData.id + " .dropped-elem").each(function(index, item){			
 			
 			var studentId = $(item).attr('data-studentId');
-			var student = _.find(me.students, function(s){
-				return s.studentData.id === studentId;
+			var student = _.find(me.students, function(id){
+				return id === studentId;
 			});
 			var studentData = student.studentData;
 			
@@ -267,17 +270,18 @@ student_grouping.group = function(groupData){
 	/**
 	 * Fill html template with group data
 	 */
-	this.generateTemplate = function(){
+	this.generateTemplate = function(color){
 		var groupData = this.groupData;
 		var template = $(this.groupContainerTemplate);
 		$(template).attr('id', 'gc' + groupData.id);
-		$(template).css('background-color', groupData.color);
-		
+		$(template).css('background-color', color.background);
+		this.color = color;
+
 		var groupNameLbl = $(template).find(this.groupNameLblClass);
 		$(groupNameLbl).html(groupData.cohortIdentifier);
 		
 		var groupNameDiv = $(template).find(this.groupNameClass);		
-		$(groupNameDiv).css('background-color', groupData.titleColor);
+		$(groupNameDiv).css('background-color', color.title);
 		
 		var groupDiv = $(template).find(this.groupClass);
 		$(groupDiv).attr('id', groupData.id);
@@ -548,7 +552,7 @@ student_grouping.group = function(groupData){
 			$(this.groupUnsavedChangesModalElem).modal('show');
 		} else {		
 			$(this.groupContainerId).remove();		
-			this.pubSub.publish('remove-group', this.groupData.id);	
+			this.pubSub.publish('group-removed', this.groupData.id);	
 		}
 		
 	}

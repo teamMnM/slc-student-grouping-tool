@@ -30,10 +30,10 @@ student_grouping.filters = function(){
      * METHODS
      **************************/
     
-    this.init = function(){    
+    this.init = function(filters){    
     	    	
 		// set up the filters
-		_.each(fakeFilters, function(filter){		
+		_.each(filters, function(filter){		
 			me.addFilter(filter);
 		});    	
     	

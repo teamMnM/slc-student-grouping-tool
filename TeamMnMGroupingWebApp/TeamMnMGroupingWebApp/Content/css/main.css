@@ -63,6 +63,9 @@
 	margin:0;
 }
 
+#studentListDiv {
+}
+
 .studentListItem {
 	width: 15em;
 	height: 4.2em;
@@ -263,8 +266,10 @@
 }
 
 .group {
-	min-height: 15em;
-	padding-top: 1em;
+	height: 15em;
+	padding-top: 0.3em;
+    overflow-y: auto;
+    margin: 1.5em 0.5em 0 0.5em;
 }
 
 .group-attachment-img {

@@ -75,8 +75,17 @@ student_grouping.student = function(studentData) {
 			$(this).addClass(me.studentLiSelectedClass);
 		});
 		
-		this.pubSub.subscribe('remove-group', function(groupId){
+		this.pubSub.subscribe('group-removed', function(groupId){
 			me.removeGroupIndicator(groupId);
+		});
+
+        /** 
+         * Listen to when this student is removed from a group
+         */
+		this.pubSub.subscribe('remove-group-indicator', function (studentId, groupId) {
+		    if (me.studentData.id === studentId) {
+		        me.removeGroupIndicator(groupId);
+		    }
 		});
     };
     
@@ -159,9 +168,7 @@ student_grouping.student = function(studentData) {
 			_.each(attributesToShow, function(attr){
 				var attributeDiv = me.populateAttributeDiv(attr);				
 				$(me.studentInfoAttributesElem).append(attributeDiv);			
-			});			
-			
-				
+			});										
 			
 			// place the popover relative to the student container
 			var position = $(studentContainer).position();
@@ -187,11 +194,11 @@ student_grouping.student = function(studentData) {
 	 */
 	this.drawLearningStylesChart = function(){
 		$("#" + this.studentInfoLearningStyleElem).empty();
-		var learningStyles = this.studentData.learningStyles;
+		var studentData = this.studentData;
 		var learningStylesData = [
-			['Auditory', learningStyles.auditoryLearning],
-			['Tactile', learningStyles.tactileLearning],
-			['Visual', learningStyles.visualLearning]
+			['Auditory', studentData.auditoryLearning],
+			['Tactile', studentData.tactileLearning],
+			['Visual', studentData.visualLearning]
 		];
 		var labels = _.map(learningStylesData, function(style, key){
 			return style[0] + " " + style[1] + "%";
