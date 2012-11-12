@@ -17,8 +17,12 @@ student_grouping.groupsList = function(){
 	this.colorList = [
         { background: '#DBFDAA', title: '#7D9D38' },
         { background: '#A5C5FF', title: '#2F62A0' },
+        { background: '#FFA5A4', title: '#A9322F' },
         { background: '#CBB7E9', title: '#654788' },
-        { background: '#FFA5A4', title: '#A9322F' }
+        { background: '#A7ECFF', title: '#35ADCD' },
+        { background: '#FFC08A', title: '#F79646' },
+        { background: '#D5D5D5', title: '#000000' }
+        
 	];
 	this.currentColorIndex = 0;
 	

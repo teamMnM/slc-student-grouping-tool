@@ -210,8 +210,8 @@ student_grouping.group = function(groupData){
 	 * Returns true if the group already contains the student with the given id 
 	 */
 	this.hasStudent = function(studentId){
-		var student = _.find(this.students, function(s){
-			return s.studentData.id === studentId;
+		var student = _.find(this.students, function(id){
+			return id === studentId;
 		});
 		return student !== undefined;
 	}
@@ -384,8 +384,12 @@ student_grouping.group = function(groupData){
 		var notOpen = $(popover).css('display') === 'none';
 		if (notOpen || groupContainerId !== popoverGroupContainerId) {		
 			
-			var description = this.groupData.cohortDescription;
-			$(this.groupDescriptionTxtElem).html(description);
+		    var description = this.groupData.cohortDescription;
+		    if (description !== null && description !== '') {
+		        $(this.groupDescriptionTxtElem).html(description);
+		    } else {
+		        $(this.groupDescriptionTxtElem).html('&nbsp;');
+		    }
 						
 			// expand right margin to accomodate the popover
 			var popoverWidth = $(popover).width();			
@@ -487,7 +491,7 @@ student_grouping.group = function(groupData){
 			// show the div with the attachment
 			me.showFileAttachment();
 			
-			this.markDirty();			
+			me.markDirty();			
 		} else {
 			me.attachedFile = null;
 		}		
@@ -621,7 +625,7 @@ student_grouping.group = function(groupData){
 	}
 	
 	
-	/** USED TO REFACTOR LATER ON
+	/**
 	 * Returns the position and size of this group's container element 
 	 */
 	this.getPositionAndSize = function(){

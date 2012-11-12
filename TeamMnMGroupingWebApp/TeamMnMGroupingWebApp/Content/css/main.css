@@ -64,13 +64,17 @@
 }
 
 #studentListDiv {
+    box-shadow: 0.2em 0.1em 1em #CCC;
+    padding-top: 0.1em;
+    margin-top: 0.5em;
+    width: 14.5em;
 }
 
 .studentListItem {
-	width: 15em;
+	width: 13em;
 	height: 4.2em;
 	background-color: #F2F2F2;
-	margin-top: 1em;	
+    margin: 1em auto auto auto;
 	padding:0.8em 0.5em 0 0;
 }
 
