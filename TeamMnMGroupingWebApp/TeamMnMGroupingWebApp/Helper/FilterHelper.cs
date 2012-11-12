@@ -14,28 +14,28 @@ namespace TeamMnMGroupingWebApp.Helper
         static string[] containsOperator = { "contains" };
 
         static IEnumerable<FilterValue> disabilityTypes = from DisabilityType s in Enum.GetValues(typeof(DisabilityType))
-                                                     select GetEnumDescription(s);
+                                                          select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> gradeLevelTypes = from GradeLevelType s in Enum.GetValues(typeof(GradeLevelType))
-                                                     select GetEnumDescription(s);
+                                                          select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> languageItemTypes = from LanguageItemType s in Enum.GetValues(typeof(LanguageItemType))
-                                                       select GetEnumDescription(s);
+                                                            select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> oldEthnicityTypes = from OldEthnicityType s in Enum.GetValues(typeof(OldEthnicityType))
-                                                       select GetEnumDescription(s);
+                                                            select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> raceItemTypes = from RaceItemType s in Enum.GetValues(typeof(RaceItemType))
-                                                   select GetEnumDescription(s);
+                                                        select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> schoolFoodServicesEligibilityTypes = from SchoolFoodServicesEligibilityType s in Enum.GetValues(typeof(SchoolFoodServicesEligibilityType))
-                                                                        select GetEnumDescription(s);
+                                                                             select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> section504DisabilityItemTypes = from Section504DisabilityItemType s in Enum.GetValues(typeof(Section504DisabilityItemType))
-                                                                   select GetEnumDescription(s);
+                                                                        select GetEnumDescription(s);
 
         static IEnumerable<FilterValue> sexTypes = from SexType s in Enum.GetValues(typeof(SexType))
-                                              select GetEnumDescription(s);
+                                                   select GetEnumDescription(s);
 
         public static IEnumerable<Filter> InitializeFilters()
         {
@@ -43,12 +43,12 @@ namespace TeamMnMGroupingWebApp.Helper
 
             var disabilities = new Filter { attributeId = "disabilities", attributeName = "Disabilities", operators = containsOperator, values = disabilityTypes };
             var gradeLevels = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = gradeLevelTypes };
-            var languageItems = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = languageItemTypes };
-            var oldEthnicities = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = oldEthnicityTypes };
-            var raceItems = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = raceItemTypes };
-            var schoolFoodServicesEligibilities = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = schoolFoodServicesEligibilityTypes };
-            var section504DisabilityItems = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = section504DisabilityItemTypes };
-            var sex = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = sexTypes };
+            var languageItems = new Filter { attributeId = "homeLanguages", attributeName = "Home Languages", operators = containsOperator, values = languageItemTypes };
+            var oldEthnicities = new Filter { attributeId = "oldEthnicity", attributeName = "Old Ethnicity", operators = containsOperator, values = oldEthnicityTypes };
+            var raceItems = new Filter { attributeId = "race", attributeName = "Race", operators = containsOperator, values = raceItemTypes };
+            var schoolFoodServicesEligibilities = new Filter { attributeId = "schoolFoodServicesEligiblity", attributeName = "School Food Services Eligibility", operators = containsOperator, values = schoolFoodServicesEligibilityTypes };
+            var section504DisabilityItems = new Filter { attributeId = "section504Disablities", attributeName = "Section 504 Disabilities", operators = containsOperator, values = section504DisabilityItemTypes };
+            var sex = new Filter { attributeId = "sex", attributeName = "Gender", operators = containsOperator, values = sexTypes };
 
             return new List<Filter>() { disabilities, gradeLevels, languageItems, oldEthnicities, raceItems, schoolFoodServicesEligibilities, section504DisabilityItems, sex };
         }
