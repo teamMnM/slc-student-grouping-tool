@@ -44,7 +44,16 @@ namespace TeamMnMGroupingWebApp.Helper
             newStudent.name = string.Format("{0} {1}", student.name.firstName, student.name.lastSurName);
             newStudent.sections = from s in sections select s.id;
             newStudent.disabilities = from d in student.disabilities select FilterHelper.GetEnumDescription(d.disability).title;
-            newStudent.learningStyles = student.learningStyles;
+            newStudent.auditoryLearning = student.learningStyles.auditoryLearning;
+            newStudent.tactileLearning = student.learningStyles.tactileLearning;
+            newStudent.visualLearning = student.learningStyles.visualLearning;
+            newStudent.birthDate = student.birthData.birthDate;
+            newStudent.profileThumbnail = student.profileThumbnail;
+            newStudent.race = student.race;
+            newStudent.schoolFoodServicesEligiblity = student.schoolFoodServicesEligiblity;
+            newStudent.section504Disablities = student.section504Disablities;
+            newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic).title;
+
             newStudent.assessments = assessments;
 
             return newStudent;
