@@ -15,3 +15,7 @@ utils.arrayUtils = {
 	    return array;
 	}
 }
+
+utils.uiUtils = {
+
+}

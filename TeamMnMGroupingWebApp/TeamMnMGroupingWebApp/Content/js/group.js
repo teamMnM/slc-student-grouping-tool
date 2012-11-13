@@ -69,7 +69,8 @@ student_grouping.group = function(groupData){
 										'<input type="text" class="group-name-txt" style="display:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
 									'<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									'<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
-									'<div class="group"></div>' + 
+                                    '<span class="group-num-students"></span>' +
+                                    '<div class="group"></div>' +
 									'<div>' +
 										'<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
 										'<span class="group-attachment-lbl"></span>' + 
@@ -145,7 +146,7 @@ student_grouping.group = function(groupData){
 			}
 		});		
 		
-		// TODO load attach lesson plan
+	    // TODO load attached lesson plan	    
 	};
 		
 	/**
@@ -175,7 +176,9 @@ student_grouping.group = function(groupData){
 			
 			// add student to list of students
 			this.students.push(student);			
-			student.addGroupIndicator(this.groupData.id, this.color.background);					
+			student.addGroupIndicator(this.groupData.id, this.color.background);
+
+			//$(this.groupContainerId).find(".group-num-students").html("Number of students: " + this.students.length);
 		}
 	}
 	
@@ -324,6 +327,11 @@ student_grouping.group = function(groupData){
 			$(popover).css('top', position_size.top);
 			$(popover).css('display','');	
 			
+		    // attach event handler to hide this if user clicks outside of it
+			this.handleOutsideClick(this.addDataBtnClass, this.studentPopoverElem, function () {
+			    $(me.groupContainerClass).css('margin-right', me.originalRightMargin);
+			});
+
 		} else {
 			// close it
 			$(popover).css('display','none');
@@ -407,7 +415,12 @@ student_grouping.group = function(groupData){
 			// if user clicks on text, make it editable					
 			$(this.groupDescriptionTxtElem).click(function(event){
 				me.makeGroupDescriptionEditable();
-			});	
+			});
+
+		    // attach event handler to hide this if user clicks outside of it
+			this.handleOutsideClick(this.groupInfoBtnClass, this.groupInfoPopoverElem, function () {
+			    $(me.groupContainerClass).css('margin-right', me.originalRightMargin);
+			});
 				
 		} else {
 			// close it
@@ -446,8 +459,15 @@ student_grouping.group = function(groupData){
 				$(this.groupAttachmentPopoverFileInput).val('');
 				$(this.groupAttachmentPopoverFileTxt).val('');
 				$(this.groupAttachmentPopoverFileInput).unbind('change');
-				$(this.groupAttachmentPopoverFileInput).change(function(){
-					$(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
+				$(this.groupAttachmentPopoverFileInput).change(function () {
+				    $(document).unbind('mouseup');
+				    $(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
+
+				});
+
+			    // attach event handler to hide this if user clicks outside of it
+				this.handleOutsideClick(this.groupAttachmentImgClass, this.groupAttachmentPopoverElem, function () {
+				    //$(me.groupContainerClass).css('margin-right', me.originalRightMargin);
 				});
 			} else {
 				// close it
@@ -656,4 +676,20 @@ student_grouping.group = function(groupData){
 	this.markDirty = function(){
 		this.dirty = true;
 	}
+
+    /**
+     * Handle outside click event to hide popover
+     */
+	this.handleOutsideClick = function (triggetBtn, container, additionalInstructions){
+	    $(document).unbind('mouseup');
+	    $(document).mouseup(function (e) {
+	        if ((!$(container).is(e.target) && $(container).has(e.target).length === 0)
+                    && (!$(triggetBtn).is(e.target) && $(triggetBtn).has(e.target).length === 0)) {
+	            $(container).hide();
+	            $(document).unbind('mouseup');
+	            additionalInstructions();
+	        }
+	    });
+	}
+
 }

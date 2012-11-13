@@ -37,7 +37,8 @@ student_grouping.groupsList = function(){
 		}		
 		
 		this.pubSub.subscribe('add-group', function(group){
-			me.addGroup(group);
+		    var newGroup = me.addGroup(group);
+		    newGroup.markDirty();
 		});
 		
 		this.pubSub.subscribe('group-removed', function(groupId){
@@ -185,15 +186,19 @@ student_grouping.groupsList = function(){
 				if (!addedToGroup){
 					
 					var group = {
-			    		id : 'g' +  me.lastNewGroupIndex++,
-			    		cohortIdentifier : 'New Group',
-			    		cohortDescription : '',
-			    		color: '#FFA5A4',
-			    		titleColor: '#A9322F'
+					    cohort: {
+					        id: 'g' + me.lastNewGroupIndex++,
+					        cohortIdentifier: 'New Group',
+					        cohortDescription: '',
+					        color: '#FFA5A4',
+					        titleColor: '#A9322F'
+					    },
+                        students: []
 			    	};
 			    	
 			    	var newGroupObject = me.addGroup(group);
-			    	newGroupObject.assignStudentToGroup(student);					
+			    	newGroupObject.assignStudentToGroup(student);
+			    	group.markDirty();
 			    	numGroups++;
 				}
 			}

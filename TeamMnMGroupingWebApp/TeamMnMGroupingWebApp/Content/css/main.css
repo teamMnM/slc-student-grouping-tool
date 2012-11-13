@@ -58,6 +58,11 @@
 	margin-right: 1.5em;
 }
 
+#txtStudentSearchBox {
+    width:13.5em;
+    margin-left:1em;
+}
+
 #studentList {
 	list-style: none;
 	margin:0;
@@ -67,7 +72,7 @@
     box-shadow: 0.2em 0.1em 1em #CCC;
     padding-top: 0.1em;
     margin-top: 0.5em;
-    width: 14.5em;
+    width: 15.6em;
 }
 
 .studentListItem {
@@ -88,8 +93,9 @@
 }
 
 .student-info-btn {
-	margin-top: -1em;
+	margin-top: -2.3em;
 	float:right;
+    width: 2.5em;
 }
 
 .studentListItem:hover .student-info-btn {
@@ -127,11 +133,11 @@
 }
 
 .dropped-elem.expanded .del-button {
-	margin-top:-1.2em;
+	margin-top:-1.0em;
 }
 
 .dropped-elem.collapsed .del-button {
-	margin-top:-1.6em;
+	margin-top:-1.5em;
 }
 
 .dropped-elem:hover .del-button {
