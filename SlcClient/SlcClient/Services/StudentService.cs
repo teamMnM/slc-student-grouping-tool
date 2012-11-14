@@ -98,6 +98,30 @@ namespace SlcClient.Services
             return new List<Assessment>();
         }
 
+        /// <summary>
+        /// Get all students
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<StudentAcademicRecord>> GetAllStudentsAcademicRecords()
+        {
+            try
+            {
+                var response = await _client.GetDataString(Constants.Student.STUDENT_ACADEMIC_RECORDS_ALL);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var records = JsonConvert.DeserializeObject<IEnumerable<StudentAcademicRecord>>(content);
+                    return records; //successful request, return list of students
+                }
+                return new List<StudentAcademicRecord>(); //problem with getting students back return empty list
+            }
+            catch (Exception e)
+            {
+                //log here
+                throw;
+            }
+        }
+
         public async Task<HttpResponseMessage> Create(Student obj)
         {
             throw new NotImplementedException("Creating student is not allowed");

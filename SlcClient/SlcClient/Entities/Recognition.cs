@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +28,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The nature of recognition given to the student for accomplishments in a co-curricular, or extra-curricular activity.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public RecognitionType recognitionType { get; set; }
     }
 }

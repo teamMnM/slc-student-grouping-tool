@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,6 +24,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The identifier for the school year.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public SchoolYearType schoolYear { get; set; }
 
         /// <summary>
@@ -33,6 +36,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The term for the session during the school year.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public TermType term { get; set; }
 
         /// <summary>

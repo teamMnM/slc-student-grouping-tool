@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using SlcClient.Enum;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SlcClient.Entities
 {
@@ -24,6 +26,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// A coding scheme that is used for identification and record-keeping purposes by schools, social services, or other agencies to refer to a student.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public StudentIdentificationSystemType identificationSystem { get; set; }
 
     }

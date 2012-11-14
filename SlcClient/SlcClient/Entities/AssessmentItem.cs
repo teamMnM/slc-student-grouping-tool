@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +29,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// Category or type of the assessment item. For example: Multiple choice Analytic Prose ....
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemCategoryType itemCategory { get; set; }
 
         /// <summary>

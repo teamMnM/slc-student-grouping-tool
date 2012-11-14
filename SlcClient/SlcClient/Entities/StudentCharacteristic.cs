@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using SlcClient.Enum;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SlcClient.Entities
 {
@@ -22,6 +24,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The characteristic designated for the student.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public StudentCharacteristicType characteristic { get; set; }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace SlcClient.Entities
         /// Resource room, Self-contained (Special Education), Self-study, Shop
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public string educationalEnvironment { get; set; }
+        public EducationalEnvironmentType educationalEnvironment { get; set; }
 
         /// <summary>
         /// The media through which teachers provide instruction to students and students and teachers communicate about instructional matters; 

@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +26,7 @@ namespace SlcClient.Entities
         /// Second Semester, First Summer Session, Second Summer Session, Third Summer Session, Summer Semester, First Nine Weeks, 
         /// Second Nine Weeks, Third Nine Weeks, Fourth Nine Weeks, First Trimester, Second Trimester, Third Trimester, End of Year
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public GradingPeriodType gradingPeriod { get; set; }
 
         /// <summary>

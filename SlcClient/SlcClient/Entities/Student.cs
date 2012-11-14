@@ -67,14 +67,16 @@ namespace SlcClient.Entities
         /// <summary>
         /// The language or dialect routinely spoken in an individual's home. This language or dialect may or may not be an individual's native language.
         /// </summary>
-       // [JsonConverter(typeof(List<StringEnumConverter>))]
-        public List<LanguageItemType> homeLanguages { get; set; }
+        // [JsonConverter(typeof(List<StringEnumConverter>))]
+        //public List<LanguageItemType> homeLanguages { get; set; }
+        public List<string> homeLanguages { get; set; }
 
         /// <summary>
         /// Language(s) the individual uses to communicate
         /// </summary>
         //[JsonConverter(typeof(List<StringEnumConverter>))]
-        public List<LanguageItemType> languages { get; set; }
+        //public List<LanguageItemType> languages { get; set; }
+        public List<string> languages { get; set; }
 
         /// <summary>
         /// The student's relative preference to visual, auditory and tactile learning expressed as percentages.
@@ -126,12 +128,14 @@ namespace SlcClient.Entities
         /// or with which the individual most identifies. The way this data element is listed, it must allow for multiple 
         /// entries so that each individual can specify all appropriate races.
         /// </summary>
-        public List<RaceItemType> race { get; set; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public List<RaceItemType> race { get; set; }
+        public List<string> race { get; set; }
 
         /// <summary>
         /// An indication of a student's level of eligibility for breakfast, lunch, snack, supper, and milk programs.
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
+        //[JsonConverter(typeof(StringEnumConverter))]
         public SchoolFoodServicesEligibilityType schoolFoodServicesEligiblity { get; set; }
 
         /// <summary>
@@ -142,8 +146,9 @@ namespace SlcClient.Entities
         /// <summary>
         /// A categorization of the disabilities associated with a student pursuant to Section 504.
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public List<Section504DisabilityItemType> section504Disablities { get; set; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public List<Section504DisabilityItemType> section504Disablities { get; set; }
+        public List<string> section504Disablities { get; set; }
 
         /// <summary>
         /// A person's gender.

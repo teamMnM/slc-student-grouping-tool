@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,23 +28,28 @@ namespace SlcClient.Entities
         /// <summary>
         /// The environment in which the test was administered. For example: Electronic Classroom Testing Center ....
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public AdministrationEnvironmentType administrationEnvironment { get; set; }
 
         /// <summary>
         /// The language in which an assessment is written and/or administered.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public LanguageItemType administrationLanguage { get; set; }
 
         /// <summary>
         /// The grade level of a student when assessed.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public GradeLevelType gradeLevelWhenAssessed { get; set; }
 
         /// <summary>
         /// Linguistic accommodations used with the student for the test. For example: Bilingual dictionary English dictionary Reading Aloud - 
         /// Word or Phrase Reading Aloud - Entire Test Item Oral Translation - Word or phrase Clarification - Word or phrase ...
         /// </summary>
-        public List<LinguisticAccommodationItemType> linguisticAccommodations { get; set; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public List<LinguisticAccommodationItemType> linguisticAccommodations { get; set; }
+        public List<string> linguisticAccommodations { get; set; }
 
         /// <summary>
         /// This descriptor defines various levels or thresholds for performance on the assessment.
@@ -52,11 +59,13 @@ namespace SlcClient.Entities
         /// <summary>
         /// The primary reason student is not tested. For example: Absent Refusal by parent Refusal by student Medical waiver Illness Disruptive behavior LEP Exempt ...
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ReasonNotTestedType reasonNotTested { get; set; }
 
         /// <summary>
         /// Indicator if the test was retaken. For example: Primary administration First retest Second retest ...
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public RetestIndicatorType retestIndicator { get; set; }
 
         /// <summary>
@@ -77,7 +86,9 @@ namespace SlcClient.Entities
         /// alter what the examination measures. The proper use of accommodations does not substantially change 
         /// academic level or performance criteria. For example: Braille Enlarged monitor view Extra time Large Print Setting Oral Administration ...
         /// </summary>
-        public List<SpecialAccommodationItemType> specialAccommodations { get; set; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public List<SpecialAccommodationItemType> specialAccommodations { get; set; }
+        public List<string> specialAccommodations { get; set; }
 
         /// <summary>
         /// This entity represents the student's responses to assessment items.

@@ -6,22 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using TeamMnMGroupingWebApp.Models;
 
 namespace TeamMnMGroupingWebApp.Helper
 {
     public class StudentHelper
     {
-        public static async Task<StudentDisplayObject> GetStudentDisplayObject(StudentService cs, Student student)
+        public static async Task<StudentDisplayObject> GetStudentDisplayObject(StudentService ss, Student student)
         {
-            var sections = GetSectionsByStudentId(cs, student.id);
-            var assessments = GetStudentAssessmentsByStudentId(cs, student.id);
+            var sections = GetSectionsByStudentId(ss, student.id);
+            var assessments = GetStudentAssessmentsByStudentId(ss, student.id);
+            var academicRecords = GetAllStudentsAcademicRecords(ss);
 
-            await Task.WhenAll(sections, assessments);
+            await Task.WhenAll(sections, assessments, academicRecords);
 
-            var result = MapStudentToStudentDisplayObject(student, sections.Result, assessments.Result);
+            var result = MapStudentToStudentDisplayObject(student, sections.Result, assessments.Result, academicRecords.Result);
 
             return result;
+        }
+
+        [OutputCache(Duration=1200, VaryByParam="none")]
+        public static async Task<IEnumerable<StudentAcademicRecord>> GetAllStudentsAcademicRecords(StudentService ss)
+        {
+            var records = await ss.GetAllStudentsAcademicRecords();
+            return records;
         }
 
         private static async Task<IEnumerable<Section>> GetSectionsByStudentId(StudentService cs, string studentId)
@@ -36,7 +45,7 @@ namespace TeamMnMGroupingWebApp.Helper
             return result;            
         }
 
-        public static StudentDisplayObject MapStudentToStudentDisplayObject(Student student, IEnumerable<Section> sections, IEnumerable<Assessment> assessments)
+        public static StudentDisplayObject MapStudentToStudentDisplayObject(Student student, IEnumerable<Section> sections, IEnumerable<Assessment> assessments, IEnumerable<StudentAcademicRecord> academicRecords)
         {
             
             var newStudent = new StudentDisplayObject();
@@ -47,6 +56,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.sections = from s in sections select s.id;
                 newStudent.disabilities = from d in student.disabilities select FilterHelper.GetEnumDescription(d.disability).title;
 
+                //sometime there's no learning style data
                 if (student.learningStyles != null)
                 {
                     newStudent.auditoryLearning = student.learningStyles.auditoryLearning;
@@ -60,6 +70,11 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.schoolFoodServicesEligiblity = student.schoolFoodServicesEligiblity;
                 newStudent.section504Disablities = student.section504Disablities;
                 newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic).title;
+
+                //get the gpa
+                var studentAcademicRecord = academicRecords.FirstOrDefault(a => a.studentId == student.id);
+                newStudent.cumulativeGradePointAverage = studentAcademicRecord != null ? studentAcademicRecord.cumulativeGradePointAverage : 0;
+
                 newStudent.assessments = assessments;
             }
             catch (Exception e)

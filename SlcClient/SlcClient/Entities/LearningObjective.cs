@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +17,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The description of the content or subject area (e.g., arts, mathematics, reading, stenography, or a foreign language) of an assessment.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public AcademicSubjectType academicSubject { get; set; }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The grade level for which the learning objective is targeted,
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public GradeLevelType objectiveGradeLevel { get; set; }
 
         /// <summary>

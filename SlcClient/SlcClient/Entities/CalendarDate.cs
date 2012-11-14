@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace SlcClient.Entities
         /// The type of scheduled or unscheduled event for the day. 
         /// For example: Instructional day Teacher only day Holiday Make-up day Weather day Student late arrival/early dismissal ...
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public CalendarEventType calendarEvent { get; set; }
 
         /// <summary>

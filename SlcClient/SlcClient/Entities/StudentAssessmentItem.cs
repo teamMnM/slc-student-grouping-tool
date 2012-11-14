@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The analyzed result of a student's response to an assessment item.. For example: Correct Incorrect Met standard ...
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public AssessmentItemResultType assessmentItemResult { get; set; }
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// Indicator of the response. For example: Nonscorable response Ineffective response Effective response Partial response ...
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ResponseIndicatorType responseIndicator { get; set; }
     }
 }

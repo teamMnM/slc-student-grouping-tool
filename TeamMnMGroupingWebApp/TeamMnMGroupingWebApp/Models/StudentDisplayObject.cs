@@ -43,11 +43,11 @@ namespace TeamMnMGroupingWebApp.Models
 
         public string profileThumbnail { get; set; }
 
-        public List<RaceItemType> race { get; set; }
+        public List<string> race { get; set; }
 
         public SchoolFoodServicesEligibilityType schoolFoodServicesEligiblity { get; set; }
 
-        public List<Section504DisabilityItemType> section504Disablities { get; set; }
+        public List<string> section504Disablities { get; set; }
 
         public IEnumerable<string> studentCharacteristics { get; set; }
 

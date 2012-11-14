@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +17,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// A reference to the type of content standard e.g., state, national, etc.)
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ContentStandardType contentStandard { get; set; }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The grade level for the specific learning standard.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public GradeLevelType gradeLevel { get; set; }
 
         /// <summary>
@@ -42,6 +46,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// Subject area for the learning standard.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public AcademicSubjectType subjectArea { get; set; }
     }
 }

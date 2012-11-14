@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +43,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The extent of formal instruction an individual has received (e.g., the highest grade in school completed or its equivalent or the highest degree received).
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public LevelOfEducationType highestLevelOfEducationCompleted { get; set; }
 
         /// <summary>
@@ -66,6 +69,7 @@ namespace SlcClient.Entities
         /// 1 - American Indian or Alaskan Native 2 - Asian or Pacific Islander 
         /// 3 - Black, not of Hispanic origin 4 - Hispanic 5 - White, not of Hispanic origin
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public OldEthnicityType oldEthnicity { get; set; }
 
         /// <summary>
@@ -77,11 +81,14 @@ namespace SlcClient.Entities
         /// The general racial category which most clearly reflects the individual's recognition of his or her community or with which the individual most identifies. 
         /// The way this data element is listed, it must allow for multiple entries so that each individual can specify all appropriate races.
         /// </summary>
-        public List<RaceItemType> race { get; set; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        //public List<RaceItemType> race { get; set; }
+        public List<string> race { get; set; }
 
         /// <summary>
         /// A person's gender.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public SexType sex { get; set; }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,21 +31,25 @@ namespace SlcClient.Entities
         /// <summary>
         /// An indication of the category of credential an individual holds.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public CredentialType credentialType { get; set; }
 
         /// <summary>
         /// The grade level(s) certified for teaching.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public LevelType level { get; set; }
 
         /// <summary>
         /// An indication of the pre-determined criteria for granting the teaching credential that an individual holds.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public TeachingCredentialBasisType teachingCredentialBasis { get; set; }
 
         /// <summary>
         /// An indication of the category of a legal document giving authorization to perform teaching assignment services.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public TeachingCredentialType teachingCredentialType { get; set; }
     }
 }

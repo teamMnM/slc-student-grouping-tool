@@ -74,6 +74,10 @@ namespace SlcClient.Entities
         /// <summary>
         /// The student who was enrolled for the session.
         /// </summary>
-        public Student student { get; set; } 
+        public Student student { get; set; }
+
+        public string studentId { get; set; }
+
+        public string sessionId { get; set; }
     }
 }

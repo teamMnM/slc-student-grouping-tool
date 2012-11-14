@@ -1,4 +1,6 @@
-﻿using SlcClient.Enum;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SlcClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +14,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// A designation of the type of academic distinctions earned by or awarded to the student.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public AcademicHonorsType academicHonorsType { get; set; }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// References to a learning objective
         /// </summary>
-        public List<LearningObjective> learningObjectives { get; set; }
+        public List<string> learningObjectives { get; set; }
 
     }
 }
