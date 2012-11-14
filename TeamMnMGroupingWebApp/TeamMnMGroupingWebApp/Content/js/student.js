@@ -33,7 +33,7 @@ student_grouping.student = function(studentData) {
 								'<div class="student-icon-div"><img class="student-icon"/></div>' +								
 								'<div>' +
 									'<span class="student-name"></span>' + 
-									'<button class="hide-button student-info-btn">i</button>' + 
+									'<img class="hide-button student-info-btn" src="/Content/img/group-info-icon.png"></img>' + 
 									'<br>GPA <span class="gpa"></span>' +		
 									'<input type="checkbox" class="student-selBox"/>' +							
 								'</div>' +																			
@@ -174,9 +174,10 @@ student_grouping.student = function(studentData) {
 			var position = $(studentContainer).position();
 			var width = $(studentContainer).width(); 
 			var height = $(studentContainer).height();
-			
+			var marginLeft = parseFloat($(studentContainer).css('margin-left').replace('px',''));
+
 			$(popover).attr('data-studentContainerId', studentId);
-			$(popover).css('left', position.left + width);
+			$(popover).css('left', position.left + width + marginLeft);
 			$(popover).css('top', position.top);
 			$(popover).css('display','');
 			
