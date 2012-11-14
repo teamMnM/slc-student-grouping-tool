@@ -37,6 +37,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
+        [OutputCache(Duration = 1200, VaryByParam = "none")]
         public ActionResult Index2()
         {
             return View("Index");
@@ -90,7 +91,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
                 var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
                 //get the studentCohortAssociationId for students to delete
-                var associationToDelete = (from s in obj.studentsToDelete select (from csca in currentStudentCohortAssociation where csca.studentId == s.id select csca.id).Single());
+                var associationToDelete = (from s in obj.studentsToDelete select (from csca in currentStudentCohortAssociation where csca.studentId == s select csca.id).Single());
                 //delete the studentCohortAssociation
                 var removeStudents = DeleteMultipleAssociation(cs, associationToDelete); 
 
@@ -181,16 +182,16 @@ namespace TeamMnMGroupingWebApp.Controllers
             return View("LoginError");
         }
 
-        public async Task<string[]> CreateMultipleAssociation(CohortService cs, string cId, IEnumerable<Student> sl)
+        public async Task<string[]> CreateMultipleAssociation(CohortService cs, string cId, IEnumerable<string> sl)
         {
             var result = await Task.WhenAll(from s in sl select CreateOneAssociation(cs, cId, s));
             return result;
         }
 
 
-        public async Task<string> CreateOneAssociation(CohortService cs, string cId, Student s)
+        public async Task<string> CreateOneAssociation(CohortService cs, string cId, string sId)
         {
-            var a = new StudentCohortAssociation { cohortId = cId, studentId = s.id, beginDate = DateTime.Now };
+            var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStudentCohortAssociation(a);
 
             return result.ToString();
@@ -254,6 +255,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
                 //cohort.cohortIdentifier = "ACC-TEST-COH-" + random.Next(10);
                 //cohort.cohortType = SlcClient.Enum.CohortType.ExtracurricularActivity;
+                cohort.cohortType = SlcClient.Enum.CohortType.Other;
                 var result = await cs.Create(cohort);
                 //result.Headers.Location.AbsolutePath.Substring(result.Headers.Location.AbsolutePath.LastIndexOf("/") + 1)
                 

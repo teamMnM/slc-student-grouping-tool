@@ -14,11 +14,11 @@ namespace TeamMnMGroupingWebApp.Models
         /// <summary>
         /// the list of students to delete from the cohort
         /// </summary>
-        public IEnumerable<Student> studentsToDelete { get; set; }
+        public IEnumerable<string> studentsToDelete { get; set; }
 
         /// <summary>
         /// the list of students to add to the cohort
         /// </summary>
-        public IEnumerable<Student> studentsToCreate { get; set; }
+        public IEnumerable<string> studentsToCreate { get; set; }
     }
 }
