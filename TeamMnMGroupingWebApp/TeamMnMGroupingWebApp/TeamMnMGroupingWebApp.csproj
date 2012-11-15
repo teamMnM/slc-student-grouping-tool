@@ -122,6 +122,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\CohortHelper.cs" />
+    <Compile Include="Helper\DataElementHelper.cs" />
     <Compile Include="Helper\FilterHelper.cs" />
     <Compile Include="Helper\StudentHelper.cs" />
     <Compile Include="Models\CohortActionObject.cs" />
@@ -186,6 +187,7 @@
     <Content Include="Content\vendor\select2\css\spinner.gif" />
     <Content Include="Content\vendor\select2\js\select2.min.js" />
     <Content Include="Content\vendor\underscore\js\underscore.min.js" />
+    <Content Include="Data\DataElements.txt" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

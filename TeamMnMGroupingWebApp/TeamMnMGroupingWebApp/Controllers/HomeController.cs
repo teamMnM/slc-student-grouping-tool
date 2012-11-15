@@ -129,7 +129,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> Group()
         {
             var cs = new CohortService(Session["access_token"].ToString());
@@ -137,6 +137,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
             var co = GetCohorts();
             var st = GetStudents();
+            var dataElements = DataElementHelper.InitializeDataElements();
 
             await Task.WhenAll(co, st);
 
@@ -144,12 +145,15 @@ namespace TeamMnMGroupingWebApp.Controllers
             var students = Task.WhenAll(from s in st.Result select StudentHelper.GetStudentDisplayObject(ss, s));
 
             await Task.WhenAll(cohorts, students);
+            await Task.WhenAll(dataElements);
 
             var data = new GroupingDisplayObject();
             data.cohorts = cohorts.Result;
             data.students = students.Result;
-            data.filters = FilterHelper.InitializeFilters();
+            data.dataElements = dataElements.Result;         
 
+            data.filters = FilterHelper.InitializeFilters(); //contruct filter values to filter students in the app
+            
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -176,6 +180,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 //var result = await Task.WhenAll(from c in co.Result select createMultipleAssociation(cs, c, st.Result));
                 var filters = Helper.FilterHelper.InitializeFilters();
+            
                 return View(displayObj);            
         }
 

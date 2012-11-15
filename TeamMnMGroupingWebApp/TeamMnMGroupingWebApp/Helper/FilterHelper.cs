@@ -21,31 +21,31 @@ namespace TeamMnMGroupingWebApp.Helper
                 };
 
         static IEnumerable<FilterValue> disabilityTypes = from DisabilityType s in Enum.GetValues(typeof(DisabilityType))
-                                                          select GetEnumDescription(s);
+                                                          select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> gradeLevelTypes = from GradeLevelType s in Enum.GetValues(typeof(GradeLevelType))
-                                                          select GetEnumDescription(s);
+                                                          select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> languageItemTypes = from LanguageItemType s in Enum.GetValues(typeof(LanguageItemType))
-                                                            select GetEnumDescription(s);
+                                                            select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> oldEthnicityTypes = from OldEthnicityType s in Enum.GetValues(typeof(OldEthnicityType))
-                                                            select GetEnumDescription(s);
+                                                            select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> raceItemTypes = from RaceItemType s in Enum.GetValues(typeof(RaceItemType))
-                                                        select GetEnumDescription(s);
+                                                        select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> schoolFoodServicesEligibilityTypes = from SchoolFoodServicesEligibilityType s in Enum.GetValues(typeof(SchoolFoodServicesEligibilityType))
-                                                                             select GetEnumDescription(s);
+                                                                             select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> section504DisabilityItemTypes = from Section504DisabilityItemType s in Enum.GetValues(typeof(Section504DisabilityItemType))
-                                                                        select GetEnumDescription(s);
+                                                                        select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> sexTypes = from SexType s in Enum.GetValues(typeof(SexType))
-                                                   select GetEnumDescription(s);
+                                                   select GetEnumFilterValues(s);
 
         static IEnumerable<FilterValue> studentCharacteristicTypes = from StudentCharacteristicType s in Enum.GetValues(typeof(StudentCharacteristicType))
-                                                   select GetEnumDescription(s);
+                                                   select GetEnumFilterValues(s);
 
         public static IEnumerable<Filter> InitializeFilters()
         {
@@ -63,55 +63,30 @@ namespace TeamMnMGroupingWebApp.Helper
             var sex = new Filter { attributeId = "sex", attributeName = "Gender", operators = containsOperator, values = sexTypes };
             var studentCharacteristics = new Filter { attributeId = "studentCharacteristics", attributeName = "Student Characteristics", operators = containsOperator, values = studentCharacteristicTypes }; 
 
+            //student attribute filters
             var birthDate = new Filter { attributeId = "birthDate", attributeName = "Birth Date", operators = logicalOperators };
             var economicDisadvantaged = new Filter { attributeId = "economicDisadvantaged", attributeName = "Economic Disadvantaged", operators = equalOperator, values = trueFalse };
-
-            var hispanicLatinoEthnicity = new Filter
-            {
-                attributeId = "hispanicLatinoEthnicity",
-                attributeName = "Hispanic Latino Ethnicity",
-                operators = equalOperator,
-                values = trueFalse
-            };
-
-            var auditoryLearning = new Filter
-            {
-                attributeId = "auditoryLearning",
-                attributeName = "Auditory Learning",
-                operators = logicalOperators
-            };
-
-            var tactileLearning = new Filter
-            {
-                attributeId = "tactileLearning",
-                attributeName = "Tactile Learning",
-                operators = logicalOperators
-            };
-
-            var visualLearning = new Filter
-            {
-                attributeId = "visualLearning",
-                attributeName = "Visual Learning",
-                operators = logicalOperators
-            };
-
-            var limitedEnglishProficiency = new Filter
-            {
-                attributeId = "limitedEnglishProficiency",
-                attributeName = "Limited English Proficiency",
-                operators = equalOperator,
-                values = trueFalse
-            };
-
+            var hispanicLatinoEthnicity = new Filter { attributeId = "hispanicLatinoEthnicity", attributeName = "Hispanic Latino Ethnicity", operators = equalOperator, values = trueFalse };
+            var auditoryLearning = new Filter { attributeId = "auditoryLearning", attributeName = "Auditory Learning", operators = logicalOperators };
+            var tactileLearning = new Filter { attributeId = "tactileLearning", attributeName = "Tactile Learning", operators = logicalOperators };
+            var visualLearning = new Filter { attributeId = "visualLearning", attributeName = "Visual Learning", operators = logicalOperators };
+            var limitedEnglishProficiency = new Filter { attributeId = "limitedEnglishProficiency", attributeName = "Limited English Proficiency", operators = equalOperator, values = trueFalse };
+            var gpa = new Filter { attributeId = "cumulativeGradePointAverage", attributeName = "GPA", operators = logicalOperators };
 
             return new List<Filter>() { disabilities, gradeLevels, languageItems, homeLanguageItems, 
                 oldEthnicities, raceItems, schoolFoodServicesEligibilities, section504DisabilityItems, sex,
                 studentCharacteristics, birthDate, economicDisadvantaged, hispanicLatinoEthnicity, 
-                auditoryLearning, tactileLearning, visualLearning, limitedEnglishProficiency
+                auditoryLearning, tactileLearning, visualLearning, limitedEnglishProficiency, gpa
             };
         }
 
-        public static FilterValue GetEnumDescription(Enum value)
+        public static FilterValue GetEnumFilterValues(Enum value)
+        {
+            var enumDescription = GetEnumDescription(value);
+            return new FilterValue { id = enumDescription, title = enumDescription };
+        }
+
+        public static string GetEnumDescription(Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
@@ -119,9 +94,9 @@ namespace TeamMnMGroupingWebApp.Helper
                 (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
-                return new FilterValue { id = attributes[0].Description, title = attributes[0].Description };
+                return attributes[0].Description;
             else
-                return new FilterValue { id = value.ToString(), title = value.ToString() };
+                return value.ToString();
         }
     }
 }

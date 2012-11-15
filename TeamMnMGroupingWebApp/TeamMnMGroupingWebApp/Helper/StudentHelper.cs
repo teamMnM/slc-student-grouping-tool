@@ -6,13 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
+using System.Web.UI;
 using TeamMnMGroupingWebApp.Models;
 
 namespace TeamMnMGroupingWebApp.Helper
 {
     public class StudentHelper
     {
+        const string ACADEMIC_RECORDS_CACHE_KEY = "academicRecords";
+        const string STUDENTS_CACHE_KEY = "allStudents";
+
         public static async Task<StudentDisplayObject> GetStudentDisplayObject(StudentService ss, Student student)
         {
             var sections = GetSectionsByStudentId(ss, student.id);
@@ -21,12 +26,13 @@ namespace TeamMnMGroupingWebApp.Helper
 
             await Task.WhenAll(sections, assessments, academicRecords);
 
+            //HttpContext.Current.Cache.Insert(ACADEMIC_RECORDS_CACHE_KEY, academicRecords);
+
             var result = MapStudentToStudentDisplayObject(student, sections.Result, assessments.Result, academicRecords.Result);
 
             return result;
         }
 
-        [OutputCache(Duration=1200, VaryByParam="none")]
         public static async Task<IEnumerable<StudentAcademicRecord>> GetAllStudentsAcademicRecords(StudentService ss)
         {
             var records = await ss.GetAllStudentsAcademicRecords();
@@ -54,7 +60,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.id = student.id;
                 newStudent.name = string.Format("{0} {1}", student.name.firstName, student.name.lastSurName);
                 newStudent.sections = from s in sections select s.id;
-                newStudent.disabilities = from d in student.disabilities select FilterHelper.GetEnumDescription(d.disability).title;
+                newStudent.disabilities = from d in student.disabilities select FilterHelper.GetEnumDescription(d.disability);
 
                 //sometime there's no learning style data
                 if (student.learningStyles != null)
@@ -67,9 +73,9 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.birthDate = student.birthData.birthDate;
                 newStudent.profileThumbnail = student.profileThumbnail;
                 newStudent.race = student.race;
-                newStudent.schoolFoodServicesEligiblity = student.schoolFoodServicesEligiblity;
+                newStudent.schoolFoodServicesEligiblity = FilterHelper.GetEnumDescription(student.schoolFoodServicesEligiblity);
                 newStudent.section504Disablities = student.section504Disablities;
-                newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic).title;
+                newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic);
 
                 //get the gpa
                 var studentAcademicRecord = academicRecords.FirstOrDefault(a => a.studentId == student.id);

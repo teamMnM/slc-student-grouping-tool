@@ -26,5 +26,7 @@ namespace TeamMnMGroupingWebApp.Models
         /// a list of all students
         /// </summary>
         public IEnumerable<StudentDisplayObject> students { get; set; }
+
+        public IEnumerable<DataElement> dataElements { get; set; }
     }
 }

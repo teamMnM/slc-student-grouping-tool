@@ -13,7 +13,7 @@ namespace SlcClient.Entities
     {
         public string id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "educationOrgId is required")]
         public string educationOrgId { get; set; }
 
         /// <summary>
@@ -32,6 +32,7 @@ namespace SlcClient.Entities
         /// The name or ID for the cohort.
         /// </summary>
         [StringLength(20)]
+        [Required(ErrorMessage = "Cohort name is required")]
         public string cohortIdentifier { get; set; }
 
         //District, School, Classroom, Teacher, Principal, Counselor, Statewide
@@ -43,6 +44,7 @@ namespace SlcClient.Entities
         /// <summary>
         /// The type of cohort (e.g., academic intervention, classroom breakout)
         /// </summary>
+        [Required(ErrorMessage = "Cohort type is required")]
         [JsonConverter(typeof(StringEnumConverter))]
         public CohortType cohortType { get; set; }
 

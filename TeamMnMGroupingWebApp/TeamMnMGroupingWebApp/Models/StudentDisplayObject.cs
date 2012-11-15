@@ -21,19 +21,35 @@ namespace TeamMnMGroupingWebApp.Models
         /// </summary>
         public IEnumerable<string> disabilities { get; set; }
 
-        /// <summary>
-        /// GPA
-        /// </summary>
-        public double cumulativeGradePointAverage { get; set; }
+        public string displacementStatus { get; set; }
 
-        /// <summary>
-        /// list of sectionId's the students belong to
-        /// </summary>
-        public IEnumerable<string> sections { get; set; }
+        public bool economicDisadvantaged { get; set; }
 
-        public LearningStyles learningStyles { get; set; }
+        public string gradeLevel { get; set; }
+
+        public bool hispanicLatinoEthnicity { get; set; }
+
+        public IEnumerable<string> homeLanguages { get; set; }
+
+        public IEnumerable<string> languages { get; set; }
+
+        public string limitedEnglishProficiency { get; set; }
+
+        public string oldEthnicity { get; set; }
+
+        public string otherName { get; set; }
+
+        public string sex { get; set; }
+
+        public IEnumerable<string> studentCharacteristics { get; set; }
+
+        public IEnumerable<string> studentIndicators { get; set; }
+
+        public IEnumerable<Telephone> telephones { get; set; }
 
         public DateTime birthDate { get; set; }
+
+        public LearningStyles learningStyles { get; set; }
 
         public double auditoryLearning { get; set; }
 
@@ -43,23 +59,21 @@ namespace TeamMnMGroupingWebApp.Models
 
         public string profileThumbnail { get; set; }
 
-        public List<string> race { get; set; }
+        public IEnumerable<string> race { get; set; }
 
-        public SchoolFoodServicesEligibilityType schoolFoodServicesEligiblity { get; set; }
+        public string schoolFoodServicesEligiblity { get; set; }
 
-        public List<string> section504Disablities { get; set; }
-
-        public IEnumerable<string> studentCharacteristics { get; set; }
+        public IEnumerable<string> section504Disablities { get; set; }
 
         /// <summary>
-        /// student info
+        /// GPA
         /// </summary>
-        //public Student student { get; set; }
+        public double cumulativeGradePointAverage { get; set; }
 
         /// <summary>
-        /// sections the student in context is in
+        /// list of sectionId's the students belong to
         /// </summary>
-        //public IEnumerable<Section> sections { get; set; }
+        public IEnumerable<string> sections { get; set; }
 
         /// <summary>
         /// assessments that the student in context has taken
