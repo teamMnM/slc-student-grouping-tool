@@ -81,6 +81,7 @@
 	background-color: #F2F2F2;
     margin: 1em auto auto auto;
 	padding:0.8em 0.5em 0 0;
+	font-size:0.9em;
 }
 
 .studentListItem-selected {
@@ -303,6 +304,7 @@
 	width:1em;
 	cursor: pointer;
 }
+
 
 /**********************
  * STUDENT DATA POPUP 

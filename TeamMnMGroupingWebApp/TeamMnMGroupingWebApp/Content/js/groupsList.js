@@ -103,13 +103,13 @@ student_grouping.groupsList = function(){
 	this.dropFunc = function(groupContainer){
 		// we use currGrp to make sure that the students get dropped once
 		// need to do this because the dropFunc is called for each dragged student
-		if (this.currGrp === null){
+		if (me.currGrp === null){
 			var groupId = $(groupContainer).attr('id');
-			this.currGrp = groupId;
+			me.currGrp = groupId;
 			
 			// find the group object
-			var group = _.find(this.groups, function(group){
-				return group.groupData.id === groupId;
+			var group = _.find(me.groups, function(group){
+				return group.groupData.id.toString() === groupId;
 			});
 			
 			// loop through each student being dragged
@@ -125,7 +125,7 @@ student_grouping.groupsList = function(){
 				// check if are moving between groups
 				if ($(elem).hasClass('dropped-elem')){
 									
-					// find the group this belongs to 
+					// find the group me belongs to 
 					var originalGroupId = $(elem).parents('.group').attr('id');
 									
 					// check if target group is indeed a different group
@@ -135,7 +135,7 @@ student_grouping.groupsList = function(){
 							return g.groupData.id === originalGroupId;
 						});
 						
-						// check that target group doesnt aleady have this student					
+						// check that target group doesnt aleady have me student					
 						var studentId = $(elem).attr('data-studentId');
 						var groupHasStudent = group.hasStudent(studentId);
 										
@@ -181,17 +181,14 @@ student_grouping.groupsList = function(){
 					}					
 				}
 				
-				// TODO randomize color
 				// should create a new group if student was not added to any existing group
 				if (!addedToGroup){
 					
 					var group = {
 					    cohort: {
-					        id: 'g' + me.lastNewGroupIndex++,
+					        id: me.lastNewGroupIndex--,
 					        cohortIdentifier: 'New Group',
-					        cohortDescription: '',
-					        color: '#FFA5A4',
-					        titleColor: '#A9322F'
+					        cohortDescription: ''
 					    },
                         students: []
 			    	};

@@ -31,6 +31,12 @@ student_grouping.init = function(){
             // set up the filter components
             student_grouping.filterComponent.init(data.filters);
 
+            _.each(data.dataElements, function (dataElement) {
+                var dataElem = $("<li><input class='cbox-student-attribute' type='checkbox'"
+                    +   "value='" + dataElement.attributeId + "'/>" + dataElement.attributeName
+                    + "</li>");
+                $("#student-data-popover").find(".student-elements-list").append(dataElem);
+            });
 
             // set up the list controls	
             var listStudentData = _.pluck(me.students, 'studentData');
