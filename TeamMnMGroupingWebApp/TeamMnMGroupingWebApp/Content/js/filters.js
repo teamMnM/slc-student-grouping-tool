@@ -145,10 +145,22 @@ student_grouping.filters = function(){
      */
     this.addSelectedFilter = function(){
     	
+        var selectedAttr = $(this.filterAttributeElem).val();
+        var selectedOperator = $(this.filterOperatorElem).val();
+
     	// get value from either textbox or dropdown
     	var value = $(this.filterValueTxtElem).val();
     	var dropdownVal = $(this.filterValueSelElem).val() !== null ? $(this.filterValueSelElem).val() : [];
-	    	    	    	    
+	    	    	
+        // make sure attribute, operator and value are selected before applying the filter
+    	if (selectedAttr === '') {
+    	    return;
+    	} else if (selectedOperator === '') {
+    	    return;
+    	} else if (value === '' && dropdownVal === '') {
+    	    return;
+    	}
+
 	    if (value === ''){
 	    	// check whether we are checking for a single value or multiple values
 	    	if ($(this.filterValuesSelElem).attr('multiple') === 'multiple'){    		 			    	    		    	
@@ -162,9 +174,9 @@ student_grouping.filters = function(){
     	
     	// get the selected filters     	
     	var filter = {
-    		attributeName : $(this.filterAttributeElem).val(),
-    		attributeId : $(this.filterAttributeElem).val(),
-    		operator : $(this.filterOperatorElem).val(),
+    		attributeName : selectedAttr,
+    		attributeId : selectedAttr,
+    		operator : selectedOperator,
     		value : value,
     		values : dropdownVal
     	}

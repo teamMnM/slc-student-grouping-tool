@@ -7,7 +7,8 @@ student_grouping.group = function(groupData){
 	this.dirty = false;
 	this.group = groupData;
 	this.groupData = groupData.cohort;
-	this.students = groupData.students;
+	this.originalStudents = groupData.students;
+	this.students = [];
 	this.color = null;
 
 	this.groupContainerId = '';
@@ -68,8 +69,7 @@ student_grouping.group = function(groupData){
 										'<div class="group-name-lbl"></div>' + 
 										'<input type="text" class="group-name-txt" style="display:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
 									'<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
-									'<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
-                                    '<span class="group-num-students"></span>' +
+									'<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +                                    
                                     '<div class="group"></div>' +
 									'<div>' +
 										'<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
@@ -125,18 +125,22 @@ student_grouping.group = function(groupData){
 		});
 		
 		$(groupContainer).find(this.delGroupBtnClass).click(function(event){
-			
+		    me.deleteGroup();
 		});
 		
 		$(groupContainer).find(this.groupNameClass).click(function(event){
 			me.makeGroupNameEditable();
 		});
 		
+		$(groupContainer).find(this.saveGroupBtnClass).click(function (event) {
+		    me.saveGroupChanges();
+		});
+
 		this.groupContainerId = groupContainer;
 		this.originalRightMargin = parseInt($(this.groupContainerId).css('margin-right').replace('px',''));
 
 		// render students assigned to this group
-		var studentIds = this.students;
+		var studentIds = this.originalStudents;
 		_.each(studentIds, function(studentId){
 			
 			// TODO refactor dependency on studentsList
@@ -175,10 +179,8 @@ student_grouping.group = function(groupData){
 			});
 			
 			// add student to list of students
-			this.students.push(student);			
+			this.students.push(studentId);
 			student.addGroupIndicator(this.groupData.id, this.color.background);
-
-			//$(this.groupContainerId).find(".group-num-students").html("Number of students: " + this.students.length);
 		}
 	}
 	
@@ -252,9 +254,10 @@ student_grouping.group = function(groupData){
 		var me = this;
 		$("#gc" + me.groupData.id + " .dropped-elem").each(function(index, item){			
 			
+		    var fullStudentData = student_grouping.studentsListComponent.students;
 			var studentId = $(item).attr('data-studentId');
-			var student = _.find(me.students, function(id){
-				return id === studentId;
+			var student = _.find(fullStudentData, function (s) {
+				return s.studentData.id === studentId;
 			});
 			var studentData = student.studentData;
 			
@@ -681,15 +684,91 @@ student_grouping.group = function(groupData){
      * Handle outside click event to hide popover
      */
 	this.handleOutsideClick = function (triggetBtn, container, additionalInstructions){
-	    $(document).unbind('mouseup');
-	    $(document).mouseup(function (e) {
+	    $(document).unbind('click');
+	    $(document).click(function (e) {
 	        if ((!$(container).is(e.target) && $(container).has(e.target).length === 0)
                     && (!$(triggetBtn).is(e.target) && $(triggetBtn).has(e.target).length === 0)) {
 	            $(container).hide();
-	            $(document).unbind('mouseup');
+	            $(document).unbind('click');
 	            additionalInstructions();
 	        }
 	    });
 	}
+    
+    /**
+     * Add new group or update a group
+     */
+	this.saveGroupChanges = function () {
 
+	    var newStudents = _.filter(this.students, function (student) {
+	        var matchingStudent = _.find(me.originalStudents, function (origStudentId) {
+	            return origStudentId === student;
+	        });
+	        return matchingStudent === undefined;
+	    });
+
+	    var studentsToDelete = _.filter(this.originalStudents, function (origStudentId) {
+	        var matchingStudent = _.find(me.students, function (student) {
+	            return origStudentId === student;
+	        });
+	        return matchingStudent === undefined;
+	    });
+
+	    var cohortActionObject = {
+	        cohort: {
+                id: this.groupData.id,
+	            cohortDescription: this.groupData.cohortDescription,
+                cohortIdentifier: this.groupData.cohortIdentifier
+	        },
+            custom: [],
+	        studentsToDelete : studentsToDelete !== null ? studentsToDelete : [],
+	        studentsToCreate : newStudents !== null ? newStudents : []
+	    }
+
+	    // negative ids represent new groups
+	    if (parseInt(this.groupData.id) < 0) {
+	        cohortActionObject.cohort.id = null;
+	        $.ajax({
+	            type: 'POST',
+	            url: 'CreateGroup',
+	            contentType: 'application/json',
+	            data: JSON.stringify(cohortActionObject),
+	            success: function (id) {
+	                me.groupData.id = id;
+	            }
+	        });
+	    } else {
+	        $.ajax({
+	            type: 'POST',
+	            url: 'UpdateGroup',
+	            contentType: 'application/json',
+	            data: JSON.stringify(cohortActionObject),
+	            success: function (msg) {
+	                alert(msg);
+	            },
+	            error: function (errorMsg) {
+	                alert(errorMsg);
+	            }
+	        });
+	    }
+	}
+    
+    /**
+     * Delete this group permanently
+     */
+	this.deleteGroup = function () {
+	    var groupId = this.groupData.id;
+
+	    $.ajax({
+	        type: 'POST',
+	        url: 'DeleteGroup?id=' + groupId,
+	        contentType: 'application/json',
+	        success: function (msg) {
+	            alert(msg);
+	        },
+	        error: function (errorMsg) {
+	            alert(errorMsg);
+	        }
+	    });
+	}
 }

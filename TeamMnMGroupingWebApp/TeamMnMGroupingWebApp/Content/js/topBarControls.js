@@ -83,13 +83,12 @@ student_grouping.topBarControls = function(){
     }
     
     /**
-     * TODO randomize color
      * Adds a new group to the list (unsaved)
      */
     this.addNewGroup = function(event){
     	var group = {
     	    cohort: {
-    	        id: 'g' + student_grouping.groupsListComponent.lastNewGroupIndex++,
+    	        id: student_grouping.groupsListComponent.lastNewGroupIndex--,
     	        cohortIdentifier: 'New Group',
     	        cohortDescription: ''
     	    },
