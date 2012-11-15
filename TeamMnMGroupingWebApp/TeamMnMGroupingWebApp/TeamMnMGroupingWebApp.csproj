@@ -125,6 +125,7 @@
     <Compile Include="Helper\DataElementHelper.cs" />
     <Compile Include="Helper\FilterHelper.cs" />
     <Compile Include="Helper\StudentHelper.cs" />
+    <Compile Include="Models\ActionResponseResult.cs" />
     <Compile Include="Models\CohortActionObject.cs" />
     <Compile Include="Models\CohortDisplayObject.cs" />
     <Compile Include="Models\CohortCustom.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Models\FilterValue.cs" />
     <Compile Include="Models\GroupingDisplayObject.cs" />
     <Compile Include="Models\LessonPlan.cs" />
+    <Compile Include="Models\Result.cs" />
     <Compile Include="Models\SectionDisplayObject.cs" />
     <Compile Include="Models\StudentDisplayObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -189,7 +191,9 @@
     <Content Include="Content\vendor\underscore\js\underscore.min.js" />
     <Content Include="Data\DataElements.txt" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -243,7 +247,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>54097</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:49560/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

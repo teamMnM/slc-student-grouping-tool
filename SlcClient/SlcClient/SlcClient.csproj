@@ -110,6 +110,7 @@
     <Compile Include="Entities\StudentObjectiveAssessment.cs" />
     <Compile Include="Entities\Associations\StudentSectionAssociation.cs" />
     <Compile Include="Entities\Telephone.cs" />
+    <Compile Include="Entities\UserSession.cs" />
     <Compile Include="Enum\AcademicHonorsType.cs" />
     <Compile Include="Enum\AcademicSubjectType.cs" />
     <Compile Include="Enum\AddressType.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Services\CohortService.cs" />
     <Compile Include="Services\SectionService.cs" />
     <Compile Include="Services\ISlcService.cs" />
+    <Compile Include="Services\SessionService.cs" />
     <Compile Include="SlcHttpClient.cs" />
     <Compile Include="Services\StudentService.cs" />
   </ItemGroup>

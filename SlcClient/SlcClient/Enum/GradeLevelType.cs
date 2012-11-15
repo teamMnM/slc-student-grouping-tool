@@ -64,8 +64,8 @@ namespace SlcClient.Enum
         [EnumMember(Value = "Tenth grade")]
         [Description("Tenth grade")]
         TenthGrade,
-        [EnumMember(Value = "Home/Personal")]
-        [Description("Home/Personal")]
+        [EnumMember(Value = "Third grade")]
+        [Description("Third grade")]
         ThirdGrade,
         [EnumMember(Value = "Transitional Kindergarten")]
         [Description("Transitional Kindergarten")]

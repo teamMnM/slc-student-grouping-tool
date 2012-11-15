@@ -17,12 +17,12 @@ namespace SlcClient
         private string _token;
         private const string SLC_API_SANDBOX_URL = "SlcApiSandboxUrl";
 
-        public SlcHttpClient(string token)
+        public SlcHttpClient(string token, string apiEndPoint = "")
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", token);
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.BaseAddress = new Uri(System.Configuration.ConfigurationManager.AppSettings[SLC_API_SANDBOX_URL]);
+            _httpClient.BaseAddress = new Uri(System.Configuration.ConfigurationManager.AppSettings[apiEndPoint == "" ? SLC_API_SANDBOX_URL : apiEndPoint]);
             _token = token;
         }
 
@@ -30,11 +30,11 @@ namespace SlcClient
         {
             try
             {               
-                var response = await _httpClient.GetAsync(endPoint);
+                var response = _httpClient.GetAsync(endPoint);
                 //response.EnsureSuccessStatusCode(); //throw exception if status is non-successful
 
                 //var responseBodyAsText = await response.Content.ReadAsStringAsync();
-                return response;
+                return response.Result;
             }
             catch (Exception ex)
             {
