@@ -107,6 +107,28 @@ namespace TeamMnMGroupingWebApp.Controllers
             
         }
 
+        /// <summary>
+        /// AJAX to this method to delete a cohort by passing in a cohort id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<string> DeleteGroup(string id)
+        {
+            try
+            {
+                var cs = new CohortService(Session["access_token"].ToString());
+                var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(id);
+                var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;
+                await DeleteMultipleAssociation(cs, associationToDelete); //remove associations for cohorts
+                var result = await cs.DeleteById(id);
+                return result.ToString();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> Group()
         {
@@ -352,11 +374,5 @@ namespace TeamMnMGroupingWebApp.Controllers
                 }
             }
         }
-    }
-
-    public class Data
-    {
-        public Task<IEnumerable<Student>> students { get; set; }
-        public Task<IEnumerable<Cohort>> cohorts { get; set; }
     }
 }

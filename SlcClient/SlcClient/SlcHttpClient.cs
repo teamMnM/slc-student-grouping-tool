@@ -81,7 +81,7 @@ namespace SlcClient
             {
                 var strEndPoint = string.Format("{0}{1}", endPoint, id);
                 var response = await _httpClient.DeleteAsync(strEndPoint);
-                response.EnsureSuccessStatusCode();
+                //response.EnsureSuccessStatusCode();
 
                 //var strResponse = await response.Content.ReadAsStringAsync();
                 return response;
