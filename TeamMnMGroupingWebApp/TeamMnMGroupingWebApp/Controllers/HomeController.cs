@@ -279,7 +279,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //var cs = new CohortService(Session["access_token"].ToString());
                 //var cohort = new Cohort();
                 //var random = new Random();
-                //cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
+                cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
                 //cohort.cohortIdentifier = "ACC-TEST-COH-" + random.Next(10);
                 //cohort.cohortType = SlcClient.Enum.CohortType.ExtracurricularActivity;
                 cohort.cohortType = SlcClient.Enum.CohortType.Other;
@@ -322,7 +322,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             //var cohort = new Cohort();
             //var random = new Random();
             //cohort.id = "2012gd-cae52ab2-26f7-11e2-8acf-02786562673b";
-            //cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
+            cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
             //cohort.cohortIdentifier = "ACC-" + DateTime.Now.Ticks.ToString().Substring(0,8);
             //cohort.cohortType = SlcClient.Enum.CohortType.ExtracurricularActivity;
             var result = await cs.Update(cohort);
