@@ -61,11 +61,11 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //if cohort was created successfully then continue to create associations
                 if(cohortResult.completedSuccessfully){
                     //2) start creating student cohort association
-                    var studentsAssociations = new Task<IEnumerable<ActionResponseResult>>();
-
-                    if(obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                    Task<IEnumerable<ActionResponseResult>> studentsAssociations;
+                    if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
                         studentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
-
+                    else
+                        studentsAssociations = null;
                     //3) initial populate of the cohort custom entity
                     var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom)); 
 
@@ -95,15 +95,16 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //1) update cohort
                 var cohortResult = await UpdateCohort(cs, obj.cohort); 
                 //2) create student cohort association
-                var newStudentsAssociations = new Task<IEnumerable<ActionResponseResult>>();
+                Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
                 if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
                     newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
-
+                else
+                    newStudentsAssociations = null;
                 //3) update cohort custom entity
                 var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom));
 
                 //4) remove students from cohort
-                var removeStudents = new Task<IEnumerable<ActionResponseResult>>();
+                Task<IEnumerable<ActionResponseResult>> removeStudents;
                 if (obj.studentsToDelete != null && obj.studentsToDelete.Count() > 0)
                 {
                     //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
@@ -111,8 +112,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //get the studentCohortAssociationId for students to delete
                     var associationToDelete = (from s in obj.studentsToDelete select (from csca in currentStudentCohortAssociation where csca.studentId == s select csca).Single());
                     //delete the studentCohortAssociation
-                    removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete); 
-                }               
+                    removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete);
+                }
+                else
+                    removeStudents = null;
 
                 await Task.WhenAll(newStudentsAssociations, cohortCustom, removeStudents);
 
