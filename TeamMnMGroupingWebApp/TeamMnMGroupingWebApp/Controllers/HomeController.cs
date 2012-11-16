@@ -61,7 +61,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //if cohort was created successfully then continue to create associations
                 if(cohortResult.completedSuccessfully){
                     //2) start creating student cohort association
-                    var studentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
+                    var studentsAssociations = new Task<IEnumerable<ActionResponseResult>>();
+
+                    if(obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                        studentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
 
                     //3) initial populate of the cohort custom entity
                     var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom)); 
@@ -89,16 +92,27 @@ namespace TeamMnMGroupingWebApp.Controllers
             try
             {
                 var cs = new CohortService(Session["access_token"].ToString());
-                var cohortResult = await UpdateCohort(cs, obj.cohort); //1) update cohort
-                var newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate); //2) create student cohort association
-                var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom)); //3) update cohort custom entity
+                //1) update cohort
+                var cohortResult = await UpdateCohort(cs, obj.cohort); 
+                //2) create student cohort association
+                var newStudentsAssociations = new Task<IEnumerable<ActionResponseResult>>();
+                if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                    newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
 
-                //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
-                var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
-                //get the studentCohortAssociationId for students to delete
-                var associationToDelete = (from s in obj.studentsToDelete select (from csca in currentStudentCohortAssociation where csca.studentId == s select csca).Single());
-                //delete the studentCohortAssociation
-                var removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete); 
+                //3) update cohort custom entity
+                var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom));
+
+                //4) remove students from cohort
+                var removeStudents = new Task<IEnumerable<ActionResponseResult>>();
+                if (obj.studentsToDelete != null && obj.studentsToDelete.Count() > 0)
+                {
+                    //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
+                    var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
+                    //get the studentCohortAssociationId for students to delete
+                    var associationToDelete = (from s in obj.studentsToDelete select (from csca in currentStudentCohortAssociation where csca.studentId == s select csca).Single());
+                    //delete the studentCohortAssociation
+                    removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete); 
+                }               
 
                 await Task.WhenAll(newStudentsAssociations, cohortCustom, removeStudents);
 
@@ -152,6 +166,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
             var co = GetCohorts();
             var st = GetStudents();
+
             var dataElements = DataElementHelper.InitializeDataElements();
 
             await Task.WhenAll(co, st);
