@@ -30,7 +30,11 @@ student_grouping.topBarControls = function(){
     	$(this.findGroupDropdownElem).select2();
     	
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
-    	$(this.addNewGroupBtn).click(this.addNewGroup);    	    	
+    	$(this.addNewGroupBtn).click(this.addNewGroup);
+
+    	this.pubSub.subscribe('group-deleted', function (id) {
+    	    me.removeGroup(id);
+    	});
     }
     
     /**
@@ -97,5 +101,17 @@ student_grouping.topBarControls = function(){
     	};
     	
     	me.pubSub.publish('add-group', group);
+    }
+
+    /**
+     * Remove the given group from the list and dropdown
+     */
+    this.removeGroup = function (groupId) {
+        this.groups = _.filter(this.groups, function(g){
+            return g.cohort.id !== groupId;
+        });
+
+        // remove from dropdown list
+        $(me.findGroupDropdownElem).find('option[value="' + groupId + '"]').remove();
     }
 }

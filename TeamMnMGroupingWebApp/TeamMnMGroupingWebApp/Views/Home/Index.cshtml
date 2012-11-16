@@ -15,7 +15,9 @@
 							<div id="studentsBtnGrp" class="btn-group">
 							  <button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
 							  <button id="random-btn" class="student-list-btn btn btn-primary">random</button>
-							  <button id="random-num-btn" class="btn btn-primary"><input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'></button>					 
+							  <button id="random-num-btn" class="btn btn-primary">
+                                  <input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'>
+							  </button>					 
 							</div>
 							<!--<input type="text" id="txtRandomNumInGroup" placeholder="# in a group"/>-->
 						</div>						
@@ -128,7 +130,7 @@
 		    <h3>Unsaved changes warning</h3>
 		  </div>
 		  <div class="modal-body">
-		    <p>Group <span id='group-unsaved-changes-group-name'></span> has unsaved changes. If you remove it these changes will be lost. Continue?</p>
+		    <p id="group-modal-content"></p>
 		  </div>
 		  <div class="modal-footer">
 		    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
@@ -144,6 +146,8 @@
 		<Script src="~/Content/vendor/underscore/js/underscore.min.js"> </Script>
 		<script src="~/Content/vendor/select2/js/select2.min.js"> </script>
 		<script src="~/Content/vendor/pubsub/js/pubsub.js"> </script>
+        <script src="~/Content/vendor/spin/js/spin.min.js"> </script>
+        <script src="~/Content/vendor/spin/js/jquery.spin.js"> </script>
 		
 		<script src="~/Content/vendor/jqplot/js/jquery.jqplot.min.js"> </script>
 		<script src="~/Content/vendor/jqplot/js/jqplot.donutRenderer.min.js"> </script>

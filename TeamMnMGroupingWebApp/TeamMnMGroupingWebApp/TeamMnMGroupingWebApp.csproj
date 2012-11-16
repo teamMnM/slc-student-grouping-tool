@@ -188,6 +188,8 @@
     <Content Include="Content\vendor\select2\css\select2x2.png" />
     <Content Include="Content\vendor\select2\css\spinner.gif" />
     <Content Include="Content\vendor\select2\js\select2.min.js" />
+    <Content Include="Content\vendor\spin\js\jquery.spin.js" />
+    <Content Include="Content\vendor\spin\js\spin.min.js" />
     <Content Include="Content\vendor\underscore\js\underscore.min.js" />
     <Content Include="Data\DataElements.txt" />
     <Content Include="Global.asax" />

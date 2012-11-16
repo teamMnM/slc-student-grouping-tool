@@ -45,6 +45,10 @@ student_grouping.groupsList = function(){
 			me.removeGroup(groupId);
 		});
 		
+		this.pubSub.subscribe('group-deleted', function (groupId) {
+		    me.removeGroup(groupId);
+		});
+
 		this.pubSub.subscribe('assign-random', function(students, numInGroup){
 			me.assignRandomGroups(students, numInGroup);
 		});

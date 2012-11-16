@@ -5,6 +5,7 @@ student_grouping.group = function(groupData){
 	this.pubSub = PubSub;
 	
 	this.dirty = false;
+	this.processing = false;
 	this.group = groupData;
 	this.groupData = groupData.cohort;
 	this.originalStudents = groupData.students;
@@ -100,40 +101,56 @@ student_grouping.group = function(groupData){
 	this.init = function() {
 		var me = this;
 		var groupContainer = $("#gc" + this.groupData.id); 
-		$(groupContainer).find(this.addDataBtnClass).click(function(event){
-			me.showStudentDataPopup();
+		$(groupContainer).find(this.addDataBtnClass).click(function (event) {
+		    if (!me.processing) {
+		        me.showStudentDataPopup();
+		    }
 		});
 		
-		$(groupContainer).find(this.groupInfoBtnClass).click(function(event){
-			me.showMoreInfoPopup();
+		$(groupContainer).find(this.groupInfoBtnClass).click(function (event) {
+		    if (!me.processing) {
+		        me.showMoreInfoPopup();
+		    }
 		});
 		
 		$(groupContainer).find(this.groupAttachmentImgClass).click(function(event){
-			me.showAttachmentPopover();
+		    if (!me.processing) {
+		        me.showAttachmentPopover();
+		    }
 		});
 		
 		$(groupContainer).find(this.groupAttachmentDelImgClass).click(function(event){
-			me.deleteAttachment();
+		    if (!me.processing) {
+		        me.deleteAttachment();
+		    }
 		});
 		
-		$(groupContainer).find(this.expColGroupBtnClass).click(function(event){
+		$(groupContainer).find(this.expColGroupBtnClass).click(function(event){		    
 			me.toggleStudentState();
 		});
 		
 		$(groupContainer).find(this.groupCloseBtnClass).click(function(event){
-			me.closeGroup();
+		    if (!me.processing) {
+		        me.closeGroup();
+		    }
 		});
 		
 		$(groupContainer).find(this.delGroupBtnClass).click(function(event){
-		    me.deleteGroup();
+		    if (!me.processing) {
+		        me.deleteGroup();
+		    }
 		});
 		
 		$(groupContainer).find(this.groupNameClass).click(function(event){
-			me.makeGroupNameEditable();
+		    if (!me.processing) {
+		        me.makeGroupNameEditable();
+		    }
 		});
 		
 		$(groupContainer).find(this.saveGroupBtnClass).click(function (event) {
-		    me.saveGroupChanges();
+		    if (!me.processing) {
+		        me.saveGroupChanges();
+		    }
 		});
 
 		this.groupContainerId = groupContainer;
@@ -638,13 +655,14 @@ student_grouping.group = function(groupData){
 	 *  Save the new group description
 	 */
 	this.saveGroupDescription = function(){
-		var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
-		this.groupData.cohortDescription = newGroupDescription;
-		$(this.groupDescriptionTxtElem).html(newGroupDescription);
-		$(this.groupDescriptionTxtAreaElem).hide();
-		$(this.groupDescriptionTxtElem).show();
-		
-		this.markDirty();
+
+	    var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
+	    this.groupData.cohortDescription = newGroupDescription;
+	    $(this.groupDescriptionTxtElem).html(newGroupDescription);
+	    $(this.groupDescriptionTxtAreaElem).hide();
+	    $(this.groupDescriptionTxtElem).show();
+
+	    this.markDirty();	    
 	}
 	
 	
@@ -732,50 +750,53 @@ student_grouping.group = function(groupData){
 	    if (parseInt(this.groupData.id) < 0) {
 	        cohortActionObject.cohort.id = null;
 	        successHandler = me.createGroupSuccessHandler;
+	        errorHandler = me.createGroupErrorHandler;
 	    } else {
 	        method = 'UpdateGroup';
-	        $.ajax({
-	            type: 'POST',
-	            url: 'UpdateGroup',
-	            contentType: 'application/json',
-	            data: JSON.stringify(cohortActionObject),
-	            success: function (msg) {
-	                alert(msg);
-	            },
-	            error: function (errorMsg) {
-	                alert(errorMsg);
-	            }
-	        });
+	        successHandler = me.updateGroupSuccessHandler;
+	        errorHandler = me.updateGroupErrorHandler;
 	    }
 
 	    $.ajax({
 	        type: 'POST',
-	        url: 'CreateGroup',
+	        url: method,
 	        contentType: 'application/json',
 	        data: JSON.stringify(cohortActionObject),
-	        success: function (id) {
-	            me.groupData.id = id;
-	        }
+	        success: function (result) {
+	            if (result.completedSuccessfully) {
+	                me.successHandler(result);
+	            } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess){
+	                me.errorHandler(result);
+	            }
+	        },
+            error: function(result) {
+                // should implement exception handling
+            }
 	    });
+	    me.toggleGroupContainerProcessingState(true);
 	}
     
     /**
      * Delete this group permanently
      */
 	this.deleteGroup = function () {
+
+
 	    var groupId = this.groupData.id;
 
 	    $.ajax({
 	        type: 'POST',
 	        url: 'DeleteGroup?id=' + groupId,
 	        contentType: 'application/json',
-	        success: function (msg) {
-	            alert(msg);
+	        success: function (result) {
+	            me.deleteGroupSuccessHandler(result);
 	        },
-	        error: function (errorMsg) {
-	            alert(errorMsg);
+	        error: function (result) {
+	            me.deleteGroupErrorHandler(result);
 	        }
 	    });
+
+	    me.toggleGroupContainerProcessingState(true);
 	}
 
     /**
@@ -783,5 +804,109 @@ student_grouping.group = function(groupData){
      */
 	this.createGroupSuccessHandler = function(result) {
 	    me.groupData.id = result.objectId;
+
+	    // Let user know the created was successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group has been successfully created.',
+            'top',
+            'manual',
+            3000);
+
+	    me.toggleGroupContainerProcessingState(false);
+	    this.dirty = false;
+	}
+
+    /**
+     * Handle error with saving a group
+     */
+	this.createGroupErrorHandler = function (result) {
+	    me.toggleGroupContainerProcessingState(false);
+
+	    // Let user know the create was not successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group could not be created. Please try again later or contact your system administrator.',
+            'top',
+            'manual',
+            3000);
+	}
+
+    /**
+     *
+     */
+	this.updateGroupSuccessHandler = function (result) {
+	    me.toggleGroupContainerProcessingState(false);
+
+        // Let user know the save was successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group has been successfully updated.',
+            'top',
+            'manual',
+            3000);
+
+	    this.dirty = false;
+	}
+
+    /**
+     *
+     */
+	this.updateGroupErrorHandler = function (result) {
+	    me.toggleGroupContainerProcessingState(false);
+	    // Let user know the update was not successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group could not be updated. Please try again later or contact your system administrator.',
+            'top',
+            'manual',
+            3000);
+	}
+
+    /**
+     *
+     */
+	this.deleteGroupSuccessHandler = function (result) {
+	    me.toggleGroupContainerProcessingState(false);
+	    this.pubSub.publish('group-deleted', this.groupData.id);
+
+	    // Let user know the delete was successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group has been successfully deleted.',
+            'top',
+            'manual',
+            2000);
+	    setTimeout(function () {
+	        $(me.groupContainerId).remove();
+	    }, 2000);
+	}
+
+    /**
+     *
+     */
+	this.deleteGroupErrorHandler = function (result) {
+	    me.toggleGroupContainerProcessingState(false);
+	    // Let user know the delete was not successful
+	    utils.uiUtils.showTooltip(
+            $(this.groupContainerId).find(this.groupNameLblClass),
+            'Group could not be deleted. Please try again later or contact your system administrator.',
+            'top',
+            'manual',
+            3000);
+	}
+
+    /**
+     * If doing an ajax request, fade out the background and display spinner
+     */
+	this.toggleGroupContainerProcessingState = function(processing){
+	    if (processing){
+	        $(me.groupContainerId).css('opacity', 0.5);
+	        $(me.groupContainerId).spin();
+	    } else {
+	        $(me.groupContainerId).css('opacity', 1);
+	        $(me.groupContainerId).spin(false);
+	    }
+	    this.processing = processing;
 	}
 }

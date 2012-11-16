@@ -18,4 +18,21 @@ utils.arrayUtils = {
 
 utils.uiUtils = {
 
+    /**
+     * Create a tooltip on the fly for the given element     
+     */
+    showTooltip: function (elem, msg, placement, trigger, timeout) {
+        // create tooltip on the fly
+        $(elem).tooltip('destroy');
+        $(elem).tooltip({
+            title: msg,
+            placement: placement,
+            trigger: trigger
+        });
+
+        $(elem).tooltip('show');
+        setTimeout(function () {
+            $(elem).tooltip('hide');
+        }, timeout);
+    }
 }
