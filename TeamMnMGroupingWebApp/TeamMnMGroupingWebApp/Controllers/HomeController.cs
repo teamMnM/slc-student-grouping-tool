@@ -61,17 +61,23 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //if cohort was created successfully then continue to create associations
                 if(cohortResult.completedSuccessfully){
                     //2) start creating student cohort association
-                    Task<IEnumerable<ActionResponseResult>> studentsAssociations;
+                    Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
                     if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                        studentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
+                        newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
                     else
-                        studentsAssociations = null;
+                        newStudentsAssociations = null;
                     //3) initial populate of the cohort custom entity
-                    var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom)); 
+                    var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom));
 
-                    await Task.WhenAll(studentsAssociations, cohortCustom);
+                    //contruct a list of tasks we're waiting for
+                    var tasksToWaitFor = new List<Task>();
+                    if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
+                    if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
 
-                    DetermineFailedToCreateFor(cohortResult, studentsAssociations);                  
+                    await Task.WhenAll(tasksToWaitFor);
+
+                    if(newStudentsAssociations != null)
+                        DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);                  
                 }
                 return cohortResult;
             }
@@ -117,7 +123,13 @@ namespace TeamMnMGroupingWebApp.Controllers
                 else
                     removeStudents = null;
 
-                await Task.WhenAll(newStudentsAssociations, cohortCustom, removeStudents);
+                //contruct a list of tasks we're waiting for
+                var tasksToWaitFor = new List<Task>();
+                if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
+                if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
+                if (removeStudents != null) tasksToWaitFor.Add(removeStudents);
+
+                await Task.WhenAll(tasksToWaitFor);
 
                 DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);
                 DetermineFailedToDeleteFor(cohortResult, removeStudents);
