@@ -726,18 +726,14 @@ student_grouping.group = function(groupData){
 	    }
 
 	    // negative ids represent new groups
+	    var method = 'CreateGroup';
+	    var successHandler = null;
+	    var errorHandler = null;
 	    if (parseInt(this.groupData.id) < 0) {
 	        cohortActionObject.cohort.id = null;
-	        $.ajax({
-	            type: 'POST',
-	            url: 'CreateGroup',
-	            contentType: 'application/json',
-	            data: JSON.stringify(cohortActionObject),
-	            success: function (id) {
-	                me.groupData.id = id;
-	            }
-	        });
+	        successHandler = me.createGroupSuccessHandler;
 	    } else {
+	        method = 'UpdateGroup';
 	        $.ajax({
 	            type: 'POST',
 	            url: 'UpdateGroup',
@@ -751,6 +747,16 @@ student_grouping.group = function(groupData){
 	            }
 	        });
 	    }
+
+	    $.ajax({
+	        type: 'POST',
+	        url: 'CreateGroup',
+	        contentType: 'application/json',
+	        data: JSON.stringify(cohortActionObject),
+	        success: function (id) {
+	            me.groupData.id = id;
+	        }
+	    });
 	}
     
     /**
@@ -770,5 +776,12 @@ student_grouping.group = function(groupData){
 	            alert(errorMsg);
 	        }
 	    });
+	}
+
+    /**
+     * Handle successful saving of group
+     */
+	this.createGroupSuccessHandler = function(result) {
+	    me.groupData.id = result.objectId;
 	}
 }
