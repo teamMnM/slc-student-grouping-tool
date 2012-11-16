@@ -131,8 +131,8 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 await Task.WhenAll(tasksToWaitFor);
 
-                DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);
-                DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);
+                if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
 
                 //remove cohort from cache after an update
                 HttpContext.Cache.Remove(obj.cohort.id);
