@@ -20,17 +20,20 @@ namespace TeamMnMGroupingWebApp.Helper
 
         public static async Task<StudentDisplayObject> GetStudentDisplayObject(StudentService ss, Student student)
         {
+            //check to see if the item is already in cache. if so, return the cache item
+            var cache = (StudentDisplayObject)HttpContext.Current.Cache[student.id];
+            if (cache != null)
+                return cache;
+
             var sections = GetSectionsByStudentId(ss, student.id);
             var assessments = GetStudentAssessmentsByStudentId(ss, student.id);
             var academicRecords = GetAllStudentsAcademicRecords(ss);
 
-            await Task.WhenAll(sections, assessments, academicRecords);
+            await Task.WhenAll(sections, assessments, academicRecords);           
 
-            //HttpContext.Current.Cache.Insert(ACADEMIC_RECORDS_CACHE_KEY, academicRecords);
-
-            var result = MapStudentToStudentDisplayObject(student, sections.Result, assessments.Result, academicRecords.Result);
-
-            return result;
+            var sdo = MapStudentToStudentDisplayObject(student, sections.Result, assessments.Result, academicRecords.Result);
+            HttpContext.Current.Cache.Insert(student.id, sdo);
+            return sdo;
         }
 
         public static async Task<IEnumerable<StudentAcademicRecord>> GetAllStudentsAcademicRecords(StudentService ss)

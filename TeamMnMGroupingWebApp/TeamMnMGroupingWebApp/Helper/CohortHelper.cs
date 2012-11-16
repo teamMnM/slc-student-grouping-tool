@@ -14,6 +14,11 @@ namespace TeamMnMGroupingWebApp.Helper
     {
         public static async Task<CohortDisplayObject> GetCohortDisplayObject(CohortService cs, Cohort cohort)
         {
+            //check to see if the item is already in cache. if so, return the cache item
+            var cache = (CohortDisplayObject)HttpContext.Current.Cache[cohort.id];
+            if (cache != null)
+                return cache;
+
             var students = GetStudentsByCohortId(cs, cohort.id);
             var custom = GetCohortCustomByCohortId(cs, cohort.id);
 
@@ -24,6 +29,7 @@ namespace TeamMnMGroupingWebApp.Helper
             displayObject.students = from s in students.Result select s.id;
             displayObject.custom = JsonConvert.DeserializeObject<CohortCustom>(custom.Result); ;
 
+            HttpContext.Current.Cache.Insert(cohort.id, displayObject);
             return displayObject;
         }
 

@@ -13,6 +13,7 @@ using TeamMnMGroupingWebApp.Controllers;
 using TeamMnMGroupingWebApp.Models;
 using TeamMnMGroupingWebApp.Helper;
 using System.Net.Http;
+using System.Web.Caching;
 
 namespace TeamMnMGroupingWebApp.Controllers
 {
@@ -103,6 +104,9 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);
                 DetermineFailedToDeleteFor(cohortResult, removeStudents);
+
+                //remove cohort from cache after an update
+                HttpContext.Cache.Remove(obj.cohort.id);
 
                 return cohortResult;
             }
@@ -199,7 +203,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="cs">the service to use for this action</param>
         /// <param name="associations">the StudentCohortAssociations to create</param>
-        /// <returns></returns>
+        /// <returns>list of results</returns>
         public async Task<IEnumerable<ActionResponseResult>> CreateMultipleStudentCohortAssociations(CohortService cs, string cId, IEnumerable<string> sl)
         {
             var result = await Task.WhenAll(from s in sl select CreateOneStudentCohortAssociation(cs, cId, s));          
@@ -211,7 +215,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="cs">the service to use for this action</param>
         /// <param name="associations">the StudentCohortAssociation to create</param>
-        /// <returns></returns>
+        /// <returns>result of this action</returns>
         public async Task<ActionResponseResult> CreateOneStudentCohortAssociation(CohortService cs, string cId, string sId)
         {
             var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
@@ -225,7 +229,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="cs">the service to use for this action</param>
         /// <param name="associations">the StudentCohortAssociations to delete</param>
-        /// <returns></returns>
+        /// <returns>result of this action</returns>
         public async Task<IEnumerable<ActionResponseResult>> DeleteMultipleStudentCohortAssociations(CohortService cs, IEnumerable<StudentCohortAssociation> associations)
         {
             var result = await Task.WhenAll(from a in associations select DeleteOneStudentCohortAssociation(cs, a));
@@ -237,7 +241,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="cs">service to use for this action</param>
         /// <param name="association">the StudentCohortAssociation to delete</param>
-        /// <returns></returns>
+        /// <returns>result of this action</returns>
         public async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
             var result = await cs.DeleteStudentCohortAssociationById(association.id);
