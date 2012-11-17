@@ -39,6 +39,7 @@
 }
 
 #student-controls {
+    margin-left:0.2em;
 	margin-bottom: 1.6em;
 }
 
@@ -55,32 +56,53 @@
 /**********************
  * STUDENT LIST
  *********************/
+
+#studentsBtnGrp {
+    width:100%;
+}
+
+#studentsBtnGrp > .btn {
+    width:33.3%;
+}
+
 .sidebar {
-	margin-right: 1.5em;
+	
+}
+
+#searchBox {
+    position:relative;
 }
 
 #txtStudentSearchBox {
-    width:13.5em;
+    width:85%;
     margin-left:1em;
+}
+
+#search-student-icon {
+    width: 1.5em;
+    position: absolute;
+    margin-left: -2em;
+    cursor: pointer;
 }
 
 #studentList {
 	list-style: none;
 	margin:0;
+    width:100%;
 }
 
 #studentListDiv {
     box-shadow: 0.2em 0.1em 1em #CCC;
     padding-top: 0.1em;
     margin-top: 0.5em;
-    width: 15.6em;
+    width: 100%;
 }
 
 .studentListItem {
-	width: 13em;
+	width: 85%;
 	height: 4.2em;
 	background-color: #F2F2F2;
-    margin: 1em auto auto auto;
+    margin: 0.8em auto auto auto;
 	padding:0.8em 0.5em 0 0;
 	font-size:0.9em;
 }
@@ -419,15 +441,19 @@
  * TOP BAR
  *********************/
 #filter-attribute {
-	width: 15em;
+	width: 100%;
 }
 
 #filter-operator {
-	width: 15em;
+	width: 100%;
 }
 
 #filter-value {
-	width:11em;
+	width:100%;
+}
+
+#filter-values {
+    width:100%;
 }
 
 .selected-filter{
