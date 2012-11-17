@@ -11,7 +11,8 @@
 		<div>
 			<div class="row-fluid">
 					<div class="sidebar span2">
-						<div id="student-controls">
+						<div class="row-fluid">
+                        <div id="student-controls" class="span12">
 							<div id="studentsBtnGrp" class="btn-group">
 							  <button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
 							  <button id="random-btn" class="student-list-btn btn btn-primary">random</button>
@@ -21,52 +22,82 @@
 							</div>
 							<!--<input type="text" id="txtRandomNumInGroup" placeholder="# in a group"/>-->
 						</div>						
-						<div id="studentListDiv">							
+						<div id="studentListDiv" class="span12">							
                             <div id="searchBox">
 							    <input id="txtStudentSearchBox" placeholder="search by name" />
+                                <img id="search-student-icon" src="~/Content/img/search-icon.png" />
 						    </div>
 							<ul id="studentList">
 								
 							</ul>
 						</div>
+                       </div>
 					</div>
-					<div class="content span9">
-						<div class="row top-bar-controls">
-							<button id="back-btn" class="btn btn-info">back</button>
-							<button id="add-new-group-btn" class="btn btn-success">+</button>
-							<span> add a new group</span>
-							<span>|</span>
-							<span> add an existing group</span>
-							<select id="find-group-dropdown" data-placeholder="find an existing group">
-								<option></option>
-							</select>
-							<button id="add-existing-group-btn" class="btn btn-success">Add</button>							
-							<img id="img-print-btn" class="top-bar-img-btn" src="~/Content/img/printer-icon.png"/>
-							<img id="img-save-btn" class="top-bar-img-btn" src="~/Content/img/save-icon.png"/>
-							<span id="logout-btn">log out</span>
-						</div>
-						<div class="row filter-topbar">
-							<div>
-								<select id="filter-attribute" data-placeholder="Choose an attribute">
-									<option></option>								
-								</select>
-								<select id="filter-operator" data-placeholder="Choose an operator">
-									<option class="filter-operator-default-option"></option>							
-								</select>
-								<input type="text" id="filter-value"/>
-								<select id="filter-values" style="display:none" data-placeholder="Choose a value">
-									<option></option>									
-								</select>
-								<button id="filter-add-btn" class="btn">Add</button>								
-							</div>
-						</div>						
-						<div class="select2-container select2-container-multi" style="border: none">
-							<ul id="selected-filters" class="select2-choices">
+					<div class="content span10">
+						<div class="row-fluid">
+                            <div class="span12 top-bar-controls">
+							    <div class='row-fluid'>
+                                    <div class="span1">
+                                        <button id="back-btn" class="btn btn-info">back</button>
+                                    </div>
+                                    <div class="span8">
+							            <div class="row-fluid">
+                                            <div class="span1">
+                                                <button id="add-new-group-btn" class="btn btn-success">+</button>
+                                            </div>
+                                            <div class="span4">
+							                    <span> add a new group</span>
+							                    <span>|</span>
+							                    <span> add an existing group</span>
+                                            </div>
+                                            <div class="span6">
+							                    <select id="find-group-dropdown" data-placeholder="find an existing group">
+								                    <option></option>
+							                    </select>
+                                            </div>
+                                            <div class="span1">
+							                    <button id="add-existing-group-btn" class="btn btn-success">Add</button>							
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span3">
+							            <img id="img-print-btn" class="top-bar-img-btn" src="~/Content/img/printer-icon.png"/>
+							            <img id="img-save-btn" class="top-bar-img-btn" src="~/Content/img/save-icon.png"/>
+							            <span id="logout-btn">log out</span>
+                                    </div>
+                                </div>
+						    </div>
+						    <div class="span12 filter-topbar">
+							    <div class="row-fluid">
+                                    <div class="span2">
+								        <select id="filter-attribute" data-placeholder="Choose an attribute">
+									        <option></option>								
+								        </select>
+                                    </div>
+                                    <div class="span2">
+								        <select id="filter-operator" data-placeholder="Choose an operator">
+									        <option class="filter-operator-default-option"></option>							
+								        </select>
+                                    </div>
+								    <div class="span6">
+                                        <input type="text" id="filter-value"/>
+								        <select id="filter-values" style="display:none" data-placeholder="Choose a value">
+									        <option></option>									
+								        </select>
+								    </div>
+								    <div class="span2">
+                                        <button id="filter-add-btn" class="btn">Add</button>								
+                                    </div>
+							    </div>
+						    </div>						
+						    <div class="span12 select2-container select2-container-multi" style="border: none">
+							    <ul id="selected-filters" class="select2-choices">
 								
-							</ul>
-						</div>
-						<div class="row groups-area">							
+							    </ul>
+						    </div>
+						    <div class="span12 groups-area">							
 							
+						    </div>
 						</div>
 					</div>
 				</div>
