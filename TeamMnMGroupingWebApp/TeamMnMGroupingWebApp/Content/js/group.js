@@ -657,6 +657,12 @@ student_grouping.group = function(groupData){
 	this.saveGroupDescription = function(){
 
 	    var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
+
+        // if no input, then set default name
+	    if (/\S/.test(newGroupDescription)) {
+	        newGroupDescription = 'New Group';
+	    }
+
 	    this.groupData.cohortDescription = newGroupDescription;
 	    $(this.groupDescriptionTxtElem).html(newGroupDescription);
 	    $(this.groupDescriptionTxtAreaElem).hide();
@@ -781,22 +787,32 @@ student_grouping.group = function(groupData){
      */
 	this.deleteGroup = function () {
 
+	    var groupId = me.groupData.id;
 
-	    var groupId = this.groupData.id;
+        // make sure we are not deleting newly created, unsaved groups
+	    if (groupId < 0) {
+	        // Let user know the created was successful
+	        utils.uiUtils.showTooltip(
+                $(me.groupContainerId).find(me.groupNameLblClass),
+                'Cannot delete this unsaved new group.',
+                'top',
+                'manual',
+                3000);
+	    } else {
+	        $.ajax({
+	            type: 'POST',
+	            url: 'DeleteGroup?id=' + groupId,
+	            contentType: 'application/json',
+	            success: function (result) {
+	                me.deleteGroupSuccessHandler(result);
+	            },
+	            error: function (result) {
+	                me.deleteGroupErrorHandler(result);
+	            }
+	        });
 
-	    $.ajax({
-	        type: 'POST',
-	        url: 'DeleteGroup?id=' + groupId,
-	        contentType: 'application/json',
-	        success: function (result) {
-	            me.deleteGroupSuccessHandler(result);
-	        },
-	        error: function (result) {
-	            me.deleteGroupErrorHandler(result);
-	        }
-	    });
-
-	    me.toggleGroupContainerProcessingState(true);
+	        me.toggleGroupContainerProcessingState(true);
+	    }
 	}
 
     /**
@@ -807,7 +823,7 @@ student_grouping.group = function(groupData){
 
 	    // Let user know the created was successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group has been successfully created.',
             'top',
             'manual',
@@ -825,7 +841,7 @@ student_grouping.group = function(groupData){
 
 	    // Let user know the create was not successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group could not be created. Please try again later or contact your system administrator.',
             'top',
             'manual',
@@ -840,7 +856,7 @@ student_grouping.group = function(groupData){
 
         // Let user know the save was successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group has been successfully updated.',
             'top',
             'manual',
@@ -856,7 +872,7 @@ student_grouping.group = function(groupData){
 	    me.toggleGroupContainerProcessingState(false);
 	    // Let user know the update was not successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group could not be updated. Please try again later or contact your system administrator.',
             'top',
             'manual',
@@ -868,11 +884,11 @@ student_grouping.group = function(groupData){
      */
 	this.deleteGroupSuccessHandler = function (result) {
 	    me.toggleGroupContainerProcessingState(false);
-	    this.pubSub.publish('group-deleted', this.groupData.id);
+	    me.pubSub.publish('group-deleted', me.groupData.id);
 
 	    // Let user know the delete was successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group has been successfully deleted.',
             'top',
             'manual',
@@ -889,7 +905,7 @@ student_grouping.group = function(groupData){
 	    me.toggleGroupContainerProcessingState(false);
 	    // Let user know the delete was not successful
 	    utils.uiUtils.showTooltip(
-            $(this.groupContainerId).find(this.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupNameLblClass),
             'Group could not be deleted. Please try again later or contact your system administrator.',
             'top',
             'manual',

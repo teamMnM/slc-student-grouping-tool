@@ -16,9 +16,9 @@
 							<div id="studentsBtnGrp" class="btn-group">
 							  <button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
 							  <button id="random-btn" class="student-list-btn btn btn-primary">random</button>
-							  <button id="random-num-btn" class="btn btn-primary">
+							  <div id="random-num-btn" class="btn btn-primary">
                                   <input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'>
-							  </button>					 
+							  </div>					 
 							</div>
 							<!--<input type="text" id="txtRandomNumInGroup" placeholder="# in a group"/>-->
 						</div>						
@@ -41,14 +41,22 @@
                                         <button id="back-btn" class="btn btn-info">back</button>
                                     </div>
                                     <div class="span8">
-							            <div class="row-fluid">
-                                            <div class="span1">
-                                                <button id="add-new-group-btn" class="btn btn-success">+</button>
-                                            </div>
-                                            <div class="span4">
-							                    <span> add a new group</span>
-							                    <span>|</span>
-							                    <span> add an existing group</span>
+							            <div class="row-fluid">                                           
+                                            <div class="span5">
+							                    <div class="row-fluid">
+                                                     <div class="span1">
+                                                        <button id="add-new-group-btn" class="btn btn-success">+</button>
+                                                    </div>
+                                                    <div class="span5">
+                                                       <span> add a new group</span>
+                                                    </div>
+                                                    <div class="span1">
+                                                        <span>|</span>
+                                                    </div>
+                                                    <div class="span5">
+                                                        <span> add an existing group</span>
+                                                    </div>
+							                    </div>
                                             </div>
                                             <div class="span6">
 							                    <select id="find-group-dropdown" data-placeholder="find an existing group">
@@ -67,30 +75,30 @@
                                     </div>
                                 </div>
 						    </div>
-						    <div class="span12 filter-topbar">
+						    <div class="span11 filter-topbar">
 							    <div class="row-fluid">
-                                    <div class="span2">
+                                    <div class="span3">
 								        <select id="filter-attribute" data-placeholder="Choose an attribute">
 									        <option></option>								
 								        </select>
                                     </div>
-                                    <div class="span2">
+                                    <div class="span3">
 								        <select id="filter-operator" data-placeholder="Choose an operator">
 									        <option class="filter-operator-default-option"></option>							
 								        </select>
                                     </div>
-								    <div class="span6">
+								    <div class="span5">
                                         <input type="text" id="filter-value"/>
 								        <select id="filter-values" style="display:none" data-placeholder="Choose a value">
 									        <option></option>									
 								        </select>
 								    </div>
-								    <div class="span2">
+								    <div class="span1">
                                         <button id="filter-add-btn" class="btn">Add</button>								
                                     </div>
 							    </div>
 						    </div>						
-						    <div class="span12 select2-container select2-container-multi" style="border: none">
+						    <div class="span11 select2-container select2-container-multi" style="border: none">
 							    <ul id="selected-filters" class="select2-choices">
 								
 							    </ul>

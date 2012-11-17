@@ -45,8 +45,10 @@ student_grouping.init = function(){
             $(".multidraggable").multidraggable(
             {
                 drag: function (event, ui) {
+                    var originalWidth = $(ui.helper.context).width();
+                    $(ui.helper[0]).width(originalWidth);
                     student_grouping.groupsListComponent.currGrp = null;
-                },
+                },                
                 revert: "invalid",
                 "helper": "clone",
                 "opacity": 0.7
