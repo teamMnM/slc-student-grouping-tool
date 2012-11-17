@@ -28,6 +28,9 @@ student_grouping.topBarControls = function(){
     	});    	    
     	
     	$(this.findGroupDropdownElem).select2();
+    	setTimeout(function () {
+    	    $(".select2-container").width('100%');
+    	}, 500);
     	
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
     	$(this.addNewGroupBtn).click(this.addNewGroup);

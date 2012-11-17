@@ -91,7 +91,8 @@ student_grouping.filters = function(){
     		$(me.filterOperatorElem).append(me.createOption(op, op));
     	});
     	$(this.filterOperatorElem).select2( {width: 'element'} );
-    	
+    	    	
+        $(".select2-container").width("100%");
     	
     }
     
@@ -135,7 +136,7 @@ student_grouping.filters = function(){
     			width: 'element', 
     			closeOnSelect: false
     		} );
-    		
+    		$(".select2-container").width("100%");
     		$(this.filterValueTxtElem).hide();
     	}
     }
