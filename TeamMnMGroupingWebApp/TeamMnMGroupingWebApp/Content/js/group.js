@@ -764,9 +764,9 @@ student_grouping.group = function(groupData){
 	        data: JSON.stringify(cohortActionObject),
 	        success: function (result) {
 	            if (result.completedSuccessfully) {
-	                me.successHandler(result);
+	                successHandler(result);
 	            } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess){
-	                me.errorHandler(result);
+	                errorHandler(result);
 	            }
 	        },
             error: function(result) {

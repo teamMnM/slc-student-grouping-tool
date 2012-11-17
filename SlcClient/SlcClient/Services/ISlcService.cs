@@ -16,8 +16,8 @@ namespace SlcClient.Services
 
         Task<HttpResponseMessage> Create(T obj);
 
-        Task<HttpStatusCode> Update(T obj);
+        Task<HttpResponseMessage> Update(T obj);
 
-        Task<HttpStatusCode> DeleteById(string id);
+        Task<HttpResponseMessage> DeleteById(string id);
     }
 }

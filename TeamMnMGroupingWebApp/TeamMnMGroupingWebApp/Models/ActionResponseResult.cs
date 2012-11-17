@@ -17,5 +17,10 @@ namespace TeamMnMGroupingWebApp.Models
         /// data associated with the response
         /// </summary>
         public string data { get; set; }
+
+        /// <summary>
+        /// response message
+        /// </summary>
+        public string message {get; set;}
     }
 }

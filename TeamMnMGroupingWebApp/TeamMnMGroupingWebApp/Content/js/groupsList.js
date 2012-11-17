@@ -136,7 +136,7 @@ student_grouping.groupsList = function(){
 					if (originalGroupId !== groupId) {				
 						// find the group object
 						var originalGroup = _.find(me.groups, function(g){
-							return g.groupData.id === originalGroupId;
+							return g.groupData.id.toString() === originalGroupId;
 						});
 						
 						// check that target group doesnt aleady have me student					

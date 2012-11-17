@@ -127,12 +127,12 @@ namespace SlcClient.Services
             throw new NotImplementedException("Creating student is not allowed");
         }
 
-        public async Task<HttpStatusCode> Update(Student obj)
+        public async Task<HttpResponseMessage> Update(Student obj)
         {
             throw new NotImplementedException("Updating student is not allowed");
         }
 
-        public async Task<HttpStatusCode> DeleteById(string id)
+        public async Task<HttpResponseMessage> DeleteById(string id)
         {
             throw new NotImplementedException("Deleting student is not allowed");
         }

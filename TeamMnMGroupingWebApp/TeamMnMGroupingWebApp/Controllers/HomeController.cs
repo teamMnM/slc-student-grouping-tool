@@ -50,7 +50,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<Result> CreateGroup(CohortActionObject obj)
+        public async Task<ActionResult> CreateGroup(CohortActionObject obj)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     if(newStudentsAssociations != null)
                         DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);                  
                 }
-                return cohortResult;
+                return Json(cohortResult, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -93,7 +93,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<Result> UpdateGroup(CohortActionObject obj)
+        public async Task<ActionResult> UpdateGroup(CohortActionObject obj)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //remove cohort from cache after an update
                 HttpContext.Cache.Remove(obj.cohort.id);
 
-                return cohortResult;
+                return Json(cohortResult, JsonRequestBehavior.AllowGet); 
             }
             catch (Exception e)
             {
@@ -152,16 +152,25 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> DeleteGroup(string id)
+        public async Task<ActionResult> DeleteGroup(string id)
         {
             try
             {
                 var cs = new CohortService(Session["access_token"].ToString());
                 var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
-                //var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;
-                await DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
-                var result = await cs.DeleteById(id);
-                return result.ToString();
+                ////var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;               
+                var cohortResult = await DeleteCohort(cs, id);
+
+                if (associationToDelete != null && associationToDelete.Count() > 0)
+                {
+                    var removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
+                    DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                }
+                    
+                //remove cohort from cache after an update
+                HttpContext.Cache.Remove(id);
+
+                return Json(cohortResult, JsonRequestBehavior.AllowGet); 
             }
             catch (Exception e)
             {
@@ -251,7 +260,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStudentCohortAssociation(a);
 
-            return new ActionResponseResult { data = sId, status = result };
+            return new ActionResponseResult { data = sId, status = result.StatusCode, message = result.Content.ReadAsStringAsync().Result };
         }
 
         /// <summary>
@@ -275,7 +284,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         public async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
             var result = await cs.DeleteStudentCohortAssociationById(association.id);
-            return new ActionResponseResult { data = association.studentId, status = result };
+            return new ActionResponseResult { data = association.studentId, status = result.StatusCode , message = result.Content.ReadAsStringAsync().Result  };
         }
 
         /// <summary>
@@ -305,14 +314,17 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// Delete a cohort
         /// </summary>
         /// <param name="id">the id of the cohort to delete</param>
-        public void DeleteCohort(string id)
+        public async Task<Result> DeleteCohort(CohortService cs, string id)
         {
             try
             {
-                var c = new CohortService(Session["access_token"].ToString());
-                var result = c.DeleteById(id);
-                //return result;
-                Response.Redirect(MAIN);
+                var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful
+                var response = await cs.DeleteById(id);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                    result.completedSuccessfully = true;
+
+                return result;
             }
             catch
             {
@@ -376,7 +388,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     
                 var response = await cs.Update(cohort);
 
-                if (response == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                     result.completedSuccessfully = true;
 
                 return result;
@@ -396,13 +408,13 @@ namespace TeamMnMGroupingWebApp.Controllers
         private static void DetermineFailedToCreateFor(Result result, Task<IEnumerable<ActionResponseResult>> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.Result.Any(a => a.status != HttpStatusCode.Created);
+            result.completedSuccessfully = associations.Result.All(a => a.status == HttpStatusCode.Created);
             if (!result.completedSuccessfully)
                 result.partialCreateSuccess = associations.Result.Any(a => a.status == HttpStatusCode.Created);
             else
                 result.partialCreateSuccess = false;
 
-            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.Created select r.data;
+            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.Created select r;
         }
 
         /// <summary>
@@ -413,13 +425,13 @@ namespace TeamMnMGroupingWebApp.Controllers
         private static void DetermineFailedToDeleteFor(Result result, Task<IEnumerable<ActionResponseResult>> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.Result.Any(a => a.status != HttpStatusCode.NoContent);
+            result.completedSuccessfully = associations.Result.All(a => a.status == HttpStatusCode.NoContent);
             if (!result.completedSuccessfully)
                 result.partialDeleteSuccess = associations.Result.Any(a => a.status == HttpStatusCode.NoContent);
             else
                 result.partialDeleteSuccess = false;
 
-            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.NoContent select r.data;
+            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.NoContent select r;
         }
 
         /// <summary>

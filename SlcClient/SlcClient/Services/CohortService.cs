@@ -72,22 +72,22 @@ namespace SlcClient.Services
         /// Update a cohort by ID
         /// </summary>
         /// <param name="obj">the cohort to update</param>
-        /// <returns>status of the request</returns>
-        public async Task<HttpStatusCode> Update(Cohort obj)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> Update(Cohort obj)
         {
             var response = await _client.PutData(Constants.Cohort.ALL + obj.id, obj);
-            return response.StatusCode;
+            return response;
         }
 
         /// <summary>
         /// Delete a cohort by id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>status of the request</returns>
-        public async Task<HttpStatusCode> DeleteById(string id)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> DeleteById(string id)
         {
             var response = await _client.DeleteData(Constants.Cohort.ALL, id);
-            return response.StatusCode;
+            return response;
         }
 
         /// <summary>
@@ -126,44 +126,44 @@ namespace SlcClient.Services
         /// Associate a student with a cohort
         /// </summary>
         /// <param name="obj">StudentCohortAssociation requires: cohortId, studentId, beginDate</param>
-        /// <returns>status code of the request</returns>
-        public async Task<HttpStatusCode> CreateStudentCohortAssociation(StudentCohortAssociation obj)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> CreateStudentCohortAssociation(StudentCohortAssociation obj)
         {
             var response = await _client.PostData(Constants.Cohort.STUDENT_COHORT_ASSOCIATION, obj);
-            return response.StatusCode;
+            return response;
         }
 
         /// <summary>
         /// Remove a student from a cohort
         /// </summary>
         /// <param name="id">the association ID</param>
-        /// <returns>status code of the request</returns>
-        public async Task<HttpStatusCode> DeleteStudentCohortAssociationById(string id)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> DeleteStudentCohortAssociationById(string id)
         {
             var response = await _client.DeleteData(Constants.Cohort.STUDENT_COHORT_ASSOCIATION, id);
-            return response.StatusCode;
+            return response;
         }
 
         /// <summary>
         /// Associate a staff with a cohort
         /// </summary>
         /// <param name="obj">StaffCohortAssociation requires: cohortId, staffId, beginDate</param>
-        /// <returns>status code of the request</returns>
-        public async Task<HttpStatusCode> CreateStaffCohortAssociation(StaffCohortAssociation obj)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> CreateStaffCohortAssociation(StaffCohortAssociation obj)
         {
             var response = await _client.PostData(Constants.Cohort.STUDENT_COHORT_ASSOCIATION, obj);           
-            return response.StatusCode;
+            return response;
         }
 
         /// <summary>
         /// Remove a staff from a cohort
         /// </summary>
         /// <param name="id">the association ID</param>
-        /// <returns>status code of the request</returns>
-        public async Task<HttpStatusCode> DeleteStaffCohortAssociationById(string id)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> DeleteStaffCohortAssociationById(string id)
         {
             var result = await _client.DeleteData(Constants.Cohort.STUDENT_COHORT_ASSOCIATION, id);
-            return result.StatusCode;
+            return result;
         }
 
         /// <summary>
@@ -206,19 +206,19 @@ namespace SlcClient.Services
         /// Update the cohort custom entity
         /// </summary>
         /// <param name="obj">the cohort to update</param>
-        /// <returns></returns>
-        public async Task<HttpStatusCode> UpdateCohortCustom(string id, string param)
+        /// <returns>request response</returns>
+        public async Task<HttpResponseMessage> UpdateCohortCustom(string id, string param)
         {
             try
             {
                 var strEndPoint = Constants.Cohort.COHORT_CUSTOM.Replace("{cohortId}", id);
                 var response = await _client.PutData(strEndPoint, param);
-                return response.StatusCode;
+                return response;
             }
             catch (Exception e)
             {
                 //SLC throws a 404 if custom doesn't exist yet
-                return HttpStatusCode.NotFound;
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }            
         }
     }

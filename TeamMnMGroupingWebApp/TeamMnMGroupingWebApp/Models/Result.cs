@@ -18,11 +18,11 @@ namespace TeamMnMGroupingWebApp.Models
         /// <summary>
         /// this list contains all the Id's that the action failed to create new objects for
         /// </summary>
-        public IEnumerable<string> failToCreateIds { get; set; }
+        public IEnumerable<ActionResponseResult> failToCreateIds { get; set; }
 
         /// <summary>
         /// this list contains all the Id's that the action failed to delete for
         /// </summary>
-        public IEnumerable<string> failToDeleteIds { get; set; }
+        public IEnumerable<ActionResponseResult> failToDeleteIds { get; set; }
     }
 }

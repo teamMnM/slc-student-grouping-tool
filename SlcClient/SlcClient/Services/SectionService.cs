@@ -40,12 +40,12 @@ namespace SlcClient.Services
             throw new NotImplementedException("Creating section is not allowed");
         }
 
-        public async Task<HttpStatusCode> Update(Section obj)
+        public async Task<HttpResponseMessage> Update(Section obj)
         {
             throw new NotImplementedException("Updating section is not allowed");
         }
 
-        public async Task<HttpStatusCode> DeleteById(string id)
+        public async Task<HttpResponseMessage> DeleteById(string id)
         {
             throw new NotImplementedException("Deleting section is not allowed");
         }
