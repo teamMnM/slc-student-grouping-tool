@@ -37,7 +37,7 @@ namespace TeamMnMGroupingWebApp.Models
 
         public string oldEthnicity { get; set; }
 
-        public string otherName { get; set; }
+        public IEnumerable<string> otherName { get; set; }
 
         public string sex { get; set; }
 

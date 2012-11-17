@@ -79,6 +79,20 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.schoolFoodServicesEligiblity = FilterHelper.GetEnumDescription(student.schoolFoodServicesEligiblity);
                 newStudent.section504Disablities = student.section504Disablities;
                 newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic);
+                newStudent.languages = student.languages;
+                newStudent.homeLanguages = student.homeLanguages;
+                newStudent.learningStyles = student.learningStyles;
+                newStudent.gradeLevel = FilterHelper.GetEnumDescription(student.gradeLevel);
+                newStudent.economicDisadvantaged = student.economicDisadvantaged;
+                newStudent.hispanicLatinoEthnicity = student.hispanicLatinoEthnicity;
+                newStudent.oldEthnicity = FilterHelper.GetEnumDescription(student.oldEthnicity);
+                newStudent.limitedEnglishProficiency = student.limitedEnglishProficiency;
+                newStudent.otherName = from son in student.otherName select string.Format("{0} {1}", son.firstName, son.lastSurName);
+                newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic);
+                newStudent.studentIndicators = from si in student.studentIndicators select si.indicator;
+                newStudent.telephones = student.telephones;
+                newStudent.sex = FilterHelper.GetEnumDescription(student.sex);
+                newStudent.displacementStatus = student.displacementStatus;
 
                 //get the gpa
                 var studentAcademicRecord = academicRecords.FirstOrDefault(a => a.studentId == student.id);
