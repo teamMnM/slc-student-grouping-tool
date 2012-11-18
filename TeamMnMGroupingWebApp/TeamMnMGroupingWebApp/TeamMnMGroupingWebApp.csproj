@@ -124,6 +124,7 @@
     <Compile Include="Helper\CohortHelper.cs" />
     <Compile Include="Helper\GlobalHelper.cs" />
     <Compile Include="Helper\FilterHelper.cs" />
+    <Compile Include="Helper\SectionHelper.cs" />
     <Compile Include="Helper\StudentHelper.cs" />
     <Compile Include="Models\ActionResponseResult.cs" />
     <Compile Include="Models\CohortActionObject.cs" />

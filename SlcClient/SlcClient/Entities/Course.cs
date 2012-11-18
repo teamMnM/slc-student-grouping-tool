@@ -114,5 +114,10 @@ namespace SlcClient.Entities
         /// The Education Organization that defines the curriculum and courses offered - often the LEA or school.
         /// </summary>
         public EducationOrganization school { get; set; }
+
+        /// <summary>
+        /// Course Identifier
+        /// </summary>
+        public string id { get; set; }
     }
 }
