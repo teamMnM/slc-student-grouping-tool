@@ -147,6 +147,7 @@
     <Content Include="Content\css\main.css" />
     <Content Include="Content\img\attachment-icon.png" />
     <Content Include="Content\img\attachment-paper.png" />
+    <Content Include="Content\img\divider-icon.png" />
     <Content Include="Content\img\group-close-icon.png" />
     <Content Include="Content\img\group-info-icon.png" />
     <Content Include="Content\img\printer-icon.png" />
