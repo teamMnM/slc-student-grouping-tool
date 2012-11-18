@@ -77,7 +77,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     await Task.WhenAll(tasksToWaitFor);
 
                     if(newStudentsAssociations != null)
-                        DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);                  
+                        DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);                  
                 }
                 return Json(cohortResult, JsonRequestBehavior.AllowGet);
             }
@@ -103,7 +103,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //2) create student cohort association
                 Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
                 if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                    newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
+                    newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate);
                 else
                     newStudentsAssociations = null;
                 //3) update cohort custom entity
@@ -131,8 +131,8 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 await Task.WhenAll(tasksToWaitFor);
 
-                if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations);
-                if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
+                if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
 
                 //remove cohort from cache after an update
                 HttpContext.Cache.Remove(obj.cohort.id);
@@ -163,8 +163,8 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 if (associationToDelete != null && associationToDelete.Count() > 0)
                 {
-                    var removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
-                    DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                    IEnumerable<ActionResponseResult> removeStudents = await DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
+                    if(removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
                 }
                     
                 //remove cohort from cache after an update
@@ -191,7 +191,8 @@ namespace TeamMnMGroupingWebApp.Controllers
             var co = GetCohorts();
             var st = GetStudents();
 
-            var dataElements = DataElementHelper.InitializeDataElements();
+            var dataElements = GlobalHelper.InitializeDataElements();
+            var colors = GlobalHelper.InitializeColors();
 
             await Task.WhenAll(co, st);
 
@@ -199,12 +200,13 @@ namespace TeamMnMGroupingWebApp.Controllers
             var students = Task.WhenAll(from s in st.Result select StudentHelper.GetStudentDisplayObject(ss, s));
 
             await Task.WhenAll(cohorts, students);
-            await Task.WhenAll(dataElements);
+            await Task.WhenAll(dataElements, colors);
 
             var data = new GroupingDisplayObject();
             data.cohorts = cohorts.Result;
             data.students = students.Result;
-            data.dataElements = dataElements.Result;         
+            data.dataElements = dataElements.Result;
+            data.colors = colors.Result;
 
             data.filters = FilterHelper.InitializeFilters(); //contruct filter values to filter students in the app
             
@@ -321,7 +323,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful
                 var response = await cs.DeleteById(id);
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                     result.completedSuccessfully = true;
 
                 return result;
@@ -340,8 +342,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];
-                var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful
+                var userSession = (UserSession)Session[SLC_USER_SESSION];               
 
                 //set temporary edorgid because it's null from the SLC API
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
@@ -353,11 +354,16 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var response = await cs.Create(cohort);
 
+                var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful                
+                result.objectActionResult.status = response.StatusCode;
+                result.objectActionResult.message = await response.Content.ReadAsStringAsync();
+
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
                     result.completedSuccessfully = true;
                     //another way of getting the Id: result.Headers.Location.AbsolutePath.Substring(result.Headers.Location.AbsolutePath.LastIndexOf("/") + 1)              
                     result.objectId = response.Headers.Location.Segments[5]; //getting the id from header location
+                    result.objectActionResult.data = result.objectId;
                 }
 
                 return result;
@@ -376,20 +382,19 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];
-                var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful
+                var userSession = (UserSession)Session[SLC_USER_SESSION];                
 
                 //user session has edOrgId == null but we need edOrgId to update a cohort
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
                     cohort.educationOrgId = userSession.edOrgId;
                 else
-                    // daom cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
-                    cohort.educationOrgId = "2012uv-e6ddf954-2f42-11e2-ad37-02786541ab34";
+                    cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8"; // daom 
+                    //cohort.educationOrgId = "2012uv-e6ddf954-2f42-11e2-ad37-02786541ab34";
                     
                 var response = await cs.Update(cohort);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                    result.completedSuccessfully = true;
+                var result = new Result { completedSuccessfully = response.StatusCode == HttpStatusCode.OK, 
+                    objectActionResult = new ActionResponseResult { data = cohort.id, status = response.StatusCode, message = await response.Content.ReadAsStringAsync() } };
 
                 return result;
             }
@@ -405,16 +410,16 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="result">the result object to populate result to</param>
         /// <param name="associations">the response from the service for the attempted creation</param>
-        private static void DetermineFailedToCreateFor(Result result, Task<IEnumerable<ActionResponseResult>> associations)
+        private static void DetermineFailedToCreateFor(Result result, IEnumerable<ActionResponseResult> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.Result.All(a => a.status == HttpStatusCode.Created);
+            result.completedSuccessfully = associations.All(a => a.status == HttpStatusCode.Created);
             if (!result.completedSuccessfully)
-                result.partialCreateSuccess = associations.Result.Any(a => a.status == HttpStatusCode.Created);
+                result.partialCreateSuccess = associations.Any(a => a.status == HttpStatusCode.Created);
             else
                 result.partialCreateSuccess = false;
 
-            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.Created select r;
+            result.failToCreateIds = from r in associations where r.status != HttpStatusCode.Created select r;
         }
 
         /// <summary>
@@ -422,16 +427,16 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="result">the result object to populate result to</param>
         /// <param name="associations">the response from the service for the attempted deletion</param>
-        private static void DetermineFailedToDeleteFor(Result result, Task<IEnumerable<ActionResponseResult>> associations)
+        private static void DetermineFailedToDeleteFor(Result result, IEnumerable<ActionResponseResult> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.Result.All(a => a.status == HttpStatusCode.NoContent);
+            result.completedSuccessfully = associations.All(a => a.status == HttpStatusCode.NoContent);
             if (!result.completedSuccessfully)
-                result.partialDeleteSuccess = associations.Result.Any(a => a.status == HttpStatusCode.NoContent);
+                result.partialDeleteSuccess = associations.Any(a => a.status == HttpStatusCode.NoContent);
             else
                 result.partialDeleteSuccess = false;
 
-            result.failToCreateIds = from r in associations.Result where r.status != HttpStatusCode.NoContent select r;
+            result.failToCreateIds = from r in associations where r.status != HttpStatusCode.NoContent select r;
         }
 
         /// <summary>
