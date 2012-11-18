@@ -177,6 +177,7 @@
     <Content Include="Content\vendor\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\vendor\bootstrap\js\bootstrap.js" />
     <Content Include="Content\vendor\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\vendor\highcharts\js\highcharts.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />
     <Content Include="Content\vendor\jqplot\js\jqplot.donutRenderer.min.js" />
     <Content Include="Content\vendor\jqplot\js\jqplot.pieRenderer.min.js" />
