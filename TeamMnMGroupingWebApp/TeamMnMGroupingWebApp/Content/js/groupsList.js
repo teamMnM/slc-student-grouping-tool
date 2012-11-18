@@ -15,27 +15,31 @@ student_grouping.groupsList = function(){
 
     // colors for the groups
 	this.colorList = [
-        { background: '#DBFDAA', title: '#7D9D38' },
+        /*{ background: '#DBFDAA', title: '#7D9D38' },
         { background: '#A5C5FF', title: '#2F62A0' },
         { background: '#FFA5A4', title: '#A9322F' },
         { background: '#CBB7E9', title: '#654788' },
         { background: '#A7ECFF', title: '#35ADCD' },
         { background: '#FFC08A', title: '#F79646' },
-        { background: '#D5D5D5', title: '#000000' }
-        
+        { background: '#D5D5D5', title: '#000000' }*/        
 	];
 	this.currentColorIndex = 0;
 	
 	/**************************
      * METHODS
      **************************/
-    this.init = function(groups){
+	this.init = function (groups, colors) {
+
+        // store pre-defined colors from backend
+	    _.each(colors, function (color) {
+	        me.colorList.push(color);
+	    });
     	
 		for (var i = 0; i < groups.length; i++){
 			var group = groups[i];
 			this.addGroup(group);			
 		}		
-		
+
 		this.pubSub.subscribe('add-group', function(group){
 		    var newGroup = me.addGroup(group);
 		    newGroup.markDirty();
@@ -51,6 +55,10 @@ student_grouping.groupsList = function(){
 
 		this.pubSub.subscribe('assign-random', function(students, numInGroup){
 			me.assignRandomGroups(students, numInGroup);
+		});
+
+		$(this.groupsAreaClass).scroll(function () {
+
 		});
     }
     
@@ -199,7 +207,7 @@ student_grouping.groupsList = function(){
 			    	
 			    	var newGroupObject = me.addGroup(group);
 			    	newGroupObject.assignStudentToGroup(student);
-			    	group.markDirty();
+			    	newGroupObject.markDirty();
 			    	numGroups++;
 				}
 			}

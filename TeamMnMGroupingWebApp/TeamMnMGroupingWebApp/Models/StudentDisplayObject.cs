@@ -47,7 +47,7 @@ namespace TeamMnMGroupingWebApp.Models
 
         public IEnumerable<Telephone> telephones { get; set; }
 
-        public DateTime birthDate { get; set; }
+        public string birthDate { get; set; }
 
         public LearningStyles learningStyles { get; set; }
 

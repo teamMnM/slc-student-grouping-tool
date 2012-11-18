@@ -31,23 +31,22 @@ student_grouping.group = function(groupData){
 	this.addDataBtnClass = '.add-data-button';
 	
 	this.selectedAttributes = [];
-	this.originalRightMargin = 0;
 	
 	this.groupCloseBtnClass = '.group-close-btn';
 			
 	this.groupPopoverClass= '.group-popover';
-	this.studentPopoverElem = '#student-data-popover';	
+	this.studentPopoverElem = '.student-data-popover';	
 	
 	this.groupInfoBtnClass = '.group-info-btn';
-	this.groupInfoPopoverElem = '#group-description-popover';
-	this.groupDescriptionTxtElem = '#group-description-text';
-	this.groupDescriptionTxtAreaElem = '#group-description-textarea';
+	this.groupInfoPopoverElem = '.group-description-popover';
+	this.groupDescriptionTxtElem = '.group-description-text';
+	this.groupDescriptionTxtAreaElem = '.group-description-textarea';
 	
 	this.groupAttachmentImgClass = '.group-attachment-img';
-	this.groupAttachmentPopoverElem = '#group-attachment-popover';
-	this.groupAttachmentPopoverFileInput = '#real-upload-txt';
-	this.groupAttachmentPopoverFileTxt = '#fake-upload-txt';
-	this.groupAttachmentPopoverDoneBtnElem = '#attachment-done-btn';	
+	this.groupAttachmentPopoverElem = '.group-attachment-popover';
+	this.groupAttachmentPopoverFileInput = '.real-upload-txt';
+	this.groupAttachmentPopoverFileTxt = '.fake-upload-txt';
+	this.groupAttachmentPopoverDoneBtnElem = '.attachment-done-btn';	
 	this.groupAttachmentLblClass = '.group-attachment-lbl';
 	this.groupAttachmentDivClass = '.group-file-attachment';
 	this.groupAttachmentNameClass = '.file-attachment-name';
@@ -60,38 +59,66 @@ student_grouping.group = function(groupData){
 	/**
 	 * HTML template to be rendered to screen 
 	 */
-	this.groupContainerTemplate='<div class="group-container disable-select">' +
-									'<div class="group-controls">' +
-										'<button class="btn btn-link del-group-btn">delete</button>' +
-										'<button class="btn btn-link save-group-btn">save</button>' + 
-										'<button class="btn btn-link exp-col-group-btn">collapse</button>' +  
-									'</div>' + 
-									'<div class="group-name">' +
-										'<div class="group-name-lbl"></div>' + 
-										'<textarea class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
-									'<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
-									'<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +                                    
-                                    '<div class="group"></div>' +
-									'<div>' +
-										'<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
-										'<span class="group-attachment-lbl"></span>' + 
-									'</div>' + 
-									'<div class="add-data-div">' +
-										'<button class="add-data-button btn btn-link">add data</button>' +
-									'</div>' +
-									'<div class="group-file-attachment">' + 
-										'<span class="file-attachment-name"/>' + 
-										'<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
-									'</div>' + 
-								'</div>';
-			
+	this.groupContainerTemplate = '<div class="group-top-container">' +
+                                    '<div class="group-container disable-select">' +
+									    '<div class="group-controls">' +
+										    '<button class="btn btn-link del-group-btn">delete</button>' +
+										    '<button class="btn btn-link save-group-btn">save</button>' +
+										    '<button class="btn btn-link exp-col-group-btn">collapse</button>' +
+									    '</div>' +
+									    '<div class="group-name">' +
+										    '<div class="group-name-lbl"></div>' +
+										    '<textarea class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
+									    '<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
+									    '<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
+                                        '<div class="group"></div>' +
+									    '<div>' +
+										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
+										    '<span class="group-attachment-lbl"></span>' +
+									    '</div>' +
+									    '<div class="add-data-div">' +
+										    '<button class="add-data-button btn btn-link">add data</button>' +
+									    '</div>' +
+									    '<div class="group-file-attachment">' +
+										    '<span class="file-attachment-name"/>' +
+										    '<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
+									    '</div>' +
+								     '</div>' +
+                                     '<div class="group-description-popover group-popover" data-groupContainerId="-1" style="display:none">' +
+			                                     '<strong>Description:</strong>' +
+			                                     '<div class="group-description-text">' +
+				                                     '&nbsp;' +
+                                                 '</div>' +
+                                                 '<textarea class="group-description-textarea"></textarea>' +
+                                     '</div>' +
+                                     '<div class="student-data-popover group-popover" data-groupContainerId="-1" style="display: none">' +
+			                            'select what you want to show' +
+			                            '<ul class="student-elements-list">' +
+			                            '</ul>' +
+		                             '</div>' +
+                                     '<div class="group-attachment-popover" data-groupContainerId="-1" style="display: none">' +
+			                            '<div class="attachment-top-bar">' +
+				                            '<span>choose a file</span>	' +
+				                            '<button class="attachment-done-btn">done</button>' +
+			                            '</div>' +
+			                            '<div>' +
+				                            '<div class="fakeupload">' +
+					                            '<input type="text" class="fake-upload-txt"/>' +
+					                            '<img src="/Content/img/attachment-icon.png" class="attachment-img"/>' +
+					                            '<input type="file" class="real-upload-txt" class="realupload"/>' +
+				                            '</div>' +
+			                            '</div>' +
+		                            '</div>'+
+			                       '</div>';
+
 	this.droppedElemClass = '.dropped-elem';
 	this.studentAttributesClass = '.student-attributes';					
 	this.droppedElemTemplate = "<div data-studentId='' class='dropped-elem'>" +					
 									"<img class='del-button' src='/Content/img/student-close-icon.png'></img>" +
 									'<div class="student-icon-div"><img class="student-icon" src="/Content/img/student-icon-male.png"/></div>' +
 									"<div class='student-name'></div>" + 
-									"<div class='student-attributes'></div>" + 				
+									"<div class='student-attributes'></div>" +
+                                    "<div class='student-full-profile'><a href='#'>full profile</a></div>" +
 								"</div>";				
 								
 	/**************************
@@ -150,11 +177,27 @@ student_grouping.group = function(groupData){
 		$(groupContainer).find(this.saveGroupBtnClass).click(function (event) {
 		    if (!me.processing && me.dirty) {
 		        me.saveGroupChanges();
+		    } else if (!me.dirty) {
+		        // Let user know the created was successful
+		        utils.uiUtils.showTooltip(
+                    $(me.groupContainerId).find(me.groupNameLblClass),
+                    'This group does not have unsaved changes.',
+                    'top',
+                    'manual',
+                    3000);
 		    }
 		});
 
 		this.groupContainerId = groupContainer;
-		this.originalRightMargin = parseInt($(this.groupContainerId).css('margin-right').replace('px',''));
+		
+	    // load the selected attributes
+		var custom = this.group.custom;
+		if (custom !== null && custom !== undefined) {
+		    var selectedAttributes = custom.dataElements;
+		    _.each(selectedAttributes, function (selectedAttribute) {
+		        me.selectedAttributes.push(selectedAttribute);
+		    });
+		}
 
 		// render students assigned to this group
 		var studentIds = this.originalStudents;
@@ -167,7 +210,7 @@ student_grouping.group = function(groupData){
 			}
 		});		
 		
-	    // TODO load attached lesson plan	    
+	    // TODO load attached lesson plan
 	};
 		
 	/**
@@ -198,6 +241,9 @@ student_grouping.group = function(groupData){
 			// add student to list of students
 			this.students.push(studentId);
 			student.addGroupIndicator(this.groupData.id, this.color.background);
+
+		    // make selected student attributes visible
+			this.toggleStudentAttributeVisibility(this.selectedAttributes);
 		}
 	}
 	
@@ -284,9 +330,17 @@ student_grouping.group = function(groupData){
 		});		
 	}
 	
-	this.appendStudentAttributes = function(attributesDiv, studentData, attributes){		
-		_.each(attributes, function(attribute){				
-			$(attributesDiv).append("<div><strong>" + attribute.attributeName + "</strong> " + studentData[attribute.attributeId] + "</div>");
+    /** 
+     * Show the given attributes on the students in this group
+     */
+	this.appendStudentAttributes = function(attributesDiv, studentData, attributes){
+	    _.each(attributes, function (attribute) {
+	        var name = attribute.attributeName;
+	        var value = studentData[attribute.attributeId];
+	        if (value === null || value === undefined) {
+	            value = 'no data';
+	        }
+			$(attributesDiv).append("<div><strong>" + name + "</strong> " + value + "</div>");
 		});
 	}
 
@@ -297,16 +351,18 @@ student_grouping.group = function(groupData){
 		var groupData = this.groupData;
 		var template = $(this.groupContainerTemplate);
 		$(template).attr('id', 'gc' + groupData.id);
-		$(template).css('background-color', color.background);
+
+		var groupContainer = $(template).find(this.groupContainerClass);
+		$(groupContainer).css('background-color', color.background);
 		this.color = color;
 
-		var groupNameLbl = $(template).find(this.groupNameLblClass);
+		var groupNameLbl = $(groupContainer).find(this.groupNameLblClass);
 		$(groupNameLbl).html(groupData.cohortIdentifier);
 		
-		var groupNameDiv = $(template).find(this.groupNameClass);		
+		var groupNameDiv = $(groupContainer).find(this.groupNameClass);
 		$(groupNameDiv).css('background-color', color.title);
 		
-		var groupDiv = $(template).find(this.groupClass);
+		var groupDiv = $(groupContainer).find(this.groupClass);
 		$(groupDiv).attr('id', groupData.id);
 		
 		return template;
@@ -319,38 +375,27 @@ student_grouping.group = function(groupData){
 		
 		// hide the other popovers
 		 $(this.groupInfoPopoverElem).hide();
-		$(this.groupAttachmentPopoverElem).hide();
-		
-		// reset right margins
-		$(this.groupContainerClass).css('margin-right', this.originalRightMargin);
+		$(this.groupAttachmentPopoverElem).hide();		
 		
 		var groupContainerId = "gc" + this.groupData.id;
 		var groupContainer = $("#" + groupContainerId);
 		
-		var popover = $(this.studentPopoverElem);
+		var popover = $(this.groupContainerId).find(this.studentPopoverElem);
 		var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
 		
 		// check if popover is already open 
 		var notOpen = $(popover).css('display') === 'none';
 		if (notOpen || groupContainerId !== popoverGroupContainerId) {	
 			
-			// expand right margin to accomodate the popover
-			var popoverWidth = $(popover).width();			
-			$(this.groupContainerId).css('margin-right', this.originalRightMargin + popoverWidth);	
-					
 			// place the popover relative to the group container
 			var position_size = this.getPositionAndSize(); 
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
-			$(popover).css('left', position_size.left + position_size.width);
 			$(popover).css('height', position_size.height);
-			$(popover).css('top', position_size.top);
 			$(popover).css('display','');	
 			
 		    // attach event handler to hide this if user clicks outside of it
-			this.handleOutsideClick(this.addDataBtnClass, this.studentPopoverElem, function () {
-			    $(me.groupContainerClass).css('margin-right', me.originalRightMargin);
-			});
+			this.handleOutsideClick(this.addDataBtnClass, this.studentPopoverElem);
 
 		} else {
 			// close it
@@ -359,13 +404,13 @@ student_grouping.group = function(groupData){
 		
 		var me = this;
 		var attributeCheckBoxes = this.studentPopoverElem + " .cbox-student-attribute";
-		$(attributeCheckBoxes).attr('checked', false);
+		$(this.groupContainerId).find(attributeCheckBoxes).attr('checked', false);
 		_.each(this.selectedAttributes, function(attribute){
-			$(attributeCheckBoxes + "[value='" + attribute.attributeId + "']").attr('checked', true);
+		    $(me.groupContainerId).find(attributeCheckBoxes + "[value='" + attribute.attributeId + "']").attr('checked', true);
 		});
 		
-		$(attributeCheckBoxes).unbind('click');
-		$(attributeCheckBoxes).click(function(event){
+		$(this.groupContainerId).find(attributeCheckBoxes).unbind('click');
+		$(this.groupContainerId).find(attributeCheckBoxes).click(function (event) {
 			var cbox = event.currentTarget;
 			me.toggleSelectedAttributes();
 			me.toggleStudentAttributeVisibility(me.selectedAttributes);
@@ -378,7 +423,7 @@ student_grouping.group = function(groupData){
 	this.toggleSelectedAttributes = function(){
 		var me = this;
 		this.selectedAttributes = [];
-		$(this.studentPopoverElem + " .cbox-student-attribute").each(function(index, elem){
+		$(this.groupContainerId).find(this.studentPopoverElem + " .cbox-student-attribute").each(function(index, elem){
 			var selected = $(elem).is(":checked");
 			if (selected){
 			    var val = $(elem).val();
@@ -398,15 +443,12 @@ student_grouping.group = function(groupData){
 		
 		// hide the other popovers
 		$(this.studentPopoverElem).hide();
-		$(this.groupAttachmentPopoverElem).hide();
-		
-		// reset right margins
-		$(this.groupContainerClass).css('margin-right', this.originalRightMargin);
+		$(this.groupAttachmentPopoverElem).hide();		
 		
 		var groupContainerId = "gc" + this.groupData.id;
 		var groupContainer = $("#" + groupContainerId);
 		
-		var popover = $(this.groupInfoPopoverElem);
+		var popover = $(this.groupContainerId).find(this.groupInfoPopoverElem);
 		var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
 		
 		// check if popover is already open 
@@ -418,30 +460,22 @@ student_grouping.group = function(groupData){
 		        $(this.groupDescriptionTxtElem).html(description);
 		    } else {
 		        $(this.groupDescriptionTxtElem).html('&nbsp;');
-		    }
-						
-			// expand right margin to accomodate the popover
-			var popoverWidth = $(popover).width();			
-			$(this.groupContainerId).css('margin-right', this.originalRightMargin + popoverWidth);
+		    }						
 			
 			// place the popover relative to the group container
 			var position_size = this.getPositionAndSize(); 
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
-			$(popover).css('left', position_size.left + position_size.width);
 			$(popover).css('height', position_size.height);
-			$(popover).css('top', position_size.top);
-			$(popover).css('display','');		
+			$(popover).css('display', '');
 			
 			// if user clicks on text, make it editable					
-			$(this.groupDescriptionTxtElem).click(function(event){
+			$(this.groupContainerId).find(this.groupDescriptionTxtElem).click(function(event){
 				me.makeGroupDescriptionEditable();
 			});
 
 		    // attach event handler to hide this if user clicks outside of it
-			this.handleOutsideClick(this.groupInfoBtnClass, this.groupInfoPopoverElem, function () {
-			    $(me.groupContainerClass).css('margin-right', me.originalRightMargin);
-			});
+			this.handleOutsideClick(this.groupInfoBtnClass, this.groupInfoPopoverElem);
 				
 		} else {
 			// close it
@@ -450,7 +484,8 @@ student_grouping.group = function(groupData){
 	}
 	
 	/**
-	 * Popup the attachment panel
+	 * TODO match width of panel to width of container
+     * Popup the attachment panel
 	 */
 	this.showAttachmentPopover = function(){
 		
@@ -458,7 +493,7 @@ student_grouping.group = function(groupData){
 			var groupContainerId = "gc" + this.groupData.id;
 			var groupContainer = $("#" + groupContainerId);
 			
-			var popover = $(this.groupAttachmentPopoverElem);
+			var popover = $(this.groupContainerId).find(this.groupAttachmentPopoverElem);
 			var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
 			
 			// check if popover is already open
@@ -470,26 +505,22 @@ student_grouping.group = function(groupData){
 				var height = $(groupContainer).height();
 				
 				$(popover).attr('data-groupContainerId', groupContainerId);
-				$(popover).css('left', position.left);
-				$(popover).css('top', position.top + height);
 				$(popover).css('display', '');
 							
-				$(this.groupAttachmentPopoverDoneBtnElem).unbind('click');
-				$(this.groupAttachmentPopoverDoneBtnElem).click(this.attachFile);
+				$(this.groupContainerId).find(this.groupAttachmentPopoverDoneBtnElem).unbind('click');
+				$(this.groupContainerId).find(this.groupAttachmentPopoverDoneBtnElem).click(this.attachFile);
 				
-				$(this.groupAttachmentPopoverFileInput).val('');
-				$(this.groupAttachmentPopoverFileTxt).val('');
-				$(this.groupAttachmentPopoverFileInput).unbind('change');
-				$(this.groupAttachmentPopoverFileInput).change(function () {
+				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).val('');
+				$(this.groupContainerId).find(this.groupAttachmentPopoverFileTxt).val('');
+				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).unbind('change');
+				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).change(function () {
 				    $(document).unbind('mouseup');
 				    $(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
 
 				});
 
 			    // attach event handler to hide this if user clicks outside of it
-				this.handleOutsideClick(this.groupAttachmentImgClass, this.groupAttachmentPopoverElem, function () {
-				    //$(me.groupContainerClass).css('margin-right', me.originalRightMargin);
-				});
+				this.handleOutsideClick(this.groupAttachmentImgClass, this.groupAttachmentPopoverElem);
 			} else {
 				// close it
 				$(popover).css('display', 'none');
@@ -501,7 +532,8 @@ student_grouping.group = function(groupData){
 	 * Attach the user specified file to this   
 	 */
 	this.attachFile = function(event){
-		var file = document.getElementById('real-upload-txt').files[0];
+	    var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
+	    var file = files[0];
 		if (file !== undefined){
 			me.attachedFile = file;
 			
@@ -527,7 +559,7 @@ student_grouping.group = function(groupData){
 		    reader.readAsDataURL(file);
 			
 			// hide the popover			
-			$(me.groupAttachmentPopoverElem).hide();	
+			$(me.groupContainerId).find(me.groupAttachmentPopoverElem).hide();	
 			
 			// show the div with the attachment
 			me.showFileAttachment();
@@ -577,7 +609,7 @@ student_grouping.group = function(groupData){
 			: $(droppedElem).find(this.studentAttributesClass).show();		
 		
 		var btnTxt = this.collapsed ? 'expand' : 'collapse';
-		$(this.expColGroupBtnClass).html(btnTxt);		
+		$(this.groupContainerId).find(this.expColGroupBtnClass).html(btnTxt);		
 	}
 	
 	/**
@@ -642,17 +674,17 @@ student_grouping.group = function(groupData){
 	 */
 	this.makeGroupDescriptionEditable = function(){
 		var groupDescription = this.groupData.cohortDescription;
-		$(this.groupDescriptionTxtElem).hide();
+		$(this.groupContainerId).find(this.groupDescriptionTxtElem).hide();
 		
-		var height = $(this.groupInfoPopoverElem).css('height').replace('px','');	
-		$(this.groupDescriptionTxtAreaElem).css('height', parseInt(height)-40);
-		$(this.groupDescriptionTxtAreaElem)
+		var height = $(this.groupContainerId).find(this.groupInfoPopoverElem).css('height').replace('px', '');
+		$(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).css('height', parseInt(height) - 40);
+	    $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem)
 			.val(groupDescription)
 			.show()
 			.focus();		
 			
-		$(this.groupDescriptionTxtAreaElem).unbind('blur');				
-		$(this.groupDescriptionTxtAreaElem).blur(function(event){
+	    $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).unbind('blur');
+	    $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).blur(function (event) {
 			me.saveGroupDescription();
 		});	
 	}
@@ -662,11 +694,11 @@ student_grouping.group = function(groupData){
 	 */
 	this.saveGroupDescription = function(){
 
-	    var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
+	    var newGroupDescription = $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).val();
 	    this.groupData.cohortDescription = newGroupDescription;
-	    $(this.groupDescriptionTxtElem).html(newGroupDescription);
-	    $(this.groupDescriptionTxtAreaElem).hide();
-	    $(this.groupDescriptionTxtElem).show();
+	    $(this.groupContainerId).find(this.groupDescriptionTxtElem).html(newGroupDescription);
+	    $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).hide();
+	    $(this.groupContainerId).find(this.groupDescriptionTxtElem).show();
 
 	    this.markDirty();	    
 	}
@@ -693,10 +725,6 @@ student_grouping.group = function(groupData){
 		return position_size;
 	}
 	
-	this.setRightMargin = function(offset){
-		$(this.groupContainerId).css('margin-right', this.originalRightMargin + offset);
-	}
-	
 	/**
 	 * Mark this group as dirty so that changes are saved back to server 
 	 */
@@ -707,14 +735,13 @@ student_grouping.group = function(groupData){
     /**
      * Handle outside click event to hide popover
      */
-	this.handleOutsideClick = function (triggetBtn, container, additionalInstructions){
+	this.handleOutsideClick = function (triggetBtn, container){
 	    $(document).unbind('click');
 	    $(document).click(function (e) {
 	        if ((!$(container).is(e.target) && $(container).has(e.target).length === 0)
                     && (!$(triggetBtn).is(e.target) && $(triggetBtn).has(e.target).length === 0)) {
 	            $(container).hide();
 	            $(document).unbind('click');
-	            additionalInstructions();
 	        }
 	    });
 	}
@@ -833,6 +860,14 @@ student_grouping.group = function(groupData){
 
 	    me.toggleGroupContainerProcessingState(false);
 	    this.dirty = false;
+
+	    // put the current list of students into the original list
+	    _.each(me.students, function(student){
+	        me.originalStudents.push(student);
+	    });
+
+	    // request to be added to list of existing groups
+	    me.pubSub.publish('add-to-existing-groups', me.groupData);
 	}
 
     /**
@@ -841,10 +876,16 @@ student_grouping.group = function(groupData){
 	this.createGroupErrorHandler = function (result) {
 	    me.toggleGroupContainerProcessingState(false);
 
+	    var msg = "Group could not be created. Please try again later or contact your system administrator.";
+
+	    if (result.completedSuccessfully && (result.failToCreateIds.length > 0)){
+	        msg = "Group was created successfully. However some students could not be assigned to the group.";
+	    }
+
 	    // Let user know the create was not successful
 	    utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
-            'Group could not be created. Please try again later or contact your system administrator.',
+            msg,
             'top',
             'manual',
             3000);

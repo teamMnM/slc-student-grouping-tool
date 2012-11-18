@@ -10,7 +10,7 @@ student_grouping.groupsListComponent = new student_grouping.groupsList();
 
 student_grouping.init = function(){
 		
-	var me = this;
+    var me = this;
 
 	$.ajax({
         type: 'GET',
@@ -23,7 +23,7 @@ student_grouping.init = function(){
             me.studentsListComponent.init(data.students);
 
             // set up the groups list
-            me.groupsListComponent.init(data.cohorts);
+            me.groupsListComponent.init(data.cohorts, data.colors);
 
             // set up the top bar controls
             me.topBarComponent.init(data.cohorts);
@@ -36,7 +36,7 @@ student_grouping.init = function(){
                     + "value='" + dataElement.attributeId + "' data-displayName='"
                     + dataElement.attributeName + "'/>" + dataElement.attributeName
                     + "</li>");
-                $("#student-data-popover").find(".student-elements-list").append(dataElem);
+                $(".student-data-popover .student-elements-list").append(dataElem);
             });
 
             // set up the list controls	
@@ -55,6 +55,14 @@ student_grouping.init = function(){
                 "opacity": 0.7,
                 appendTo: 'body'
             });
+
+            $(".main-content").spin(false);
+            $(".main-content").css('opacity',1 );
+        },
+        error: function (errorMsg) {
+            window.location = 'Index';
+            $(".main-content").spin(false);
+            $(".main-content").css('opacity', 1);
         }
 	});
 
@@ -69,5 +77,6 @@ student_grouping.init = function(){
 
 // initialize module
 $(function() {
-	student_grouping.init();
+    student_grouping.init();
+    $(".main-content").spin();
 });

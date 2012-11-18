@@ -73,7 +73,7 @@ namespace TeamMnMGroupingWebApp.Helper
                     newStudent.visualLearning = student.learningStyles.visualLearning;
                 }
                 
-                newStudent.birthDate = student.birthData.birthDate;
+                newStudent.birthDate = student.birthData.birthDate.ToShortDateString();
                 newStudent.profileThumbnail = student.profileThumbnail;
                 newStudent.race = student.race;
                 newStudent.schoolFoodServicesEligiblity = FilterHelper.GetEnumDescription(student.schoolFoodServicesEligiblity);

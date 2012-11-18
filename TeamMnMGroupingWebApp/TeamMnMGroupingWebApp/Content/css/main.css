@@ -1,3 +1,7 @@
+.main-content {
+    opacity: 0.2;
+}
+
 #txtRandomNumInGroup{
 	width:80px;
 	background-color: #8EB4E3;
@@ -124,10 +128,10 @@
 }
 
 .studentListItem {
-	height: 4.2em;
+	height: 5.2em;
 	background-color: #F2F2F2;
     margin: 0.8em auto auto auto;
-	padding:0.8em 0.5em 0 0;
+	padding:0.8em 0.4em 0 0;
 	font-size:0.9em;
 }
 
@@ -190,8 +194,8 @@
 #student-learningStyle-chart{
 	color:white; 
 	font-size:0.7em;
-	width:200px;
-	height:200px;
+	width:250px;
+	height:250px;
 }
 
 /**********************
@@ -225,6 +229,7 @@
 .dropped-elem.expanded {
 	width: 15em;
 	min-height:4em;
+    position:relative;
 }
 
 .dropped-elem.collapsed {
@@ -245,6 +250,7 @@
 
 .dropped-elem .student-attributes {
 	margin-left:3.7em;
+    margin-bottom:1.3em;
 	font-size:0.8em;
 }
 
@@ -255,6 +261,23 @@
 
 .dropped-elem.collapsed .student-icon {
 	display:none;
+}
+
+.dropped-elem.expanded .student-full-profile {
+    float:right;    
+    display:none;    
+    font-size:0.8em;
+    position: absolute;
+    bottom: 0;
+    right: 0.5em;
+}
+
+.dropped-elem.collapsed .student-full-profile {
+    display:none;
+}
+
+.dropped-elem.expanded:hover .student-full-profile {
+    display: block;
 }
 
 .circle
@@ -287,11 +310,15 @@
  * GROUPS 
  *********************/
 
-.group-container {
+.group-top-container {
 	margin: 2em 2em 4em 2em;
+    display:inline-block;
+}
+
+.group-container {
 	border-radius: 0.8em;	
 	width: 20em;
-	display:inline-block;
+    float:left;
 }
 
 .group-container:hover .group-controls {
@@ -386,11 +413,11 @@
 }
 
 .group-popover {
+    float:left;
 	padding:0 0.5em 0 0.5em;	
 	color:white;
 	background-color:black;
 	opacity: 0.7;
-	position:absolute;
 	border-radius: 0.8em;	
 	overflow-y:auto;
     z-index: 2; /*1 more than the groups-area*/
@@ -406,11 +433,15 @@
 /**********************
  * GROUP DESC POPUP 
  *********************/
-#group-description-popover{
+.group-description-popover{
 	width: 15em;
 }
 
-#group-description-textarea {
+.group-description-text {
+    word-wrap: break-word;
+}
+
+.group-description-textarea {
 	color:white;
 	display:none;
 	background-color:transparent;
@@ -421,19 +452,18 @@
 /**********************
  * GROUP ATTACH POPUP 
  *********************/
-#group-attachment-popover{
-	margin: 0em 2em 4em 0em;
+.group-attachment-popover{
 	padding:0.5em 0.5em 0 0.5em;	
 	width: 19em;
-	position:absolute;
 	color:white;
 	background-color:black;
 	opacity: 0.7;
 	border-radius: 0.8em;	
+    clear:both;
     z-index: 2; /*1 more than the groups-area*/
 }
 
-#attachment-done-btn{
+.attachment-done-btn{
 	float:right;
 	color:white;
 	background-color:transparent;
@@ -443,10 +473,10 @@
 	width:4.5em;
 }
 
-#real-upload-txt {
+.real-upload-txt {
     position:absolute;
     top:10;
-    right:0;
+    left:1em;
 
     /* start of transparency styles */
     opacity:0;
@@ -458,7 +488,7 @@
     width:20em;
 }
 
-#fake-upload-txt{
+.fake-upload-txt{
 	height:1em;
 	width:15em;
 	background-color:transparent;
@@ -466,7 +496,7 @@
 	color:white;
 }
 
-#attachment-img {
+.attachment-img {
 	margin-top:-0.5em;
 	width: 1.8em;
 }

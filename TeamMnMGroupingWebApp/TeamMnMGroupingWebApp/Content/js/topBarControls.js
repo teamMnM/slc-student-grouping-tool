@@ -35,8 +35,15 @@ student_grouping.topBarControls = function(){
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
     	$(this.addNewGroupBtn).click(this.addNewGroup);
 
+        // remove group from dropdown if deleted
     	this.pubSub.subscribe('group-deleted', function (id) {
     	    me.removeGroup(id);
+    	});
+
+        // add newly created (saved to server) group to dropdown list
+    	this.pubSub.subscribe('add-to-existing-groups', function (group) {
+    	    $(me.findGroupDropdownElem).
+    			append("<option value='" + group.id + "'>" + group.cohortIdentifier + "</option>");
     	});
     }
     

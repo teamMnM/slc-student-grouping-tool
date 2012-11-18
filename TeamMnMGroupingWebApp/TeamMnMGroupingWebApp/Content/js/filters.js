@@ -115,7 +115,7 @@ student_grouping.filters = function(){
     	}
     	    	
     	$(this.filterValueSelElem).select2('destroy');
-    	if (filter.values.length === 0){
+    	if (filter.values === null || filter.values.length === 0){
     		$(this.filterValueTxtElem).show();
     		$(this.filterValueSelElem).hide();
     	} else {
@@ -145,7 +145,7 @@ student_grouping.filters = function(){
      * Add the selected filter to the list of filters 
      */
     this.addSelectedFilter = function(){
-    	
+        var selectedAttrName = $(this.filterAttributeElem).find('option:selected').text();
         var selectedAttr = $(this.filterAttributeElem).val();
         var selectedOperator = $(this.filterOperatorElem).val();
 
@@ -175,7 +175,7 @@ student_grouping.filters = function(){
     	
     	// get the selected filters     	
     	var filter = {
-    		attributeName : selectedAttr,
+    		attributeName : selectedAttrName,
     		attributeId : selectedAttr,
     		operator : selectedOperator,
     		value : value,
@@ -251,7 +251,7 @@ student_grouping.filters = function(){
     				case '<' : return studentAttributeVal < parseFloat(value);
     				case '>' : return studentAttributeVal > parseFloat(value);
     				case '<=' : return studentAttributeVal <= parseFloat(value);
-    				case '>=' : return studentAttributeVal <= parseFloat(value);
+    				case '>=' : return studentAttributeVal >= parseFloat(value);
     				case 'contains' :     					
     					var intersection = _.any(studentAttributeVal, function(studentVal){
     						var studentHasDisability = _.find(value, function(val){
@@ -267,7 +267,9 @@ student_grouping.filters = function(){
     					});
     					return matchingVal !== undefined;
     				case 'startsWith' : 
-    					return studentAttributeVal.lastIndexOf(value, 0) === 0;
+    				    return studentAttributeVal
+                            .toLowerCase()
+                            .lastIndexOf(value.toLowerCase(), 0) === 0;
     			}
     		});
     	});

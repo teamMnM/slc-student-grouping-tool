@@ -164,7 +164,11 @@ student_grouping.student = function(studentData) {
 			
 			// populate student info content
 			$(this.studentInfoAttributesElem).empty();
-			var attributesToShow = ['classes', 'gpa', 'disabilities'];
+			var attributesToShow = [
+                { attributeId : 'classes', attributeName : ' Classes ' },
+                { attributeId : 'cummulativeGradePointAverage', attributeName: 'Cummulative GPA ' },
+                { attributeId: 'disabilities', attributeName: 'Disabilities' }
+			];
 			_.each(attributesToShow, function(attr){
 				var attributeDiv = me.populateAttributeDiv(attr);				
 				$(me.studentInfoAttributesElem).append(attributeDiv);			
@@ -181,6 +185,9 @@ student_grouping.student = function(studentData) {
 			$(popover).css('top', position.top);
 			$(popover).css('display','');
 			
+		    // draw table for assessment data
+            //this.drawAssessmentTable
+
 			// draw the required charts
 			this.drawLearningStylesChart();
 			
@@ -194,33 +201,33 @@ student_grouping.student = function(studentData) {
 	 * Draws the learning styles chart
 	 */
 	this.drawLearningStylesChart = function(){
-		$("#" + this.studentInfoLearningStyleElem).empty();
-		var studentData = this.studentData;
-		var learningStylesData = [
+	    $("#" + this.studentInfoLearningStyleElem).empty();
+	    var studentData = this.studentData;
+	    var learningStylesData = [
 			['Auditory', studentData.auditoryLearning],
 			['Tactile', studentData.tactileLearning],
 			['Visual', studentData.visualLearning]
-		];
-		var labels = _.map(learningStylesData, function(style, key){
-			return style[0] + " " + style[1] + "%";
-		});
-		var chart = $.jqplot(this.studentInfoLearningStyleElem, [learningStylesData],
+	    ];
+	    var labels = _.map(learningStylesData, function(style, key){
+	        return style[0] + " " + style[1] + "%";
+	    });
+	    var chart = $.jqplot(this.studentInfoLearningStyleElem, [learningStylesData],
 		{
-			seriesDefaults: {
-				renderer: $.jqplot.PieRenderer,
-				rendererOptions: {
-					dataLabels:labels,
-					showDataLabels: true
-				}			
-			},
-			// green, blue, red
-			seriesColors: ['#C73C39', '#8AAF3F', '#3771B8'],
-			grid: {
-				background: 'transparent',
-				borderWidth: 0,
-				shadow: false
-			}
-		});			
+		    seriesDefaults: {
+		        renderer: $.jqplot.PieRenderer,
+		        rendererOptions: {
+		            dataLabels:labels,
+		            showDataLabels: true
+		        }			
+		    },
+		    // green, blue, red
+		    seriesColors: ['#C73C39', '#8AAF3F', '#3771B8'],
+		    grid: {
+		        background: 'transparent',
+		        borderWidth: 0,
+		        shadow: false
+		    }
+		});		
 	}
 	
 	/**
@@ -228,9 +235,9 @@ student_grouping.student = function(studentData) {
 	 */
 	this.populateAttributeDiv = function(attribute){
 		var div = $("<div>");
-		$(div).append('<strong>' + attribute + ' : </strong>');
+		$(div).append('<strong>' + attribute.attributeName + ' : </strong>');
 		
-		var studentAttrVal = this.studentData[attribute];
+		var studentAttrVal = this.studentData[attribute.attributeId];
 		var str = ""
 		if ($.isArray(studentAttrVal)){
 			_.each(studentAttrVal, function(c){
