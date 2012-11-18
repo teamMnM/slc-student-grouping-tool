@@ -354,13 +354,14 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var response = await cs.Create(cohort);
 
-                var result = new Result { completedSuccessfully = false }; //default to false, set to true later if it's successful                
-                result.objectActionResult.status = response.StatusCode;
-                result.objectActionResult.message = await response.Content.ReadAsStringAsync();
+                var result = new Result
+                {
+                    completedSuccessfully = response.StatusCode == HttpStatusCode.OK,
+                    objectActionResult = new ActionResponseResult { status = response.StatusCode, message = await response.Content.ReadAsStringAsync() }
+                };
 
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
-                    result.completedSuccessfully = true;
                     //another way of getting the Id: result.Headers.Location.AbsolutePath.Substring(result.Headers.Location.AbsolutePath.LastIndexOf("/") + 1)              
                     result.objectId = response.Headers.Location.Segments[5]; //getting the id from header location
                     result.objectActionResult.data = result.objectId;
