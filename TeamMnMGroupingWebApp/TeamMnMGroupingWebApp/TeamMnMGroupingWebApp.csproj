@@ -122,13 +122,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\CohortHelper.cs" />
-    <Compile Include="Helper\DataElementHelper.cs" />
+    <Compile Include="Helper\GlobalHelper.cs" />
     <Compile Include="Helper\FilterHelper.cs" />
     <Compile Include="Helper\StudentHelper.cs" />
     <Compile Include="Models\ActionResponseResult.cs" />
     <Compile Include="Models\CohortActionObject.cs" />
     <Compile Include="Models\CohortDisplayObject.cs" />
     <Compile Include="Models\CohortCustom.cs" />
+    <Compile Include="Models\Color.cs" />
     <Compile Include="Models\DataElement.cs" />
     <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\FilterValue.cs" />
@@ -192,6 +193,7 @@
     <Content Include="Content\vendor\spin\js\jquery.spin.js" />
     <Content Include="Content\vendor\spin\js\spin.min.js" />
     <Content Include="Content\vendor\underscore\js\underscore.min.js" />
+    <Content Include="Data\Colors.txt" />
     <Content Include="Data\DataElements.txt" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">

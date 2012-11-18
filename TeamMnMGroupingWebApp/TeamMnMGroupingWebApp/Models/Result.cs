@@ -11,6 +11,8 @@ namespace TeamMnMGroupingWebApp.Models
 
         public bool completedSuccessfully { get; set; }
 
+        public ActionResponseResult objectActionResult { get; set; }
+
         public bool partialCreateSuccess { get; set; }
 
         public bool partialDeleteSuccess { get; set; }

@@ -23,6 +23,11 @@ namespace TeamMnMGroupingWebApp.Models
         public IEnumerable<Filter> filters { get; set; }
 
         /// <summary>
+        /// A list of colors to be used to assign to groups. This list is specified in the /Data/Colors.txt file
+        /// </summary>
+        public IEnumerable<Color> colors { get; set; }
+
+        /// <summary>
         /// a list of all students
         /// </summary>
         public IEnumerable<StudentDisplayObject> students { get; set; }
