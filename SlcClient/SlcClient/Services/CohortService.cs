@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -196,9 +197,7 @@ namespace SlcClient.Services
         /// <returns></returns>
         public async Task<HttpResponseMessage> CreateCohortCustom(string id, string param)
         {
-            var strEndPoint = Constants.Cohort.COHORT_CUSTOM.Replace("{cohortId}", id);
-            var response = await _client.PostData(strEndPoint, param);
-            //var content = await response.Content.ReadAsStringAsync();
+            var response = await SubmitCohortCustomData(id, param, HttpMethod.Post);
             return response;
         }
 
@@ -211,8 +210,7 @@ namespace SlcClient.Services
         {
             try
             {
-                var strEndPoint = Constants.Cohort.COHORT_CUSTOM.Replace("{cohortId}", id);
-                var response = await _client.PutData(strEndPoint, param);
+                var response = await SubmitCohortCustomData(id, param, HttpMethod.Put);
                 return response;
             }
             catch (Exception e)
@@ -220,6 +218,23 @@ namespace SlcClient.Services
                 //SLC throws a 404 if custom doesn't exist yet
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }            
+        }
+
+        private async Task<HttpResponseMessage> SubmitCohortCustomData(string id, string param, HttpMethod method)
+        {
+            //using SlcHttpClient throw an Internal Server Error from SLC so we're constructing a new HttpClient for a clean HttpRequestMessage for custom only
+            var _httpClient = new HttpClient();
+            var strEndPoint = Constants.Cohort.COHORT_CUSTOM.Replace("{cohortId}", id);
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["SlcApiSandboxUrl"] + strEndPoint),
+                Method = method,
+            };
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", _client.token);
+
+            request.Content = new System.Net.Http.StringContent(param, Encoding.UTF8, "application/json");
+            var response = await _httpClient.SendAsync(request);
+            return response;
         }
     }
 }

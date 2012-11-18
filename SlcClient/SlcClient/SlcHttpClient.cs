@@ -17,6 +17,11 @@ namespace SlcClient
         private string _token;
         private const string SLC_API_SANDBOX_URL = "SlcApiSandboxUrl";
 
+        /// <summary>
+        /// Get the token
+        /// </summary>
+        public string token { get { return _token; } }
+
         public SlcHttpClient(string token, string apiEndPoint = "")
         {
             _httpClient = new HttpClient();

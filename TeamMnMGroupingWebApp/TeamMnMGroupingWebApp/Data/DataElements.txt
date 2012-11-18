@@ -1,5 +1,4 @@
-﻿[{ "attributeId":"name", "attributeName":"Name" }, 
-{ "attributeId":"disabilities", "attributeName":"Disablities" }, 
+﻿[{ "attributeId":"disabilities", "attributeName":"Disablities" }, 
 { "attributeId":"displacementStatus", "attributeName":"Displacement Status" },
 { "attributeId":"economicDisadvantaged", "attributeName":"Economic Disadvantaged" },
 { "attributeId":"gradeLevel", "attributeName":"Grade Level" },
