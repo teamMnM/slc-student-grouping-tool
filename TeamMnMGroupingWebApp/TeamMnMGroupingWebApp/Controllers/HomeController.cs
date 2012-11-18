@@ -187,24 +187,28 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             var cs = new CohortService(Session["access_token"].ToString());
             var ss = new StudentService(Session["access_token"].ToString());
+            var ses = new SectionService(Session["access_token"].ToString());
 
             var co = GetCohorts();
             var st = GetStudents();
+            var se = GetSections();
 
             var dataElements = GlobalHelper.InitializeDataElements();
             var colors = GlobalHelper.InitializeColors();
 
-            await Task.WhenAll(co, st);
+            await Task.WhenAll(co, st, se);
 
             var cohorts = Task.WhenAll(from c in co.Result select CohortHelper.GetCohortDisplayObject(cs, c));
             var students = Task.WhenAll(from s in st.Result select StudentHelper.GetStudentDisplayObject(ss, s));
+            var sections = Task.WhenAll(from s in se.Result select SectionHelper.GetSectionDisplayObject(ses, s));
 
-            await Task.WhenAll(cohorts, students);
+            await Task.WhenAll(cohorts, students, se);
             await Task.WhenAll(dataElements, colors);
 
             var data = new GroupingDisplayObject();
             data.cohorts = cohorts.Result;
             data.students = students.Result;
+            data.sections = sections.Result;
             data.dataElements = dataElements.Result;
             data.colors = colors.Result;
 
@@ -310,6 +314,18 @@ namespace TeamMnMGroupingWebApp.Controllers
             var students = await s.GetAll();
 
             return students;
+        }
+
+        /// <summary>
+        /// Get all sections
+        /// </summary>
+        /// <returns>List of all sections the current user has access to</returns>
+        public async Task<IEnumerable<Section>> GetSections()
+        {
+            var c = new SectionService(Session["access_token"].ToString());
+            var list = await c.GetAll();
+
+            return list;
         }
 
         /// <summary>

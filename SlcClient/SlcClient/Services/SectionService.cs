@@ -35,6 +35,22 @@ namespace SlcClient.Services
             return section;
         }
 
+        public async Task<IEnumerable<Course>> GetAllCourses()
+        {
+            var response = await _client.GetDataString(Constants.Section.ALL_COURSES);
+            var content = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<IEnumerable<Course>>(content);
+            return data;
+        }
+
+        public async Task<IEnumerable<CourseOffering>> GetAllCourseOfferings()
+        {
+            var response = await _client.GetDataString(Constants.Section.ALL_COURSE_OFFERINGS);
+            var content = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<IEnumerable<CourseOffering>>(content);
+            return data;
+        }
+
         public async Task<HttpResponseMessage> Create(Section obj)
         {
             throw new NotImplementedException("Creating section is not allowed");

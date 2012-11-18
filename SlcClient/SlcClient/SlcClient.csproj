@@ -70,6 +70,7 @@
     <Compile Include="Entities\CohortYear.cs" />
     <Compile Include="Entities\Course.cs" />
     <Compile Include="Entities\CourseCode.cs" />
+    <Compile Include="Entities\CourseOffering.cs" />
     <Compile Include="Entities\Credential.cs" />
     <Compile Include="Entities\CredentialFieldDescriptor.cs" />
     <Compile Include="Entities\Credits.cs" />
