@@ -68,7 +68,7 @@ student_grouping.group = function(groupData){
 									'</div>' + 
 									'<div class="group-name">' +
 										'<div class="group-name-lbl"></div>' + 
-										'<input type="text" class="group-name-txt" style="display:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
+										'<textarea class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
 									'<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									'<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +                                    
                                     '<div class="group"></div>' +
@@ -141,14 +141,14 @@ student_grouping.group = function(groupData){
 		    }
 		});
 		
-		$(groupContainer).find(this.groupNameClass).click(function(event){
+		$(groupContainer).find(this.groupNameLblClass).click(function(event){
 		    if (!me.processing) {
 		        me.makeGroupNameEditable();
 		    }
 		});
 		
 		$(groupContainer).find(this.saveGroupBtnClass).click(function (event) {
-		    if (!me.processing) {
+		    if (!me.processing && me.dirty) {
 		        me.saveGroupChanges();
 		    }
 		});
@@ -286,7 +286,7 @@ student_grouping.group = function(groupData){
 	
 	this.appendStudentAttributes = function(attributesDiv, studentData, attributes){		
 		_.each(attributes, function(attribute){				
-			$(attributesDiv).append("<div>" + attribute + " " + studentData[attribute] + "</div>");
+			$(attributesDiv).append("<div><strong>" + attribute.attributeName + "</strong> " + studentData[attribute.attributeId] + "</div>");
 		});
 	}
 
@@ -361,7 +361,7 @@ student_grouping.group = function(groupData){
 		var attributeCheckBoxes = this.studentPopoverElem + " .cbox-student-attribute";
 		$(attributeCheckBoxes).attr('checked', false);
 		_.each(this.selectedAttributes, function(attribute){
-			$(attributeCheckBoxes + "[value='" + attribute + "']").attr('checked', true);
+			$(attributeCheckBoxes + "[value='" + attribute.attributeId + "']").attr('checked', true);
 		});
 		
 		$(attributeCheckBoxes).unbind('click');
@@ -381,8 +381,9 @@ student_grouping.group = function(groupData){
 		$(this.studentPopoverElem + " .cbox-student-attribute").each(function(index, elem){
 			var selected = $(elem).is(":checked");
 			if (selected){
-				var val = $(elem).val();
-				me.selectedAttributes.push(val);
+			    var val = $(elem).val();
+			    var displayName = $(elem).attr('data-displayName');
+			    me.selectedAttributes.push({ attributeId: val, attributeName: displayName });
 			}
 		});
 		
@@ -465,7 +466,7 @@ student_grouping.group = function(groupData){
 			if (notOpen || groupContainerId !== popoverGroupContainerId) {
 				
 				// place the popover relative to the group container
-				var position = $(groupContainer).position();
+				var position = $(groupContainer).offset();
 				var height = $(groupContainer).height();
 				
 				$(popover).attr('data-groupContainerId', groupContainerId);
@@ -604,15 +605,15 @@ student_grouping.group = function(groupData){
 	/**
 	 * Make the group name label editable, turns it into a textbox
 	 */
-	this.makeGroupNameEditable = function(){
+	this.makeGroupNameEditable = function () {
 		var groupName = $(this.groupContainerId).find(this.groupNameLblClass).html();
-		$(this.groupContainerId).find(this.groupNameLblClass).hide();
-		
+		$(this.groupContainerId).find(this.groupNameLblClass).hide();		
 		$(this.groupContainerId).find(this.groupNameTxtClass)
 			.val(groupName)
 			.css('display', '')
 			.focus();
 											
+		$(this.groupContainerId).find(this.groupNameTxtClass).unbind('blur');
 		$(this.groupContainerId).find(this.groupNameTxtClass).blur(function(event){
 			me.saveGroupName();
 		});
@@ -622,7 +623,12 @@ student_grouping.group = function(groupData){
 	 * Save the new group name 
 	 */
 	this.saveGroupName = function(){
-		var newGroupName = $(this.groupContainerId).find(this.groupNameTxtClass).val();
+	    var newGroupName = $(this.groupContainerId).find(this.groupNameTxtClass).val();
+
+	    // if no input, then set default name
+	    if (!/\S/.test(newGroupName)) {
+	        newGroupName = 'New Group';
+	    }
 		this.groupData.cohortIdentifier = newGroupName;
 		$(this.groupContainerId).find(this.groupNameLblClass).html(newGroupName);
 		$(this.groupContainerId).find(this.groupNameLblClass).show();
@@ -657,12 +663,6 @@ student_grouping.group = function(groupData){
 	this.saveGroupDescription = function(){
 
 	    var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
-
-        // if no input, then set default name
-	    if (/\S/.test(newGroupDescription)) {
-	        newGroupDescription = 'New Group';
-	    }
-
 	    this.groupData.cohortDescription = newGroupDescription;
 	    $(this.groupDescriptionTxtElem).html(newGroupDescription);
 	    $(this.groupDescriptionTxtAreaElem).hide();
@@ -676,7 +676,7 @@ student_grouping.group = function(groupData){
 	 * Returns the position and size of this group's container element 
 	 */
 	this.getPositionAndSize = function(){
-		var position = $(this.groupContainerId).position();
+		var position = $(this.groupContainerId).offset();
 		var width = $(this.groupContainerId).width(); 
 		var height = $(this.groupContainerId).height();
 		
@@ -744,7 +744,7 @@ student_grouping.group = function(groupData){
 	            cohortDescription: this.groupData.cohortDescription,
                 cohortIdentifier: this.groupData.cohortIdentifier
 	        },
-            custom: [],
+	        custom: { dataElements : me.selectedAttributes },
 	        studentsToDelete : studentsToDelete !== null ? studentsToDelete : [],
 	        studentsToCreate : newStudents !== null ? newStudents : []
 	    }
@@ -788,30 +788,32 @@ student_grouping.group = function(groupData){
 	this.deleteGroup = function () {
 
 	    var groupId = me.groupData.id;
+	    var confirmation = confirm('Are you sure you want to delete the group: ' + me.groupData.cohortIdentifier);
+	    if (confirmation) {
+	        // make sure we are not deleting newly created, unsaved groups
+	        if (groupId < 0) {
+	            // Let user know the created was successful
+	            utils.uiUtils.showTooltip(
+                    $(me.groupContainerId).find(me.groupNameLblClass),
+                    'Cannot delete this unsaved new group.',
+                    'top',
+                    'manual',
+                    3000);
+	        } else {
+	            $.ajax({
+	                type: 'POST',
+	                url: 'DeleteGroup?id=' + groupId,
+	                contentType: 'application/json',
+	                success: function (result) {
+	                    me.deleteGroupSuccessHandler(result);
+	                },
+	                error: function (result) {
+	                    me.deleteGroupErrorHandler(result);
+	                }
+	            });
 
-        // make sure we are not deleting newly created, unsaved groups
-	    if (groupId < 0) {
-	        // Let user know the created was successful
-	        utils.uiUtils.showTooltip(
-                $(me.groupContainerId).find(me.groupNameLblClass),
-                'Cannot delete this unsaved new group.',
-                'top',
-                'manual',
-                3000);
-	    } else {
-	        $.ajax({
-	            type: 'POST',
-	            url: 'DeleteGroup?id=' + groupId,
-	            contentType: 'application/json',
-	            success: function (result) {
-	                me.deleteGroupSuccessHandler(result);
-	            },
-	            error: function (result) {
-	                me.deleteGroupErrorHandler(result);
-	            }
-	        });
-
-	        me.toggleGroupContainerProcessingState(true);
+	            me.toggleGroupContainerProcessingState(true);
+	        }
 	    }
 	}
 

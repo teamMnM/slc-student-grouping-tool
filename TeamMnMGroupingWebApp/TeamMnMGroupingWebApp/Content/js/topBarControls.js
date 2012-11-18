@@ -29,7 +29,7 @@ student_grouping.topBarControls = function(){
     	
     	$(this.findGroupDropdownElem).select2();
     	setTimeout(function () {
-    	    $(".select2-container").width('100%');
+    	    $(".select2-container").not('.span11').width('100%');
     	}, 500);
     	
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);

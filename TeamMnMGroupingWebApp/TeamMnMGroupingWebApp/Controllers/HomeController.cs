@@ -356,7 +356,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var result = new Result
                 {
-                    completedSuccessfully = response.StatusCode == HttpStatusCode.OK,
+                    completedSuccessfully = response.StatusCode == HttpStatusCode.Created,
                     objectActionResult = new ActionResponseResult { status = response.StatusCode, message = await response.Content.ReadAsStringAsync() }
                 };
 
@@ -389,12 +389,12 @@ namespace TeamMnMGroupingWebApp.Controllers
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
                     cohort.educationOrgId = userSession.edOrgId;
                 else
-                    cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8"; // daom 
-                    //cohort.educationOrgId = "2012uv-e6ddf954-2f42-11e2-ad37-02786541ab34";
+                    //cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8"; // daom 
+                    cohort.educationOrgId = "2012uv-e6ddf954-2f42-11e2-ad37-02786541ab34";
                     
                 var response = await cs.Update(cohort);
 
-                var result = new Result { completedSuccessfully = response.StatusCode == HttpStatusCode.OK, 
+                var result = new Result { completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent, 
                     objectActionResult = new ActionResponseResult { data = cohort.id, status = response.StatusCode, message = await response.Content.ReadAsStringAsync() } };
 
                 return result;

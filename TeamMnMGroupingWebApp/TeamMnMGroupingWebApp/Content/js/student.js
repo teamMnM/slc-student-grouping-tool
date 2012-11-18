@@ -171,7 +171,7 @@ student_grouping.student = function(studentData) {
 			});										
 			
 			// place the popover relative to the student container
-			var position = $(studentContainer).position();
+			var position = $(studentContainer).offset();
 			var width = $(studentContainer).width(); 
 			var height = $(studentContainer).height();
 			var marginLeft = parseFloat($(studentContainer).css('margin-left').replace('px',''));

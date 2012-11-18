@@ -33,7 +33,8 @@ student_grouping.init = function(){
 
             _.each(data.dataElements, function (dataElement) {
                 var dataElem = $("<li><input class='cbox-student-attribute' type='checkbox'"
-                    +   "value='" + dataElement.attributeId + "'/>" + dataElement.attributeName
+                    + "value='" + dataElement.attributeId + "' data-displayName='"
+                    + dataElement.attributeName + "'/>" + dataElement.attributeName
                     + "</li>");
                 $("#student-data-popover").find(".student-elements-list").append(dataElem);
             });
@@ -51,12 +52,19 @@ student_grouping.init = function(){
                 },                
                 revert: "invalid",
                 "helper": "clone",
-                "opacity": 0.7
+                "opacity": 0.7,
+                appendTo: 'body'
             });
         }
 	});
 
-	
+    // set the size of page
+	var windowHeight = $(window).height();
+	$(".main-content").height(windowHeight + 'px');
+	var studentCtrlHeight = $("#student-controls").height();
+	var studentCtrlMargin = $("#student-controls").css('margin-bottom');
+	var studentListMargin = $("#studentListDiv").css('margin-top');
+    $("#studentListDiv").height()
 }
 
 // initialize module
