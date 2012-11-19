@@ -23,7 +23,7 @@ namespace TeamMnMGroupingWebApp.Controllers
     [HandleError(ExceptionType = typeof(HttpRequestException), View = "PermissionError")]
     public class HomeController : BaseController
     {
-        const string MAIN = "/Home/Index2";
+        const string MAIN = "/Home/MultipleGroupsEdit";
         const string SLC_USER_SESSION = "slc_user";
 
         public void Index()
@@ -40,7 +40,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         [OutputCache(Duration = 1200, VaryByParam = "none")]
-        public ActionResult Index2()
+        public ActionResult MultipleGroupsEdit()
         {
             return View("Index");
         }
