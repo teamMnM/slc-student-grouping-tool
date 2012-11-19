@@ -28,21 +28,13 @@ student_grouping.init = function(){
             me.studentsListComponent.init(data.students);
 
             // set up the groups list
-            me.groupsListComponent.init(data.cohorts, data.colors);
+            me.groupsListComponent.init(data.cohorts, data.colors, data.dataElements);
 
             // set up the top bar controls
             me.topBarComponent.init(data.cohorts);
 
             // set up the filter components
             student_grouping.filterComponent.init(data.filters);
-
-            _.each(data.dataElements, function (dataElement) {
-                var dataElem = $("<li><input class='cbox-student-attribute' type='checkbox'"
-                    + "value='" + dataElement.attributeId + "' data-displayName='"
-                    + dataElement.attributeName + "'/>" + dataElement.attributeName
-                    + "</li>");
-                $(".student-data-popover .student-elements-list").append(dataElem);
-            });
 
             // set up the list controls	
             var listStudentData = _.pluck(me.students, 'studentData');
@@ -65,7 +57,7 @@ student_grouping.init = function(){
             $(".main-content").css('opacity', 1);
         },
         error: function (errorMsg) {
-            window.location = 'Index';
+            window.location = 'Error';
             $(".main-content").spin(false);
             $(".main-content").css('opacity', 1);
         }
@@ -77,7 +69,7 @@ student_grouping.init = function(){
 	var studentCtrlHeight = $("#student-controls").height();
 	var studentCtrlMargin = $("#student-controls").css('margin-bottom');
 	var studentListMargin = $("#studentListDiv").css('margin-top');
-    $("#studentListDiv").height()
+	$("#studentListDiv").height();
 }
 
 // initialize module

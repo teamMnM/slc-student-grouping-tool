@@ -132,20 +132,27 @@ student_grouping.studentsList = function(){
 	}
 	
 	/**
-	 * TODO add description and check for numeric value 
+	 * Randomly organizes all students into groups (reassigns students that are already
+     * assigned to groups)
 	 */
-	this.assignRandom = function(){
-		var me = this;
-		var randomNum = $(this.randomNumTxt).val();
-		if (randomNum !== ''){		
-			this.pubSub.publish('assign-random', this.students, randomNum);
-			$(this.randomNumTxt).val('');
-		} else {
-			$(this.randomNumTxt).tooltip('show');
-			setTimeout(function(){
-				$(me.randomNumTxt).tooltip('hide');
-			}, 4000);
-		}
+	this.assignRandom = function () {
+
+        // show warning and confirm that the user would like to perform the action
+	    var confirmation = confirm('Random will reorganize your students into groups randomly,' + 
+            + 'even the students that are already assigned to groups. Would you like to continue?');
+	    if (confirmation) {
+	        var me = this;
+	        var randomNum = $(this.randomNumTxt).val();
+	        if (randomNum !== '') {
+	            this.pubSub.publish('assign-random', this.students, randomNum);
+	            $(this.randomNumTxt).val('');
+	        } else {
+	            $(this.randomNumTxt).tooltip('show');
+	            setTimeout(function () {
+	                $(me.randomNumTxt).tooltip('hide');
+	            }, 4000);
+	        }
+	    }
 	}
 	
 	/**

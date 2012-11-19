@@ -11,6 +11,7 @@ student_grouping.topBarControls = function(){
 	this.findGroupSelect2Elem = '#s2id_find-group-dropdown'; // this could change with plugin update - unstable
 	this.addExistingGroupBtn = '#add-existing-group-btn';
 	this.addNewGroupBtn = '#add-new-group-btn';
+	this.saveAllBtnElem = '#img-save-btn';
 	
 	this.groups = [];
 	
@@ -34,6 +35,7 @@ student_grouping.topBarControls = function(){
     	
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
     	$(this.addNewGroupBtn).click(this.addNewGroup);
+    	$(this.saveAllBtnElem).click(this.saveAllGroups);
 
         // remove group from dropdown if deleted
     	this.pubSub.subscribe('group-deleted', function (id) {
@@ -45,6 +47,7 @@ student_grouping.topBarControls = function(){
     	    $(me.findGroupDropdownElem).
     			append("<option value='" + group.id + "'>" + group.cohortIdentifier + "</option>");
     	});
+
     }
     
     /**
@@ -123,5 +126,12 @@ student_grouping.topBarControls = function(){
 
         // remove from dropdown list
         $(me.findGroupDropdownElem).find('option[value="' + groupId + '"]').remove();
+    }
+
+    /**
+     * Handle click of the save all button
+     */
+    this.saveAllGroups = function () {
+        this.pubSub.publish('save-all-groups');
     }
 }
