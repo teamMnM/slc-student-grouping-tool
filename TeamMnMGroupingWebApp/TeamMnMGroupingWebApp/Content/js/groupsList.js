@@ -243,6 +243,10 @@ student_grouping.groupsList = function(){
      */
 	this.saveAllGroups = function () {
 
+	    // disable the groups area screen
+	    $(this.groupsAreaClass).spin();
+	    $(this.groupsAreaClass).css('opacity', 0.2);
+
         // reset synching params
 	    this.groupsAdded = false;
 	    this.createGroupsResults = [];
@@ -275,19 +279,51 @@ student_grouping.groupsList = function(){
 	    });        	    
 	}
 
+    /**
+     * TODO refactor assign ids to new groups
+     */
 	this.saveAllGroupsSuccessHandler = function(results, groupsToSave){
+	    var numSuccessfulSaves = 0;
 	    var numResults = results.length;
 	    for (var i = 0; i < numResults; i++) {
 	        var result = results[i];
-	        if (result.objectId !== null && result.objectId !== undefined){
+
+            // assign id to newly created groups
+	        if (result.objectId !== null && result.objectId !== undefined) {
+	            var groupToSave = groupsToSave[i];
+	            groupToSave.groupData.id = result.objectId;
+	        }
+
+	        if (result.completedSuccessfully) {
+	            numSuccessfulSaves++;
 	        }
 	    }
 
-	    $(me.saveAllGroupsContentElem).html();
+	    $(me.saveAllGroupsContentElem).html("<div class='well label-success save-all-msg'>Number of successful saves: " + numSuccessfulSaves + 
+            "</div> <div class='well label-important save-all-msg'>Number of unsuccessful saves: " + (numResults - numSuccessfulSaves) + "</div>"
+        );
 	    $(me.saveAllGroupsModalElem).modal('show');
+
+	    me.saveAllComplete();
 	}
 
+    /**
+     * TODO need better way to display errors
+     */
 	this.saveAllGroupsErrorHandler = function (errorMsg) {
 	    $(me.saveAllGroupsModalElem).modal('show');
+	    $(me.saveAllGroupsContentElem).html("<div>There was an error saving your changes.</div> <div>Error message: " + errorMsg.responseText + "</div>");
+
+	    me.saveAllComplete();
+	}
+
+	this.saveAllComplete = function () {
+
+	    // notify others that save all has completed
+	    me.pubSub.publish('save-all-completed');
+
+	    // re-enable the groups area screen
+	    $(this.groupsAreaClass).spin(false);
+	    $(this.groupsAreaClass).css('opacity', 1);
 	}
 }

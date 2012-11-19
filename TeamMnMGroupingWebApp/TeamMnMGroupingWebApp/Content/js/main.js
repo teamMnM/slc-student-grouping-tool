@@ -11,6 +11,9 @@ student_grouping.groupsListComponent = new student_grouping.groupsList();
 // TODO create lookup component 
 student_grouping.sections = [];
 
+/**
+ * TODO add description and externalize element selectors
+ */
 student_grouping.init = function(){
 		
     var me = this;
