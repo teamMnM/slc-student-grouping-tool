@@ -165,47 +165,64 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns>result of the action</returns>
         public async Task<Result> ProcessOneCohortUpdate(CohortActionObject obj)
         {
-            var cs = new CohortService(Session["access_token"].ToString());
-            //1) update cohort
-            var cohortResult = await UpdateCohort(cs, obj.cohort);
-            //2) create student cohort association
-            Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
-            if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate);
-            else
-                newStudentsAssociations = null;
-            //3) update cohort custom entity
-            var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
-
-            //4) remove students from cohort
-            Task<IEnumerable<ActionResponseResult>> removeStudents;
-            if (obj.studentsToDelete != null && obj.studentsToDelete.Count() > 0)
+            try
             {
-                //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
-                var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
-                //get the studentCohortAssociationId for students to delete
-                var associationToDelete = (from s in obj.studentsToDelete select (currentStudentCohortAssociation.FirstOrDefault(csca => csca.studentId == s)));
-                //delete the studentCohortAssociation
-                removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete);
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cs = new CohortService(Session["access_token"].ToString());
+                    //1) update cohort
+                    var cohortResult = await UpdateCohort(cs, obj.cohort);
+                    //2) create student cohort association
+                    Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
+                    if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                        newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate);
+                    else
+                        newStudentsAssociations = null;
+                    //3) update cohort custom entity
+                    var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
+
+                    //4) remove students from cohort
+                    Task<IEnumerable<ActionResponseResult>> removeStudents;
+                    if (obj.studentsToDelete != null && obj.studentsToDelete.Count() > 0)
+                    {
+                        //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
+                        var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
+                        //get the studentCohortAssociationId for students to delete
+                        var associationToDelete = (from s in obj.studentsToDelete select (currentStudentCohortAssociation.FirstOrDefault(csca => csca.studentId == s)));
+                        //delete the studentCohortAssociation
+                        removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete);
+                    }
+                    else
+                        removeStudents = null;
+
+                    //contruct a list of tasks we're waiting for
+                    var tasksToWaitFor = new List<Task>();
+                    if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
+                    if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
+                    if (removeStudents != null) tasksToWaitFor.Add(removeStudents);
+
+                    await Task.WhenAll(tasksToWaitFor);
+
+                    if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
+                    if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
+
+                    //remove cohort from cache after an update
+                    HttpContext.Cache.Remove(obj.cohort.id);
+
+                    return cohortResult;
+                }
+                else
+                {
+                    //session expired
+                    return GetSessionExpiredResult(obj.cohort.id);
+                }                
             }
-            else
-                removeStudents = null;
-
-            //contruct a list of tasks we're waiting for
-            var tasksToWaitFor = new List<Task>();
-            if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
-            if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
-            if (removeStudents != null) tasksToWaitFor.Add(removeStudents);
-
-            await Task.WhenAll(tasksToWaitFor);
-
-            if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
-            if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
-
-            //remove cohort from cache after an update
-            HttpContext.Cache.Remove(obj.cohort.id);
-
-            return cohortResult;
+            catch (Exception e)
+            {
+                return GetExceptionResult(obj.cohort.id, e);
+            }
+            
         }
 
         /// <summary>
@@ -215,35 +232,52 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns>result of the action</returns>
         public async Task<Result> ProcessOneCohortCreate(CohortActionObject obj)
         {
-            var cs = new CohortService(Session["access_token"].ToString());
-            //1) create the cohort first
-            var cohortResult = await CreateCohort(cs, obj.cohort);
-
-            //if cohort was created successfully then continue to create associations
-            if (cohortResult.completedSuccessfully)
+            try
             {
-                //2) start creating student cohort association
-                Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
-                if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                    newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cs = new CohortService(Session["access_token"].ToString());
+                    //1) create the cohort first
+                    var cohortResult = await CreateCohort(cs, obj.cohort);
+
+                    //if cohort was created successfully then continue to create associations
+                    if (cohortResult.completedSuccessfully)
+                    {
+                        //2) start creating student cohort association
+                        Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
+                        if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                            newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
+                        else
+                            newStudentsAssociations = null;
+                        //3) initial populate of the cohort custom entity
+                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
+
+                        //contruct a list of tasks we're waiting for
+                        var tasksToWaitFor = new List<Task>();
+                        if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
+                        if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
+
+                        await Task.WhenAll(tasksToWaitFor);
+
+                        if (newStudentsAssociations != null)
+                            DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
+                    }
+
+                    return cohortResult;
+                }
                 else
-                    newStudentsAssociations = null;
-                //3) initial populate of the cohort custom entity
-                var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
-
-                //contruct a list of tasks we're waiting for
-                var tasksToWaitFor = new List<Task>();
-                if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
-                if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
-
-                await Task.WhenAll(tasksToWaitFor);
-
-                if (newStudentsAssociations != null)
-                    DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
+                {
+                    //section expired
+                    return GetSessionExpiredResult(obj.cohort.cohortIdentifier);
+                }
+                
             }
-
-            return cohortResult;
-        }
+            catch (Exception e)
+            {
+                return GetExceptionResult(obj.cohort.cohortIdentifier, e);
+            }           
+        }        
 
         /// <summary>
         /// Delete one cohort
@@ -252,22 +286,38 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns>result of the action</returns>
         public async Task<Result> ProcessOneCohortDelete(string id)
         {
-            var cs = new CohortService(Session["access_token"].ToString());
-            var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
-            ////var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;               
-            var cohortResult = await DeleteCohort(cs, id);
-
-            if (associationToDelete != null && associationToDelete.Count() > 0)
+            try
             {
-                IEnumerable<ActionResponseResult> removeStudents = await DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
-                if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cs = new CohortService(Session["access_token"].ToString());
+                    var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
+                    ////var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;               
+                    var cohortResult = await DeleteCohort(cs, id);
+
+                    if (associationToDelete != null && associationToDelete.Count() > 0)
+                    {
+                        IEnumerable<ActionResponseResult> removeStudents = await DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
+                        if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
+                    }
+
+                    //remove cohort from cache after an update
+                    HttpContext.Cache.Remove(id);
+
+                    return cohortResult; 
+                }
+                else
+                {
+                    //session has expired
+                    return GetSessionExpiredResult(id);
+                }
+                
             }
-
-            //remove cohort from cache after an update
-            HttpContext.Cache.Remove(id);
-
-            return cohortResult;
-            //return Json(cohortResult, JsonRequestBehavior.AllowGet); 
+            catch (Exception e)
+            {
+                return GetExceptionResult(id, e);
+            }           
         }
 
         /// <summary>
@@ -601,6 +651,37 @@ namespace TeamMnMGroupingWebApp.Controllers
                     throw new Exception(response.Content.ReadAsStringAsync().Result.ToString());
                 }
             }
+        }
+
+        private Result GetSessionExpiredResult(string id = "")
+        {
+            return new Result
+            {
+                completedSuccessfully = false,
+                objectId = id,
+                objectActionResult =
+                    new ActionResponseResult
+                    {
+                        status = HttpStatusCode.ProxyAuthenticationRequired,
+                        message = "Session expired"
+                    }
+            };
+        }
+
+        private static Result GetExceptionResult(string id, Exception e)
+        {
+            Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+            return new Result
+            {
+                completedSuccessfully = false,
+                objectId = id,
+                objectActionResult =
+                    new ActionResponseResult
+                    {
+                        status = HttpStatusCode.InternalServerError,
+                        message = "Message: " + e.Message + " Inner Exception: " + e.InnerException == null ? "" : e.InnerException.Message
+                    }
+            };
         }
     }
 }
