@@ -148,6 +148,7 @@
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Content\css\main.css" />
     <Content Include="Content\img\attachment-icon.png" />
+    <Content Include="Content\img\attachment-paper-small.png" />
     <Content Include="Content\img\attachment-paper.png" />
     <Content Include="Content\img\divider-icon.png" />
     <Content Include="Content\img\group-close-icon.png" />

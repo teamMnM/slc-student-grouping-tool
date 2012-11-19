@@ -50,6 +50,7 @@ namespace TeamMnMGroupingWebApp.Helper
             var newSection = new SectionDisplayObject();
             if (c != null)
             {
+                newSection.id = c.id;
                 newSection.courseTitle = c.courseTitle;
                 newSection.courseDescription = c.courseDescription;
                 newSection.courseLevel = c.courseLevel;

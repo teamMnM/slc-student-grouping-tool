@@ -113,6 +113,7 @@ student_grouping.group = function(groupData){
 
 	this.droppedElemClass = '.dropped-elem';
 	this.studentAttributesClass = '.student-attributes';					
+	this.fullProfileLinkClass = '.student-full-profile a';
 	this.droppedElemTemplate = "<div data-studentId='' class='dropped-elem'>" +					
 									"<img class='del-button' src='/Content/img/student-close-icon.png'></img>" +
 									'<div class="student-icon-div"><img class="student-icon" src="/Content/img/student-icon-male.png"/></div>' +
@@ -286,7 +287,8 @@ student_grouping.group = function(groupData){
 
 	
 	/**
-	 * Create group indicator for the given student
+	 * TODO externalize element selectors
+     * Create group indicator for the given student
 	 * @param {Object} student
 	 */
 	this.createDroppedElem = function(student){
@@ -305,6 +307,12 @@ student_grouping.group = function(groupData){
 		$(closeBtn).click(function(event){
 			me.removeStudent(student.id);
 		});
+
+		var fullProfileLink = $(elemDiv).find(this.fullProfileLinkClass);
+		$(fullProfileLink).click(function (event) {
+		    window.open("https://dashboard.sandbox.slcedu.org/s/l/student/" + student.id);                         
+		});
+
 		return elemDiv;		
 	}
 	
@@ -331,6 +339,7 @@ student_grouping.group = function(groupData){
 	}
 	
     /** 
+     * TODO refactor to make lookups generic
      * Show the given attributes on the students in this group
      */
 	this.appendStudentAttributes = function(attributesDiv, studentData, attributes){
@@ -340,6 +349,24 @@ student_grouping.group = function(groupData){
 	        if (value === null || value === undefined) {
 	            value = 'no data';
 	        }
+
+            // perform lookup for sections
+	        if (attribute.attributeId === 'sections') {
+	            var sectionNames = [];
+	            var studentSections = value;
+	            var sections = student_grouping.sections;
+	            _.each(studentSections, function (studentSection) {
+	                // find the corresponding section using the id
+	                var matchingSection = _.find(sections, function (section) {
+	                    return section.id === studentSection;
+	                });
+	                if (matchingSection !== undefined) {
+	                    sectionNames.push(matchingSection.courseTitle);
+	                }
+	            });
+	            value = sectionNames;
+	        }
+
 			$(attributesDiv).append("<div><strong>" + name + "</strong> " + value + "</div>");
 		});
 	}
@@ -515,8 +542,9 @@ student_grouping.group = function(groupData){
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).unbind('change');
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).change(function () {
 				    $(document).unbind('mouseup');
-				    $(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
-
+				    var fileName = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).val()
+				    $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt)
+                        .val(fileName);
 				});
 
 			    // attach event handler to hide this if user clicks outside of it

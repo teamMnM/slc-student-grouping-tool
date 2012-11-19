@@ -8,6 +8,9 @@ student_grouping.filterComponent = new student_grouping.filters();
 student_grouping.studentsListComponent = new student_grouping.studentsList();
 student_grouping.groupsListComponent = new student_grouping.groupsList();
 
+// TODO create lookup component 
+student_grouping.sections = [];
+
 student_grouping.init = function(){
 		
     var me = this;
@@ -17,6 +20,8 @@ student_grouping.init = function(){
         url: 'Group',
         success: function (data) {
 
+            // store lookups
+            me.sections = data.sections;
 
             // set up the students list --> this goes before the groupsList 
             // because groupsList depends on the full list of students
@@ -57,7 +62,7 @@ student_grouping.init = function(){
             });
 
             $(".main-content").spin(false);
-            $(".main-content").css('opacity',1 );
+            $(".main-content").css('opacity', 1);
         },
         error: function (errorMsg) {
             window.location = 'Index';

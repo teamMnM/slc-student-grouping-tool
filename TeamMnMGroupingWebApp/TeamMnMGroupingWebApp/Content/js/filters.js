@@ -252,7 +252,14 @@ student_grouping.filters = function(){
     				case '>' : return studentAttributeVal > parseFloat(value);
     				case '<=' : return studentAttributeVal <= parseFloat(value);
     				case '>=' : return studentAttributeVal >= parseFloat(value);
-    				case 'contains' :     					
+    			    case 'contains':
+                        // if not array, then make it into one
+    			        if (!Array.isArray(studentAttributeVal)) {
+    			            var copyOfStudentAttributeVal = studentAttributeVal;
+    			            studentAttributeVal = [];
+    			            studentAttributeVal.push(copyOfStudentAttributeVal);
+    			        }
+
     					var intersection = _.any(studentAttributeVal, function(studentVal){
     						var studentHasDisability = _.find(value, function(val){
     							return val === studentVal;

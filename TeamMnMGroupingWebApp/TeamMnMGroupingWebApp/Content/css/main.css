@@ -32,9 +32,18 @@
 /**********************
  * TOP BAR
  *********************/
+.tooltip-inner {
+    z-index:2;
+}
+
 .top-bar-controls {
 	margin-bottom: 1.6em;
 	width:auto;
+}
+
+.top-bar-rows {
+    background: #D7E4BD;
+    height:2.3em;
 }
 
 .top-bar-img-btn {
@@ -313,6 +322,7 @@
 .group-top-container {
 	margin: 2em 2em 4em 2em;
     display:inline-block;
+    vertical-align: top;
 }
 
 .group-container {
@@ -476,7 +486,7 @@
 .real-upload-txt {
     position:absolute;
     top:10;
-    left:1em;
+    left:0em;
 
     /* start of transparency styles */
     opacity:0;
@@ -503,6 +513,7 @@
 
 .fakeupload {
 	margin-top:0.8em;
+    position:relative;
 }
 
 /**********************
