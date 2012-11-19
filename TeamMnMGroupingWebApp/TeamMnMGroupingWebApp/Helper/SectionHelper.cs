@@ -61,29 +61,46 @@ namespace TeamMnMGroupingWebApp.Helper
 
         public static async Task<IEnumerable<Course>> GetAllCourses(SectionService ss)
         {
-            //Get all courses
-            var result = await ss.GetAllCourses();
-
-            //cache each course by id
-            foreach (var c in result)
+            try
             {
-                HttpContext.Current.Cache.Insert(c.id, c);
+                //Get all courses
+                var result = await ss.GetAllCourses();
+
+                //cache each course by id
+                foreach (var c in result)
+                {
+                    HttpContext.Current.Cache.Insert(c.id, c);
+                }
+
+                return result;
             }
-            
-            return result;
+            catch (Exception e)
+            {
+                ExceptionHelper.LogCaughtException(e);
+                return new List<Course>();
+            }           
         }
 
         public static async Task<IEnumerable<CourseOffering>> GetAllCourseOfferings(SectionService ss)
         {
-            //Get all course offerings
-            var result = await ss.GetAllCourseOfferings();
-
-            //cache each course offering
-            foreach (var co in result)
+            try
             {
-                HttpContext.Current.Cache.Insert(co.id, co);
-            }           
-            return result;
+                //Get all course offerings
+                var result = await ss.GetAllCourseOfferings();
+
+                //cache each course offering
+                foreach (var co in result)
+                {
+                    HttpContext.Current.Cache.Insert(co.id, co);
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                ExceptionHelper.LogCaughtException(e);
+                return new List<CourseOffering>();
+            }
+            
         }
 
     }

@@ -102,7 +102,7 @@ namespace TeamMnMGroupingWebApp.Helper
             }
             catch (Exception e)
             {
-                //log something here
+                ExceptionHelper.LogCaughtException(e);
             }
             
             return newStudent;

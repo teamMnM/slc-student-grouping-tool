@@ -30,7 +30,8 @@ namespace TeamMnMGroupingWebApp.Helper
             }
             catch(Exception e)
             {
-                throw;
+                ExceptionHelper.LogCaughtException(e);
+                return new List<DataElement>();
             }
         }
 
@@ -50,7 +51,8 @@ namespace TeamMnMGroupingWebApp.Helper
             }
             catch (Exception e)
             {
-                throw;
+                ExceptionHelper.LogCaughtException(e);
+                return new List<Color>();
             }
         }
 

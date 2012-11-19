@@ -39,7 +39,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
-        [OutputCache(Duration = 1200, VaryByParam = "none")]
+        //[OutputCache(Duration = 1200, VaryByParam = "none")]
         public ActionResult MultipleGroupsEdit()
         {
             return View("Index");
@@ -610,47 +610,54 @@ namespace TeamMnMGroupingWebApp.Controllers
         [NonAction]
         private void GetToken(string redirectUrl)
         {
-            // We get a code back from the first leg of OAuth process.  If we don't have one, let's get it.
-            if (Request.QueryString["code"] == null)
+            try
             {
-                // Here the user will log into the SLC.
-                string authorizeUrl = string.Format(SLC_SANDBOX_LOGIN, SLC_CLIENT_ID, SLC_REDIRECT_URL);
-                Response.Redirect(authorizeUrl);
-            }
-            else
-            {
-                // Now we have a code, we can run the second leg of OAuth process.
-                string code = Request.QueryString["code"];
-
-                // Set the authorization URL
-                string sessionUrl = string.Format(SLC_OAUTH_URL, SLC_CLIENT_ID, SLC_SHARED_SECRET, SLC_REDIRECT_URL, code);
-
-                var client = new HttpClient();
-                var response = client.GetAsync(sessionUrl).Result;
-                if (response.StatusCode == HttpStatusCode.OK)
+                // We get a code back from the first leg of OAuth process.  If we don't have one, let's get it.
+                if (Request.QueryString["code"] == null)
                 {
-                    string access_token = JObject.Parse(response.Content.ReadAsStringAsync().Result)["access_token"].ToString();
-                    // If we have a valid token, it'll be 38 chars long.  Let's add it to session if so.
-                    if (access_token.Length == 38)
-                    {
-                        Session.Add("access_token", access_token);
-
-                        //Get the current user session info
-                        var ss = new SessionService(access_token);
-                        var userSession = ss.Get().Result;
-                        Session.Add(SLC_USER_SESSION, userSession);
-
-                        // Redirect to app main page.
-                        Response.Redirect(redirectUrl);
-                    }
+                    // Here the user will log into the SLC.
+                    string authorizeUrl = string.Format(SLC_SANDBOX_LOGIN, SLC_CLIENT_ID, SLC_REDIRECT_URL);
+                    Response.Redirect(authorizeUrl);
                 }
                 else
                 {
-                    //error logging into SLC
-                    //Response.Redirect("Home/LoginError");
-                    throw new Exception(response.Content.ReadAsStringAsync().Result.ToString());
+                    // Now we have a code, we can run the second leg of OAuth process.
+                    string code = Request.QueryString["code"];
+
+                    // Set the authorization URL
+                    string sessionUrl = string.Format(SLC_OAUTH_URL, SLC_CLIENT_ID, SLC_SHARED_SECRET, SLC_REDIRECT_URL, code);
+
+                    var client = new HttpClient();
+                    var response = client.GetAsync(sessionUrl).Result;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string access_token = JObject.Parse(response.Content.ReadAsStringAsync().Result)["access_token"].ToString();
+                        // If we have a valid token, it'll be 38 chars long.  Let's add it to session if so.
+                        if (access_token.Length == 38)
+                        {
+                            Session.Add("access_token", access_token);
+
+                            //Get the current user session info
+                            var ss = new SessionService(access_token);
+                            var userSession = ss.Get().Result;
+                            Session.Add(SLC_USER_SESSION, userSession);
+
+                            // Redirect to app main page.
+                            Response.Redirect(redirectUrl);
+                        }
+                    }
+                    else
+                    {
+                        //error logging into SLC
+                        Response.Redirect("Home/LoginError");
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                ExceptionHelper.LogCaughtException(e);
+                Response.Redirect("Home/LoginError");
+            }            
         }
 
         private Result GetSessionExpiredResult(string id = "")
@@ -670,7 +677,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
         private static Result GetExceptionResult(string id, Exception e)
         {
-            Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+            ExceptionHelper.LogCaughtException(e);
             return new Result
             {
                 completedSuccessfully = false,
