@@ -13,6 +13,7 @@ student_grouping.topBarControls = function(){
 	this.addNewGroupBtn = '#add-new-group-btn';
 	this.saveAllBtnElem = '#img-save-btn';
 	
+	this.savingAll = false;
 	this.groups = [];
 	
 	/**************************
@@ -40,6 +41,11 @@ student_grouping.topBarControls = function(){
         // remove group from dropdown if deleted
     	this.pubSub.subscribe('group-deleted', function (id) {
     	    me.removeGroup(id);
+    	});
+
+        // TODO add description
+    	this.pubSub.subscribe('save-all-completed', function () {
+    	    me.savingAll = false;
     	});
 
         // add newly created (saved to server) group to dropdown list
@@ -132,6 +138,10 @@ student_grouping.topBarControls = function(){
      * Handle click of the save all button
      */
     this.saveAllGroups = function () {
-        me.pubSub.publish('save-all-groups');
+
+        if (!me.savingAll) {
+            me.savingAll = true; // prevent user from trigger save all while saving
+            me.pubSub.publish('save-all-groups');
+        }
     }
 }

@@ -258,8 +258,10 @@ student_grouping.group = function(groupData){
 			this.students.push(studentId);
 			student.addGroupIndicator(this.groupData.id, this.color.background);
 
-		    // make selected student attributes visible
-			this.toggleStudentAttributeVisibility(this.selectedAttributes);
+		    // make selected student attributes visible (only if group is not collapsed)
+			if (!me.collapsed) {
+			    this.toggleStudentAttributeVisibility(this.selectedAttributes);
+			}
 
             // update student count label
 			this.updateNumStudentsBadge();
@@ -323,7 +325,12 @@ student_grouping.group = function(groupData){
 		var state = this.collapsed ? this.collapsedClass : this.expandedClass;
 		$(elemDiv).addClass(state);
 		
-		me.appendStudentAttributes(attributesDiv, student, me.selectedAttributes);	
+		if (!me.collapsed) {
+		    me.appendStudentAttributes(attributesDiv, student, me.selectedAttributes);
+		} else {
+		    $(elemDiv).find('.student-attributes').hide();
+		}
+
 		var closeBtn = $(elemDiv).find('.del-button');
 		$(closeBtn).click(function(event){
 			me.removeStudent(student.id);
@@ -367,7 +374,7 @@ student_grouping.group = function(groupData){
 	    _.each(attributes, function (attribute) {
 	        var name = attribute.attributeName;
 	        var value = studentData[attribute.attributeId];
-	        if (value === null || value === undefined || value === '') {
+	        if (value === null || value === undefined || value === '' || value.length === 0) {
 	            value = '[no data]';
 	        }
 
