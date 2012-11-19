@@ -8,6 +8,7 @@ student_grouping.groupsList = function(){
 	// keep track of the current group we are dragging to
 	this.currGrp = null;
 	this.groups = [];
+	this.dataElements = [];
 	this.lastNewGroupIndex = -1;
 	
 	this.groupClass = '.group';
@@ -28,7 +29,12 @@ student_grouping.groupsList = function(){
 	/**************************
      * METHODS
      **************************/
-	this.init = function (groups, colors) {
+	this.init = function (groups, colors, dataElements) {
+
+	    // store pre-defined data elements from backend
+	    _.each(dataElements, function (dataElement) {
+	        me.dataElements.push(dataElement);
+	    });
 
         // store pre-defined colors from backend
 	    _.each(colors, function (color) {
@@ -57,8 +63,8 @@ student_grouping.groupsList = function(){
 			me.assignRandomGroups(students, numInGroup);
 		});
 
-		$(this.groupsAreaClass).scroll(function () {
-
+		this.pubSub.subscribe('save-all-groups', function () {
+		    me.saveAllGroups();
 		});
     }
     
@@ -77,7 +83,7 @@ student_grouping.groupsList = function(){
     	    var group = new student_grouping.group(newGroup);
     	    var color = this.colorList[this.currentColorIndex++];
 			$(this.groupsAreaClass).append(group.generateTemplate(color));
-			group.init();
+			group.init(me.dataElements);
 			
 			if (this.currentColorIndex >= this.colorList.length) {
 			    this.currentColorIndex = 0;
@@ -173,44 +179,47 @@ student_grouping.groupsList = function(){
 		var groups = utils.arrayUtils.shuffle(this.groups);
 		var numGroups = groups.length;
 		
+	    // remove students from all groups
+		_.each(groups, function (group) {
+		    group.removeAllStudents();
+		});
+
 		// keep track of the next group that is not FULL
 		var indexOfNextAvailableGroup = 0;
 		_.each(students, function(student){
 			var studentId = student.studentData.id;			
-			if (!student.inAGroup()){
-					
-				// keep track of whether student has been assigned to the existing groups
-				var addedToGroup = false;			
-				for (var i = indexOfNextAvailableGroup; i < numGroups; i++){
-					var group = groups[i];
-					if (group.students.length < numInGroup && !group.hasStudent(studentId)){
-						group.assignStudentToGroup(student);
+
+			// keep track of whether student has been assigned to the existing groups
+			var addedToGroup = false;			
+			for (var i = indexOfNextAvailableGroup; i < numGroups; i++){
+				var group = groups[i];
+				if (group.students.length < numInGroup){
+					group.assignStudentToGroup(student);
 						
-						addedToGroup = true;
-						break;
-					} else if (group.students.length === numInGroup){
-						indexOfNextAvailableGroup++;
-					}					
-				}
-				
-				// should create a new group if student was not added to any existing group
-				if (!addedToGroup){
-					
-					var group = {
-					    cohort: {
-					        id: me.lastNewGroupIndex--,
-					        cohortIdentifier: 'New Group',
-					        cohortDescription: ''
-					    },
-                        students: []
-			    	};
-			    	
-			    	var newGroupObject = me.addGroup(group);
-			    	newGroupObject.assignStudentToGroup(student);
-			    	newGroupObject.markDirty();
-			    	numGroups++;
-				}
+					addedToGroup = true;
+					break;
+				} else if (group.students.length === numInGroup){
+					indexOfNextAvailableGroup++;
+				}					
 			}
+				
+			// should create a new group if student was not added to any existing group
+			if (!addedToGroup){
+					
+				var group = {
+					cohort: {
+					    id: me.lastNewGroupIndex--,
+					    cohortIdentifier: 'New Group',
+					    cohortDescription: ''
+					},
+                    students: []
+			    };
+			    	
+			    var newGroupObject = me.addGroup(group);
+			    newGroupObject.assignStudentToGroup(student);
+			    newGroupObject.markDirty();
+			    numGroups++;
+			}			
 		});		
 	}
 	
@@ -225,5 +234,27 @@ student_grouping.groupsList = function(){
 		return existingGroup !== undefined;
 	}
 	
+    /**
+     * Saving changes to all groups
+     */
+	this.saveAllGroups = function () {
+	    var newGroups = [];
+	    var existingGroups = [];
 
+	    var groups = me.groups;
+	    _.each(groups, function (group) {
+	        var cohortActionObject = group.prepareGroupForSaving();
+
+	        if (cohortActionObject.cohort.id === null) {
+	            newGroups.push(cohortActionObject);
+	        } else {
+	            existingGroups.push(cohortActionObject);
+	        }
+	    });
+
+	    // call server to add all new groups
+
+
+        // call server to save changes to existing groups
+	}
 }

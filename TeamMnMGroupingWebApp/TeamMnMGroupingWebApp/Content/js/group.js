@@ -43,11 +43,11 @@ student_grouping.group = function(groupData){
 	this.groupDescriptionTxtAreaElem = '.group-description-textarea';
 	
 	this.groupAttachmentImgClass = '.group-attachment-img';
+	this.groupNumStudentsBadgeClass = '.group-num-students-badge';
 	this.groupAttachmentPopoverElem = '.group-attachment-popover';
 	this.groupAttachmentPopoverFileInput = '.real-upload-txt';
 	this.groupAttachmentPopoverFileTxt = '.fake-upload-txt';
-	this.groupAttachmentPopoverDoneBtnElem = '.attachment-done-btn';	
-	this.groupAttachmentLblClass = '.group-attachment-lbl';
+	this.groupAttachmentPopoverDoneBtnElem = '.attachment-done-btn';
 	this.groupAttachmentDivClass = '.group-file-attachment';
 	this.groupAttachmentNameClass = '.file-attachment-name';
 	this.groupAttachmentDelImgClass = '.del-attachment-img';
@@ -72,18 +72,18 @@ student_grouping.group = function(groupData){
 									    '<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									    '<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
                                         '<div class="group"></div>' +
-									    '<div>' +
+									    '<div style="text-align:center">' +
 										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
-										    '<span class="group-attachment-lbl"></span>' +
+										    '<span class="badge group-num-students-badge"></span>' +
 									    '</div>' +
 									    '<div class="add-data-div">' +
 										    '<button class="add-data-button btn btn-link">add data</button>' +
 									    '</div>' +
-									    '<div class="group-file-attachment">' +
-										    '<span class="file-attachment-name"/>' +
-										    '<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
-									    '</div>' +
 								     '</div>' +
+									 '<div class="group-file-attachment">' +
+										 '<a class="file-attachment-name"/>' +
+										 '<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
+									 '</div>' +
                                      '<div class="group-description-popover group-popover" data-groupContainerId="-1" style="display:none">' +
 			                                     '<strong>Description:</strong>' +
 			                                     '<div class="group-description-text">' +
@@ -126,7 +126,7 @@ student_grouping.group = function(groupData){
      * METHODS
      **************************/
 	
-	this.init = function() {
+	this.init = function(dataElements) {
 		var me = this;
 		var groupContainer = $("#gc" + this.groupData.id); 
 		$(groupContainer).find(this.addDataBtnClass).click(function (event) {
@@ -190,7 +190,18 @@ student_grouping.group = function(groupData){
 		});
 
 		this.groupContainerId = groupContainer;
-		
+		this.updateNumStudentsBadge();
+
+        // add the pre-defined data elements to the popover
+		_.each(dataElements, function (dataElement) {
+		    var dataElem = $("<li><input class='cbox-student-attribute' type='checkbox'"
+                + "value='" + dataElement.attributeId + "' data-displayName='"
+                + dataElement.attributeName + "'/>" + dataElement.attributeName
+                + "</li>");
+		    $(me.groupContainerId).find(".student-data-popover .student-elements-list")
+                .append(dataElem);
+		});
+
 	    // load the selected attributes
 		var custom = this.group.custom;
 		if (custom !== null && custom !== undefined) {
@@ -245,6 +256,9 @@ student_grouping.group = function(groupData){
 
 		    // make selected student attributes visible
 			this.toggleStudentAttributeVisibility(this.selectedAttributes);
+
+            // update student count label
+			this.updateNumStudentsBadge();
 		}
 	}
 	
@@ -273,6 +287,9 @@ student_grouping.group = function(groupData){
 		$(studentElem).remove();
 		 
 		this.markDirty();
+
+	    // update student count label
+		this.updateNumStudentsBadge();
 	}
 	
 	/**
@@ -580,6 +597,9 @@ student_grouping.group = function(groupData){
 		        	type: type,
 		        	content: content
 		        }
+
+		        // show the div with the attachment
+		        me.showFileAttachment();
 		      };
 		    })(file);
 		
@@ -589,8 +609,6 @@ student_grouping.group = function(groupData){
 			// hide the popover			
 			$(me.groupContainerId).find(me.groupAttachmentPopoverElem).hide();	
 			
-			// show the div with the attachment
-			me.showFileAttachment();
 			
 			me.markDirty();			
 		} else {
@@ -613,9 +631,13 @@ student_grouping.group = function(groupData){
 	 * Show the attached file
 	 */
 	this.showFileAttachment = function(){
-		var file = this.attachedFile;		
-		$(me.groupContainerId).find(me.groupAttachmentNameClass).html(file.name);
-		$(me.groupContainerId).find(me.groupAttachmentDivClass).show();
+	    var file = this.attachedFile;
+	    if (file !== null && file !== undefined) {
+	        $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('href', file.type + "," + file.content);
+	        $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('download', file.name);
+	        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(file.name);
+	        $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
+	    }
 	}
 	
 	/**
@@ -779,30 +801,7 @@ student_grouping.group = function(groupData){
      */
 	this.saveGroupChanges = function () {
 
-	    var newStudents = _.filter(this.students, function (student) {
-	        var matchingStudent = _.find(me.originalStudents, function (origStudentId) {
-	            return origStudentId === student;
-	        });
-	        return matchingStudent === undefined;
-	    });
-
-	    var studentsToDelete = _.filter(this.originalStudents, function (origStudentId) {
-	        var matchingStudent = _.find(me.students, function (student) {
-	            return origStudentId === student;
-	        });
-	        return matchingStudent === undefined;
-	    });
-
-	    var cohortActionObject = {
-	        cohort: {
-                id: this.groupData.id,
-	            cohortDescription: this.groupData.cohortDescription,
-                cohortIdentifier: this.groupData.cohortIdentifier
-	        },
-	        custom: { dataElements : me.selectedAttributes },
-	        studentsToDelete : studentsToDelete !== null ? studentsToDelete : [],
-	        studentsToCreate : newStudents !== null ? newStudents : []
-	    }
+	    var cohortActionObject = this.prepareGroupForSaving();
 
 	    // negative ids represent new groups
 	    var method = 'CreateGroup';
@@ -837,6 +836,42 @@ student_grouping.group = function(groupData){
 	    me.toggleGroupContainerProcessingState(true);
 	}
     
+    /**
+     * Creates JSON object to send back to server for saving changes
+     */
+	this.prepareGroupForSaving = function () {
+	    var newStudents = _.filter(this.students, function (student) {
+	        var matchingStudent = _.find(me.originalStudents, function (origStudentId) {
+	            return origStudentId === student;
+	        });
+	        return matchingStudent === undefined;
+	    });
+
+	    var studentsToDelete = _.filter(this.originalStudents, function (origStudentId) {
+	        var matchingStudent = _.find(me.students, function (student) {
+	            return origStudentId === student;
+	        });
+	        return matchingStudent === undefined;
+	    });
+
+        // if negative, then it is a new group so it doesn't have an id
+	    var id = parseInt(this.groupData.id) > 0 ?
+             this.groupData.id : null;
+
+	    var cohortActionObject = {
+	        cohort: {
+	            id: id,
+	            cohortDescription: this.groupData.cohortDescription,
+	            cohortIdentifier: this.groupData.cohortIdentifier
+	        },
+	        custom: { dataElements: me.selectedAttributes },
+	        studentsToDelete: studentsToDelete !== null ? studentsToDelete : [],
+	        studentsToCreate: newStudents !== null ? newStudents : []
+	    }
+
+	    return cohortActionObject;
+	}
+
     /**
      * Delete this group permanently
      */
@@ -954,7 +989,6 @@ student_grouping.group = function(groupData){
      *
      */
 	this.deleteGroupSuccessHandler = function (result) {
-	    me.toggleGroupContainerProcessingState(false);
 	    me.pubSub.publish('group-deleted', me.groupData.id);
 
 	    // Let user know the delete was successful
@@ -965,6 +999,7 @@ student_grouping.group = function(groupData){
             'manual',
             2000);
 	    setTimeout(function () {
+	        me.toggleGroupContainerProcessingState(false);
 	        $(me.groupContainerId).remove();
 	    }, 2000);
 	}
@@ -995,5 +1030,24 @@ student_grouping.group = function(groupData){
 	        $(me.groupContainerId).spin(false);
 	    }
 	    this.processing = processing;
+	}
+
+    /**
+     * Update the label that shows the number of students in group
+     */
+	this.updateNumStudentsBadge = function () {
+	    var numStudents = me.students.length;
+	    $(me.groupContainerId).find(me.groupNumStudentsBadgeClass).css('background-color', me.color.title);
+	    $(me.groupContainerId).find(me.groupNumStudentsBadgeClass).html(numStudents);
+	}
+
+    /**
+     * Remove all the students from this group
+     */
+	this.removeAllStudents = function () {
+	    var students = this.students;
+	    _.each(students, function (student) {
+	        me.removeStudent(student);
+	    });
 	}
 }

@@ -39,10 +39,10 @@
 .top-bar-controls {
 	margin-bottom: 1.6em;
 	width:auto;
+    background: #D7E4BD;
 }
 
 .top-bar-rows {
-    background: #D7E4BD;
     height:2.3em;
 }
 
@@ -83,10 +83,6 @@
 /**********************
  * STUDENT LIST
  *********************/
-
-#studentsBtnGrp {
-    width:100%;
-}
 
 #select-all-btn, #random-btn {
     width:35%;
@@ -180,6 +176,7 @@
  *********************/
 .content {
     height:100%;
+    padding-top: 3em;
 }
 
 .content-row {
@@ -189,7 +186,7 @@
 
 .groups-area {
     z-index: 1;
-	top:10em;	
+	top:6em;	
     bottom: 0;
     padding-top:4em;
     width: 97% !important;
@@ -318,7 +315,6 @@
 /**********************
  * GROUPS 
  *********************/
-
 .group-top-container {
 	margin: 2em 2em 4em 2em;
     display:inline-block;
@@ -384,21 +380,27 @@
 	height: 15em;
 	padding-top: 0.3em;
     overflow-y: auto;
-    margin: 1.5em 0.5em 0 0.5em;
+    margin: 1.5em 0.5em 0.5em 0.5em;
 }
 
 .group-attachment-img {
 	cursor: pointer;
 	margin-left:1em;
 	width: 1.8em;
+    float:left;
+}
+
+.group-num-students-badge {
+    margin-left:-3.2em;
 }
 
 .group-file-attachment {
 	display:none;
-	background: url('../img/attachment-paper.png') no-repeat;
+    clear:both;
+	background: url('../img/attachment-paper-small.png') no-repeat;
 	background-size: 100% 100%;
-	height:3.5em;
-	padding-top:1em;
+	height:3.0em;
+	padding-top:1.5em;
 	padding-left:2em;
 	padding-right:1em;
 }

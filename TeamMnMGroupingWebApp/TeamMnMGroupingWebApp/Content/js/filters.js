@@ -196,10 +196,7 @@ student_grouping.filters = function(){
     	$(selectedFilterHtml).attr('data-selectedFilter', filter.attributeId);
     		
     	$(this.selectedFiltersElem).append(selectedFilterHtml);
-    	
-    	// reset selected values
-    	this.resetFilters();
-    	
+    	    	
     	// bind event handler for removing this filter
     	$(selectedFilterHtml).find(this.selectedFilterCloseBtn).click(function(event){
     		$(selectedFilterHtml).remove();

@@ -9,19 +9,63 @@
 	</head>
 	<body>
 		<div>
+            <div class="row-fluid">                
+                 <div class="span12 top-bar-controls navbar-fixed-top">                     
+					<div id="studentsBtnGrp" class="span2 btn-group">
+						<button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
+						<button id="random-btn" class="student-list-btn btn btn-primary">random</button>
+						<div id="random-num-btn" class="btn btn-primary">
+                            <input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'>
+						</div>					 
+					</div>
+					<div class='span10 top-bar-rows'>
+                        <div class="span1">
+                            <button id="back-btn" class="btn btn-info">back</button>
+                        </div>
+                        <div class="span8">
+							<div class="row-fluid">                                           
+                                <div class="span3">
+							        <div class="row-fluid">
+                                        <div class="span3">
+                                            <button id="add-new-group-btn" class="btn btn-success">+</button>
+                                        </div>
+                                        <div class="span9">
+                                            <span> add a new group</span>
+                                        </div>                                                    
+							        </div>
+                                </div>
+                                <div class="span1">
+                                    <img class="top-bar-divider" src="~/Content/img/divider-icon.png" />
+                                </div>
+                                <div class="span8">
+                                    <div class="row-fluid">
+                                        <div class="span4">
+                                            <span> add an existing group</span>
+                                        </div>
+							            <div class="span7">
+                                            <select id="find-group-dropdown" data-placeholder="find an existing group">
+								                <option></option>
+							                </select>
+                                        </div>
+                                            <div class="span1">
+							                <button id="add-existing-group-btn" class="btn btn-success">Add</button>							
+                                        </div>
+                                    </div>
+                                </div>                                           
+                            </div>
+                        </div>
+                        <div class="span3 top-bar-buttons" >
+							<img id="img-print-btn" class="top-bar-img-btn" src="~/Content/img/printer-icon.png"/>
+							<img id="img-save-btn" class="top-bar-img-btn" src="~/Content/img/save-icon.png"/>
+							<span id="logout-btn">log out</span>
+                        </div>
+                    </div>
+				</div>	
+            </div>
 			<div class="row-fluid main-content">
 					<div class="sidebar span2">
 						<div class="row-fluid sidebar-row">
-                            <div id="student-controls" class="span12">
-							    <div id="studentsBtnGrp" class="btn-group">
-							      <button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
-							      <button id="random-btn" class="student-list-btn btn btn-primary">random</button>
-							      <div id="random-num-btn" class="btn btn-primary">
-                                      <input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'>
-							      </div>					 
-							    </div>
-							    <!--<input type="text" id="txtRandomNumInGroup" placeholder="# in a group"/>-->
-						    </div>						
+                            				
 						    <div id="studentListDiv" class="span12">							
                                 <div id="searchBox">
 							        <input id="txtStudentSearchBox" placeholder="search by name" />
@@ -35,50 +79,7 @@
 					</div>
 					<div class="content span10">
 						<div class="row-fluid content-row">
-                            <div class="span12 top-bar-controls">
-							    <div class='row-fluid top-bar-rows'>
-                                    <div class="span1">
-                                        <button id="back-btn" class="btn btn-info">back</button>
-                                    </div>
-                                    <div class="span8">
-							            <div class="row-fluid">                                           
-                                            <div class="span3">
-							                    <div class="row-fluid">
-                                                    <div class="span3">
-                                                        <button id="add-new-group-btn" class="btn btn-success">+</button>
-                                                    </div>
-                                                    <div class="span9">
-                                                       <span> add a new group</span>
-                                                    </div>                                                    
-							                    </div>
-                                            </div>
-                                            <div class="span1">
-                                                <img class="top-bar-divider" src="~/Content/img/divider-icon.png" />
-                                            </div>
-                                            <div class="span8">
-                                                <div class="row-fluid">
-                                                    <div class="span4">
-                                                        <span> add an existing group</span>
-                                                    </div>
-							                        <div class="span7">
-                                                        <select id="find-group-dropdown" data-placeholder="find an existing group">
-								                            <option></option>
-							                            </select>
-                                                    </div>
-                                                     <div class="span1">
-							                            <button id="add-existing-group-btn" class="btn btn-success">Add</button>							
-                                                    </div>
-                                                </div>
-                                            </div>                                           
-                                        </div>
-                                    </div>
-                                    <div class="span3 top-bar-buttons" >
-							            <img id="img-print-btn" class="top-bar-img-btn" src="~/Content/img/printer-icon.png"/>
-							            <img id="img-save-btn" class="top-bar-img-btn" src="~/Content/img/save-icon.png"/>
-							            <span id="logout-btn">log out</span>
-                                    </div>
-                                </div>
-						    </div>
+                           
 						    <div class="span11 filter-topbar">
 							    <div class="row-fluid">
                                     <div class="span3">
