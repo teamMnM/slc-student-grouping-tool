@@ -15,5 +15,6 @@ namespace TeamMnMGroupingWebApp.Controllers
         internal string SLC_REDIRECT_URL = ConfigurationManager.AppSettings["SlcRedirectUrl"];
         internal string SLC_SANDBOX_LOGIN = ConfigurationManager.AppSettings["SlcSandboxLogin"];
         internal string SLC_OAUTH_URL = ConfigurationManager.AppSettings["SlcOAuthUrl"];
+        internal string CURRENT_ED_ORG_ID = ConfigurationManager.AppSettings["CurrentEdgOrgId"]; //there's no data from SLC about the current user Ed Org, temporarily using a constant value for each environment
     }
 }

@@ -86,7 +86,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 newStudent.economicDisadvantaged = student.economicDisadvantaged;
                 newStudent.hispanicLatinoEthnicity = student.hispanicLatinoEthnicity;
                 newStudent.oldEthnicity = FilterHelper.GetEnumDescription(student.oldEthnicity);
-                newStudent.limitedEnglishProficiency = student.limitedEnglishProficiency;
+                newStudent.limitedEnglishProficiency = FilterHelper.GetEnumDescription(student.limitedEnglishProficiency);
                 newStudent.otherName = from son in student.otherName select string.Format("{0} {1}", son.firstName, son.lastSurName);
                 newStudent.studentCharacteristics = from sc in student.studentCharacteristics select FilterHelper.GetEnumDescription(sc.characteristic);
                 newStudent.studentIndicators = from si in student.studentIndicators select si.indicator;

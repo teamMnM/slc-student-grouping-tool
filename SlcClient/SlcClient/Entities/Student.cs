@@ -86,7 +86,8 @@ namespace SlcClient.Entities
         /// <summary>
         /// An indication that the student has been identified as limited English proficient by the Language Proficiency Assessment Committee (LPAC), or English proficient.
         /// </summary>
-        public string limitedEnglishProficiency { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public LimitedEnglishProficiencyType limitedEnglishProficiency { get; set; }
 
         /// <summary>
         /// The login ID for the user; used for security access control interface.

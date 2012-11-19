@@ -47,6 +47,9 @@ namespace TeamMnMGroupingWebApp.Helper
         static IEnumerable<FilterValue> studentCharacteristicTypes = from StudentCharacteristicType s in Enum.GetValues(typeof(StudentCharacteristicType))
                                                    select GetEnumFilterValues(s);
 
+        static IEnumerable<FilterValue> limitedEnglishProficiencyTypes = from LimitedEnglishProficiencyType s in Enum.GetValues(typeof(LimitedEnglishProficiencyType))
+                                                                         select GetEnumFilterValues(s);
+
         public static IEnumerable<Filter> InitializeFilters()
         {
             var filters = new List<Filter>();
@@ -61,7 +64,8 @@ namespace TeamMnMGroupingWebApp.Helper
             var schoolFoodServicesEligibilities = new Filter { attributeId = "schoolFoodServicesEligiblity", attributeName = "School Food Services Eligibility", operators = containsOperator, values = schoolFoodServicesEligibilityTypes };
             var section504DisabilityItems = new Filter { attributeId = "section504Disablities", attributeName = "Section 504 Disabilities", operators = containsOperator, values = section504DisabilityItemTypes };
             var sex = new Filter { attributeId = "sex", attributeName = "Gender", operators = containsOperator, values = sexTypes };
-            var studentCharacteristics = new Filter { attributeId = "studentCharacteristics", attributeName = "Student Characteristics", operators = containsOperator, values = studentCharacteristicTypes }; 
+            var studentCharacteristics = new Filter { attributeId = "studentCharacteristics", attributeName = "Student Characteristics", operators = containsOperator, values = studentCharacteristicTypes };
+            var limitedEnglishProficiency = new Filter { attributeId = "limitedEnglishProficiency", attributeName = "Limited English Proficiency", operators = containsOperator, values = limitedEnglishProficiencyTypes };
 
             //student attribute filters
             var birthDate = new Filter { attributeId = "birthDate", attributeName = "Birth Date", operators = logicalOperators };
@@ -69,8 +73,7 @@ namespace TeamMnMGroupingWebApp.Helper
             var hispanicLatinoEthnicity = new Filter { attributeId = "hispanicLatinoEthnicity", attributeName = "Hispanic Latino Ethnicity", operators = equalOperator, values = trueFalse };
             var auditoryLearning = new Filter { attributeId = "auditoryLearning", attributeName = "Auditory Learning", operators = logicalOperators };
             var tactileLearning = new Filter { attributeId = "tactileLearning", attributeName = "Tactile Learning", operators = logicalOperators };
-            var visualLearning = new Filter { attributeId = "visualLearning", attributeName = "Visual Learning", operators = logicalOperators };
-            var limitedEnglishProficiency = new Filter { attributeId = "limitedEnglishProficiency", attributeName = "Limited English Proficiency", operators = equalOperator, values = trueFalse };
+            var visualLearning = new Filter { attributeId = "visualLearning", attributeName = "Visual Learning", operators = logicalOperators };            
             var gpa = new Filter { attributeId = "cumulativeGradePointAverage", attributeName = "GPA", operators = logicalOperators };
 
             return new List<Filter>() { disabilities, gradeLevels, languageItems, homeLanguageItems, 

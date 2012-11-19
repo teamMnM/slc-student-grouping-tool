@@ -207,7 +207,7 @@ namespace SlcClient.Services
         /// <param name="obj">the cohort to update</param>
         /// <returns>request response</returns>
         public async Task<HttpResponseMessage> UpdateCohortCustom(string id, string param)
-        {
+         {
             try
             {
                 var response = await SubmitCohortCustomData(id, param, HttpMethod.Put);
