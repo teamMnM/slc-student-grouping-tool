@@ -132,6 +132,6 @@ student_grouping.topBarControls = function(){
      * Handle click of the save all button
      */
     this.saveAllGroups = function () {
-        this.pubSub.publish('save-all-groups');
+        me.pubSub.publish('save-all-groups');
     }
 }

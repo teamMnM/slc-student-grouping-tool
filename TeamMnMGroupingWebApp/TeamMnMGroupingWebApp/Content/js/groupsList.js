@@ -14,6 +14,9 @@ student_grouping.groupsList = function(){
 	this.groupClass = '.group';
 	this.groupsAreaClass = '.groups-area';
 
+	this.saveAllGroupsModalElem = "#save-all-summary";
+	this.saveAllGroupsContentElem = "#save-all-summary-content";    
+
     // colors for the groups
 	this.colorList = [
         /*{ background: '#DBFDAA', title: '#7D9D38' },
@@ -235,26 +238,56 @@ student_grouping.groupsList = function(){
 	}
 	
     /**
+     * TODO server side will handle all this with one call
      * Saving changes to all groups
      */
 	this.saveAllGroups = function () {
-	    var newGroups = [];
-	    var existingGroups = [];
 
+        // reset synching params
+	    this.groupsAdded = false;
+	    this.createGroupsResults = [];
+
+	    this.groupsUpdated = false;
+	    this.updateGroupsResults = [];
+
+	    var groupsToSave = [];
+        
 	    var groups = me.groups;
+	    var originalGroupsToSave = []; // keep track of the actual group objects so we can later update with created ID
 	    _.each(groups, function (group) {
-	        var cohortActionObject = group.prepareGroupForSaving();
-
-	        if (cohortActionObject.cohort.id === null) {
-	            newGroups.push(cohortActionObject);
-	        } else {
-	            existingGroups.push(cohortActionObject);
+	        if (group.dirty) {
+	            var cohortActionObject = group.prepareGroupForSaving();
+	            groupsToSave.push(cohortActionObject);
+	            originalGroupsToSave.push(group);
 	        }
 	    });
-
+        
 	    // call server to add all new groups
+	    $.ajax({
+	        type: 'POST',
+	        url: 'SaveAll',
+	        contentType: 'application/json',
+	        data: JSON.stringify(groupsToSave),
+	        success: function (results) {
+	            me.saveAllGroupsSuccessHandler(results, originalGroupsToSave);
+	        },
+	        error: me.saveAllGroupsErrorHandler
+	    });        	    
+	}
 
+	this.saveAllGroupsSuccessHandler = function(results, groupsToSave){
+	    var numResults = results.length;
+	    for (var i = 0; i < numResults; i++) {
+	        var result = results[i];
+	        if (result.objectId !== null && result.objectId !== undefined){
+	        }
+	    }
 
-        // call server to save changes to existing groups
+	    $(me.saveAllGroupsContentElem).html();
+	    $(me.saveAllGroupsModalElem).modal('show');
+	}
+
+	this.saveAllGroupsErrorHandler = function (errorMsg) {
+	    $(me.saveAllGroupsModalElem).modal('show');
 	}
 }

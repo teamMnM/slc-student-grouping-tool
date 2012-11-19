@@ -14,6 +14,7 @@ student_grouping.sections = [];
 student_grouping.init = function(){
 		
     var me = this;
+    $(".top-bar-controls").hide();
 
 	$.ajax({
         type: 'GET',
@@ -55,6 +56,8 @@ student_grouping.init = function(){
 
             $(".main-content").spin(false);
             $(".main-content").css('opacity', 1);
+
+            $(".top-bar-controls").show();
         },
         error: function (errorMsg) {
             window.location = 'Error';

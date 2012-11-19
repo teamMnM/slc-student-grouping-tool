@@ -165,8 +165,8 @@ student_grouping.student = function(studentData) {
 			// populate student info content
 			$(this.studentInfoAttributesElem).empty();
 			var attributesToShow = [
-                { attributeId : 'classes', attributeName : ' Classes ' },
-                { attributeId : 'cummulativeGradePointAverage', attributeName: 'Cummulative GPA ' },
+                { attributeId : 'sections', attributeName : ' Classes ' },
+                { attributeId : 'cumulativeGradePointAverage', attributeName: 'Cummulative GPA ' },
                 { attributeId: 'disabilities', attributeName: 'Disabilities' }
 			];
 			_.each(attributesToShow, function(attr){
@@ -231,13 +231,31 @@ student_grouping.student = function(studentData) {
 	}
 	
 	/**
-	 * TODO add description 
+	 * TODO add description and refactor lookups to make generic
 	 */
 	this.populateAttributeDiv = function(attribute){
 		var div = $("<div>");
 		$(div).append('<strong>' + attribute.attributeName + ' : </strong>');
 		
 		var studentAttrVal = this.studentData[attribute.attributeId];
+
+        // lookups
+		if (attribute.attributeId === 'sections') {
+		    var sectionNames = [];
+		    var studentSections = studentAttrVal;
+		    var sections = student_grouping.sections;
+		    _.each(studentSections, function (studentSection) {
+		        // find the corresponding section using the id
+		        var matchingSection = _.find(sections, function (section) {
+		            return section.id === studentSection;
+		        });
+		        if (matchingSection !== undefined) {
+		            sectionNames.push(matchingSection.courseTitle);
+		        }
+		    });
+		    studentAttrVal = sectionNames;
+        }
+
 		var str = ""
 		if ($.isArray(studentAttrVal)){
 			_.each(studentAttrVal, function(c){

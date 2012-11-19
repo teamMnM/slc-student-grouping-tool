@@ -223,6 +223,10 @@ student_grouping.group = function(groupData){
 		});		
 		
 	    // TODO load attached lesson plan
+		if (this.group.custom !== null && this.group.custom.lessonPlan !== null) {
+		    this.attachedFile = this.group.custom.lessonPlan;
+		    this.showFileAttachment();
+		}
 	};
 		
 	/**
@@ -363,8 +367,8 @@ student_grouping.group = function(groupData){
 	    _.each(attributes, function (attribute) {
 	        var name = attribute.attributeName;
 	        var value = studentData[attribute.attributeId];
-	        if (value === null || value === undefined) {
-	            value = 'no data';
+	        if (value === null || value === undefined || value === '') {
+	            value = '[no data]';
 	        }
 
             // perform lookup for sections
@@ -857,14 +861,14 @@ student_grouping.group = function(groupData){
         // if negative, then it is a new group so it doesn't have an id
 	    var id = parseInt(this.groupData.id) > 0 ?
              this.groupData.id : null;
-
+        
 	    var cohortActionObject = {
 	        cohort: {
 	            id: id,
 	            cohortDescription: this.groupData.cohortDescription,
 	            cohortIdentifier: this.groupData.cohortIdentifier
 	        },
-	        custom: { dataElements: me.selectedAttributes },
+	        custom: { dataElements: me.selectedAttributes, lessonPlan: me.attachedFile },
 	        studentsToDelete: studentsToDelete !== null ? studentsToDelete : [],
 	        studentsToCreate: newStudents !== null ? newStudents : []
 	    }
