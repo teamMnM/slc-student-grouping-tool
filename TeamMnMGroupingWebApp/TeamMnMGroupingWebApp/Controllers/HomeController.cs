@@ -317,8 +317,6 @@ namespace TeamMnMGroupingWebApp.Controllers
             
         }
 
-
-
         public async Task<ActionResult> Sample()
         {
 
@@ -334,7 +332,12 @@ namespace TeamMnMGroupingWebApp.Controllers
 
         public ActionResult LoginError()
         {
-            return View("LoginError");
+            return View();
+        }
+
+        public ActionResult Error()
+        {
+            return View();
         }
 
         /// <summary>
