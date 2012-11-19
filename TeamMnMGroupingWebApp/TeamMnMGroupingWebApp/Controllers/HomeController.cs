@@ -69,12 +69,12 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<ActionResult> CreateMultipleGroups(IEnumerable<CohortActionObject> objs)
+        public async Task<IEnumerable<Result>> CreateMultipleGroups(IEnumerable<CohortActionObject> objs)
         {
             try
             {
                 var result = await Task.WhenAll(from obj in objs select ProcessOneCohortCreate(obj));
-                return Json(result, JsonRequestBehavior.AllowGet);               
+                return result;               
             }
             catch (Exception e)
             {
@@ -107,12 +107,12 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<ActionResult> UpdateMultipleGroups(IEnumerable<CohortActionObject> objs)
+        public async Task<IEnumerable<Result>> UpdateMultipleGroups(IEnumerable<CohortActionObject> objs)
         {
             try
             {
                 var result = await Task.WhenAll(from obj in objs select ProcessOneCohortUpdate(obj));
-                return Json(result, JsonRequestBehavior.AllowGet);
+                return result;
             }
             catch (Exception e)
             {
@@ -318,6 +318,35 @@ namespace TeamMnMGroupingWebApp.Controllers
             {
                 return GetExceptionResult(id, e);
             }           
+        }
+
+        /// <summary>
+        /// AJAX to this method for a master save of all groups
+        /// </summary>
+        /// <param name="list">list of CohortActionObject to save</param>
+        /// <returns>list of result of this action</returns>
+        public async Task<ActionResult> SaveAll(IEnumerable<CohortActionObject> list)
+        {
+            try
+            {
+                var cohortsToUpdate = from cao in list where cao.cohort.id != null select cao;
+                var cohortsToCreate = from cao in list where cao.cohort.id == null select cao;
+
+                var updateCohorts = UpdateMultipleGroups(cohortsToUpdate);
+                var createCohorts = CreateMultipleGroups(cohortsToCreate);
+
+                var allTasks = await Task.WhenAll(updateCohorts, createCohorts);
+
+                var resultList = new List<Result>();
+                resultList.AddRange(updateCohorts.Result);
+                resultList.AddRange(createCohorts.Result);
+
+                return Json(resultList, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                throw;
+            }            
         }
 
         /// <summary>
