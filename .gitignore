@@ -6,3 +6,4 @@ bin
 /TeamMnMGroupingWebApp/TeamMnMGroupingWebApp/Web.Debug.config
 /SlcClient/SlcClient/SlcClient.csproj.user
 /TeamMnMGroupingWebApp/TeamMnMGroupingWebApp.Azure/TeamMnMGroupingWebApp.Azure.ccproj.user
+App_Data
