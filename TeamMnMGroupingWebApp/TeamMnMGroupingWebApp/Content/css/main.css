@@ -233,7 +233,7 @@
 }
 
 .dropped-elem.expanded {
-	width: 15em;
+	width: 16.0em;
 	min-height:4em;
     position:relative;
 }

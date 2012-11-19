@@ -5,7 +5,7 @@ student_grouping.group = function(groupData){
 	this.pubSub = PubSub;
 	
 	this.dirty = false;
-	this.processing = false;
+	this.processing = false;    
 	this.group = groupData;
 	this.groupData = groupData.cohort;
 	this.originalStudents = groupData.students;
@@ -222,11 +222,21 @@ student_grouping.group = function(groupData){
 			}
 		});		
 		
-	    // TODO load attached lesson plan
+	    // load attached lesson plan
 		if (this.group.custom !== null && this.group.custom.lessonPlan !== null) {
 		    this.attachedFile = this.group.custom.lessonPlan;
 		    this.showFileAttachment();
 		}
+
+	    // disable all group actions while save all is going on
+		me.pubSub.subscribe('save-all-groups', function () {
+		    me.processing = true;
+		});
+
+	    // re-enable all group actions once save all is done
+		me.pubSub.subscribe('save-all-completed', function () {
+		    me.processing = false;
+		});
 	};
 		
 	/**
@@ -310,7 +320,7 @@ student_grouping.group = function(groupData){
 
 	
 	/**
-	 * TODO externalize element selectors
+	 * TODO externalize element selectors and remove manual width of dropped elem
      * Create group indicator for the given student
 	 * @param {Object} student
 	 */
@@ -638,7 +648,8 @@ student_grouping.group = function(groupData){
 		this.markDirty();
 	}	
 	
-	/**
+    /**
+     * TODO implement better solution for cutting off long file names
 	 * Show the attached file
 	 */
 	this.showFileAttachment = function(){
@@ -646,7 +657,13 @@ student_grouping.group = function(groupData){
 	    if (file !== null && file !== undefined) {
 	        $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('href', file.type + "," + file.content);
 	        $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('download', file.name);
-	        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(file.name);
+
+	        var fileName = file.name;
+            // cut off filename if its too long
+	        if (fileName.length > 28) {
+	            fileName = file.name.substring(0, 28) + "...";
+	        }
+	        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
 	        $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
 	    }
 	}

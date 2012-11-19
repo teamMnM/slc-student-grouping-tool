@@ -1,6 +1,6 @@
 var student_grouping = student_grouping || {};
 
-
+// TODO create a js file for all the different events out there
 student_grouping.pubSub = PubSub;
 
 student_grouping.topBarComponent = new student_grouping.topBarControls();
@@ -71,7 +71,7 @@ student_grouping.init = function(){
 
     // set the size of page
 	var windowHeight = $(window).height();
-	$(".main-content").height(windowHeight + 'px');
+	$(".main-content").height((windowHeight-3) + 'px');
 	var studentCtrlHeight = $("#student-controls").height();
 	var studentCtrlMargin = $("#student-controls").css('margin-bottom');
 	var studentListMargin = $("#studentListDiv").css('margin-top');
