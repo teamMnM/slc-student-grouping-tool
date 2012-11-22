@@ -156,6 +156,7 @@
     <Content Include="Content\img\group-info-icon.png" />
     <Content Include="Content\img\printer-icon.png" />
     <Content Include="Content\img\save-icon.png" />
+    <Content Include="Content\img\search-icon.png" />
     <Content Include="Content\img\student-close-icon.png" />
     <Content Include="Content\img\student-icon-female.png" />
     <Content Include="Content\img\student-icon-female2.png" />
@@ -233,7 +234,9 @@
     <Content Include="Views\Home\Student.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\grouptest - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\grouptest - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\grouptest - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\grouptest - Web Deploy.pubxml" />
     <Content Include="Views\Shared\LoginError.cshtml" />
     <Content Include="Views\Home\Group.cshtml" />
