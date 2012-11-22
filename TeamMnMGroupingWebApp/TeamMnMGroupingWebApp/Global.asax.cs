@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using TeamMnMGroupingWebApp.Global;
 
 namespace TeamMnMGroupingWebApp
 {
@@ -27,6 +28,10 @@ namespace TeamMnMGroupingWebApp
             var webformsEngine = viewEngines.OfType<WebFormViewEngine>().FirstOrDefault();
             if (webformsEngine != null)
                 viewEngines.Remove(webformsEngine);
+
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            ValueProviderFactories.Factories.Add(new JsonLargeResultValueProviderFactory());
+            //JsonValueProviderFactory
         }
 
         void Session_Start(object sender, EventArgs e)

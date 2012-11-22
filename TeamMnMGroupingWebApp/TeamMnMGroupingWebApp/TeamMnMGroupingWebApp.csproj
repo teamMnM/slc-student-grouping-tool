@@ -120,6 +120,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Global\JsonLargeResultValueProviderFactory.cs" />
     <Compile Include="Helper\CohortHelper.cs" />
     <Compile Include="Helper\ExceptionHelper.cs" />
     <Compile Include="Helper\GlobalHelper.cs" />
@@ -212,7 +213,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Global\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
