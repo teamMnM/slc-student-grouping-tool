@@ -83,12 +83,22 @@ namespace TeamMnMGroupingWebApp.Helper
             };
         }
 
+        /// <summary>
+        /// Get a FilterValue object from an Enum
+        /// </summary>
+        /// <param name="value">The enum to get the description value from</param>
+        /// <returns>a FilterValue object</returns>
         public static FilterValue GetEnumFilterValues(Enum value)
         {
             var enumDescription = GetEnumDescription(value);
             return new FilterValue { id = enumDescription, title = enumDescription };
         }
 
+        /// <summary>
+        /// Get the description value of Enum values
+        /// </summary>
+        /// <param name="value">The enum to get the description value from</param>
+        /// <returns>The description of the enum</returns>
         public static string GetEnumDescription(Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());

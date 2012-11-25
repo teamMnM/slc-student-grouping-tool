@@ -49,8 +49,8 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <summary>
         /// AJAX to this method to create a brand new group with students
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">the cohort to delete</param>
+        /// <returns>result of the delete</returns>
         public async Task<ActionResult> CreateGroup(CohortActionObject obj)
         {
             try
@@ -174,12 +174,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                     var cs = new CohortService(Session["access_token"].ToString());
                     //1) update cohort
                     var cohortResult = await UpdateCohort(cs, obj.cohort);
-                    //2) create student cohort association
-                    Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
-                    if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                        newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate);
-                    else
-                        newStudentsAssociations = null;
+                    //2) create student cohort association                    
+                    var newStudentsAssociations = GetNewStudentCohortAssociations(obj, cs);
                     //3) update cohort custom entity
                     var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
 
@@ -190,7 +186,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                         //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
                         var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
                         //get the studentCohortAssociationId for students to delete
-                        var associationToDelete = (from s in obj.studentsToDelete select (currentStudentCohortAssociation.FirstOrDefault(csca => csca.studentId == s)));
+                        var associationToDelete = (from s in obj.studentsToDelete 
+                                                   select (currentStudentCohortAssociation.FirstOrDefault(csca => csca.studentId == s)));
                         //delete the studentCohortAssociation
                         removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete);
                     }
@@ -208,6 +205,11 @@ namespace TeamMnMGroupingWebApp.Controllers
                     if (newStudentsAssociations != null) DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
                     if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
 
+                    //determine whether custom was created successfully
+                    var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
+                    if (cohortCustom.Result.StatusCode != HttpStatusCode.NoContent)
+                        cohortResult.completedSuccessfully = false;
+
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(obj.cohort.id);
 
@@ -224,6 +226,22 @@ namespace TeamMnMGroupingWebApp.Controllers
                 return GetExceptionResult(obj.cohort.id, e);
             }
             
+        }
+
+        /// <summary>
+        /// Create new student cohort associations
+        /// </summary>
+        /// <param name="obj">cohort to create</param>
+        /// <param name="cs">cohort service</param>
+        /// <returns>result of this action</returns>
+        private Task<IEnumerable<ActionResponseResult>> GetNewStudentCohortAssociations(CohortActionObject obj, CohortService cs)
+        {
+            Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
+            if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
+                newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, obj.cohort.id, obj.studentsToCreate);
+            else
+                newStudentsAssociations = null;
+            return newStudentsAssociations;
         }
 
         /// <summary>
@@ -246,13 +264,9 @@ namespace TeamMnMGroupingWebApp.Controllers
                     if (cohortResult.completedSuccessfully)
                     {
                         //2) start creating student cohort association
-                        Task<IEnumerable<ActionResponseResult>> newStudentsAssociations;
-                        if (obj.studentsToCreate != null && obj.studentsToCreate.Count() > 0)
-                            newStudentsAssociations = CreateMultipleStudentCohortAssociations(cs, cohortResult.objectId, obj.studentsToCreate);
-                        else
-                            newStudentsAssociations = null;
+                        var newStudentsAssociations = GetNewStudentCohortAssociations(obj, cs);
                         //3) initial populate of the cohort custom entity
-                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
+                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));                        
 
                         //contruct a list of tasks we're waiting for
                         var tasksToWaitFor = new List<Task>();
@@ -263,6 +277,12 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                         if (newStudentsAssociations != null)
                             DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
+
+                        //determine whether custom was created successfully
+                        var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
+                        if (cohortCustom.Result.StatusCode != HttpStatusCode.Created)
+                            cohortResult.completedSuccessfully = false;
+                            
                     }
 
                     return cohortResult;
@@ -299,7 +319,8 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                     if (associationToDelete != null && associationToDelete.Count() > 0)
                     {
-                        IEnumerable<ActionResponseResult> removeStudents = await DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
+                        IEnumerable<ActionResponseResult> removeStudents = await 
+                            DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
                         if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
                     }
 
@@ -312,8 +333,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 {
                     //session has expired
                     return GetSessionExpiredResult(id);
-                }
-                
+                }                
             }
             catch (Exception e)
             {
@@ -368,8 +388,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var st = GetStudents();
                 var se = GetSections();
 
+                //Get the available data elements and colors
                 var dataElements = GlobalHelper.InitializeDataElements();
                 var colors = GlobalHelper.InitializeColors();
+                var filters = FilterHelper.InitializeFilters(); //contruct filter values to filter students in the app
 
                 await Task.WhenAll(co, st, se);
 
@@ -380,14 +402,14 @@ namespace TeamMnMGroupingWebApp.Controllers
                 await Task.WhenAll(cohorts, students, se);
                 await Task.WhenAll(dataElements, colors);
 
+                //Construct a master object to for display purpose
                 var data = new GroupingDisplayObject();
                 data.cohorts = cohorts.Result;
                 data.students = students.Result;
                 data.sections = sections.Result;
                 data.dataElements = dataElements.Result;
                 data.colors = colors.Result;
-
-                data.filters = FilterHelper.InitializeFilters(); //contruct filter values to filter students in the app
+                data.filters = filters;
 
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
@@ -397,24 +419,19 @@ namespace TeamMnMGroupingWebApp.Controllers
             
         }
 
-        public async Task<ActionResult> Sample()
-        {
-
-                //var displayObj = new List<CohortDisplayObject>();
-                var cs = new CohortService(Session["access_token"].ToString());
-                var co = await GetCohorts();
-
-                var displayObj = await Task.WhenAll(from c in co select CohortHelper.GetCohortDisplayObject(cs, c));
-                var filters = Helper.FilterHelper.InitializeFilters();
-            
-                return View(displayObj);            
-        }
-
+        /// <summary>
+        /// Return the LoginError view
+        /// </summary>
+        /// <returns></returns>
         public ActionResult LoginError()
         {
             return View();
         }
 
+        /// <summary>
+        /// Return the Error view
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Error()
         {
             return View();
@@ -466,12 +483,12 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns>result of this action</returns>
         public async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
-            var result = await cs.DeleteStudentCohortAssociationById(association.id);
-            return new ActionResponseResult { data = association.studentId, status = result.StatusCode , message = result.Content.ReadAsStringAsync().Result  };
+            var response = await cs.DeleteStudentCohortAssociationById(association.id);
+            return GetActionResponseResult(association.studentId, response);
         }
 
         /// <summary>
-        /// Get all cohorts
+        /// Get all cohorts from SLI for the current user session
         /// </summary>
         /// <returns>list of all cohorts the current user has access to</returns>
         public async Task<IEnumerable<Cohort>> GetCohorts(){
@@ -482,7 +499,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         /// <summary>
-        /// Get all students
+        /// Get all students from SLI for the current user session
         /// </summary>
         /// <returns>list of all students the current user has access to</returns>
         public async Task<IEnumerable<Student>> GetStudents()
@@ -494,7 +511,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         /// <summary>
-        /// Get all sections
+        /// Get all sections from SLI for the current user session
         /// </summary>
         /// <returns>List of all sections the current user has access to</returns>
         public async Task<IEnumerable<Section>> GetSections()
@@ -541,7 +558,6 @@ namespace TeamMnMGroupingWebApp.Controllers
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
                     cohort.educationOrgId = userSession.edOrgId;
                 else
-                    // daom cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8";
                     cohort.educationOrgId = CURRENT_ED_ORG_ID;
                     cohort.cohortType = SlcClient.Enum.CohortType.Other;
 
@@ -587,8 +603,11 @@ namespace TeamMnMGroupingWebApp.Controllers
                     
                 var response = await cs.Update(cohort);
 
-                var result = new Result { completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent, 
-                    objectActionResult = new ActionResponseResult { data = cohort.id, status = response.StatusCode, message = await response.Content.ReadAsStringAsync() } };
+                var result = new Result
+                {
+                    completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent,
+                    objectActionResult = GetActionResponseResult(cohort.id, response)
+                };
 
                 return result;
             }
@@ -607,13 +626,16 @@ namespace TeamMnMGroupingWebApp.Controllers
         private static void DetermineFailedToCreateFor(Result result, IEnumerable<ActionResponseResult> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.All(a => a.status == HttpStatusCode.Created);
+            var assocationSuccess = associations.All(a => a.status == HttpStatusCode.Created);
+            if (result.completedSuccessfully) //if overal success is true and set to to false if this action is false, else overal success is still false
+                result.completedSuccessfully = assocationSuccess;
+
             if (!result.completedSuccessfully)
                 result.partialCreateSuccess = associations.Any(a => a.status == HttpStatusCode.Created);
             else
                 result.partialCreateSuccess = false;
 
-            result.failToCreateIds = from r in associations where r.status != HttpStatusCode.Created select r;
+            result.failToCreateAssocations = from r in associations where r.status != HttpStatusCode.Created select r;
         }
 
         /// <summary>
@@ -624,13 +646,16 @@ namespace TeamMnMGroupingWebApp.Controllers
         private static void DetermineFailedToDeleteFor(Result result, IEnumerable<ActionResponseResult> associations)
         {
             //determine if all the associations were created successfully
-            result.completedSuccessfully = associations.All(a => a.status == HttpStatusCode.NoContent);
+            var assocationSuccess = associations.All(a => a.status == HttpStatusCode.NoContent);
+            if (result.completedSuccessfully) //if overal success is true and set to to false if this action is false, else overal success is still false
+                result.completedSuccessfully = assocationSuccess;
+
             if (!result.completedSuccessfully)
                 result.partialDeleteSuccess = associations.Any(a => a.status == HttpStatusCode.NoContent);
             else
                 result.partialDeleteSuccess = false;
 
-            result.failToCreateIds = from r in associations where r.status != HttpStatusCode.NoContent select r;
+            result.failToCreateAssocations = from r in associations where r.status != HttpStatusCode.NoContent select r;
         }
 
         /// <summary>
@@ -690,6 +715,11 @@ namespace TeamMnMGroupingWebApp.Controllers
             }            
         }
 
+        /// <summary>
+        /// Get a Result object with an expired status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private Result GetSessionExpiredResult(string id = "")
         {
             return new Result
@@ -705,6 +735,12 @@ namespace TeamMnMGroupingWebApp.Controllers
             };
         }
 
+        /// <summary>
+        /// Get a Result object
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private static Result GetExceptionResult(string id, Exception e)
         {
             ExceptionHelper.LogCaughtException(e);
@@ -718,6 +754,22 @@ namespace TeamMnMGroupingWebApp.Controllers
                         status = HttpStatusCode.InternalServerError,
                         message = "Message: " + e.Message + " Inner Exception: " + e.InnerException == null ? "" : e.InnerException.Message
                     }
+            };
+        }
+
+        /// <summary>
+        /// Create a new ActionResponseResult object base on the HttpResponseMessage parameter
+        /// </summary>
+        /// <param name="objId">The related object id</param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        private static ActionResponseResult GetActionResponseResult(string objId, HttpResponseMessage m)
+        {
+            return new ActionResponseResult
+            {
+                data = objId,
+                status = m.StatusCode,
+                message = m.Content.ReadAsStringAsync().Result,
             };
         }
     }
