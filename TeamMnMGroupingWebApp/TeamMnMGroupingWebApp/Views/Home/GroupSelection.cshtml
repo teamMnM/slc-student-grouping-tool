@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+        <title>Student Grouping Tool - Group Selection</title>
+		<link rel="stylesheet" href="~/Content/vendor/select2/css/select2.css" />		
+		<link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.min.css" />	
+		<link rel="stylesheet" href="~/Content/vendor/jqplot/css/jquery.jqplot.min.css" />
+		<link rel="stylesheet" href="~/Content/css/groupSelection.css" />	
+	</head>
+	<body>
+		<div>
+			 <div class="row-fluid">                
+	             <div class="span12 top-bar-controls navbar-fixed-top">                     
+					<div id="studentsBtnGrp" class="span5">
+						<div class="row-fluid">
+							<div class="span4">								
+								<button id="edit-multiple-groups-btn" class="btn btn-info">edit multiple groups</button>
+							</div>
+							<div class="span8">
+								<select id="group-search-txt" data-placeholder="Search for a group">
+									<option></option>
+								</select>
+								<button class="btn btn-success">search</button>
+							</div>
+						</div>		 
+					</div>
+					<div class="span2 top-bar-title">
+						<h4>MnM</h4>
+					</div>
+					<div class="span5">
+						<div class="row-fluid">
+							<div class="span10">
+								<img class="add-group-btn" src="~/Content/img/add-icon.png"/>
+								<span>create groups</span>
+								<input type="text" class="num-groups-create-txt"/>
+								 <button id="create-groups-btn" class="btn btn-success">create</button>
+							</div>
+							<div class="span2">
+								<h5>logout</h5>
+							</div>
+						</div>
+					</div>
+				</div>	
+            </div>
+            <div class="row-fluid main-content">
+            	<div class="span6 group-section-list">
+            		
+            	</div>
+            	<div class="span6 group-details">
+            		<div class="group-name">
+            			<h3 class="group-name-txt"><i>Group Details Page</i></h3>
+                        <img class="group-details-btn edit-group-icon" src="~/Content/img/group-edit-icon.png" />
+                        <img class="group-details-btn save-group-icon" src="~/Content/img/save-icon.png" />
+            		</div>
+            		<div class="group-description">
+            			
+            		</div>
+            		<div class="details-section-title">
+            			<div class="group-more-data">
+            				<span id="members-div">Members</span>
+            				<button id="show-more-data-btn" class="btn btn-success">show more data</button>
+            			</div>
+            			<div class="group-add-student">
+	            			<select id="student-search-txt" data-placeholder="Add a student to this group">
+	            				<option></option>
+	            			</select>
+	            			<button id="add-student-btn" class="btn btn-success">add</button>
+            			</div>
+            		</div>
+            		<div class="member-list">
+            			
+            		</div>
+            		<div>
+            			<div class="group-lesson-plan-top details-section-title">
+	            			<div class="group-lesson-plan">
+	            				<span id="group-lesson-plan-title">Lesson Plan</span>            				
+	            			</div>
+	            			<div class="group-lesson-plan-upload">
+	            				 <div class="fakeupload">
+		                            <input type="text" class="fake-upload-txt"/>
+		                            <img src="~/Content/img/attachment-icon.png" class="attachment-img"/>
+		                            <input type="file" class="real-upload-txt" class="realupload"/>
+	                            </div>
+	            				<button class="btn btn-success add-attachment-btn">add</button>
+	            			</div>           				
+            			</div>
+						<div class="group-lesson-plan-bottom">
+							<a class="lesson-plan-file-name"> </a>
+							<img class="lesson-plan-remove-icon" src="~/Content/img/trash-icon.png"/>							
+						</div> 
+            		</div>
+            	</div>
+            </div>
+       </div>
+       
+       <div id="show-more-data-modal" class="modal hide fade">  
+       	    <div class="modal-body">       			    	   		
+	       		select what you want to show	
+	       		<div class="modal-attributes-list-div">
+                   <ul id="modal-attributes-list">
+	       		   </ul>
+                </div>
+	       		<div class="modal-attributes-btn-div">
+                    <button class="btn attributes-save-btn">Save</button>
+	       		    <button class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+       	    </div>
+       </div>
+       
+       <!-- Load third part scripts -->
+		<script src="~/Content/vendor/jquery/js/jquery.min.js"> </script>
+		<script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"> </script>
+		<Script src="~/Content/vendor/underscore/js/underscore.min.js"> </Script>
+		<script src="~/Content/vendor/select2/js/select2.min.js"> </script>
+		<script src="~/Content/vendor/pubsub/js/pubsub.js"> </script>
+        <script src="~/Content/vendor/spin/js/spin.min.js"> </script>
+        <script src="~/Content/vendor/spin/js/jquery.spin.js"> </script>
+		
+       <!-- Load custom scripts -->
+       <script src="~/Content/js/utils.js"> </script>
+       <script src="~/Content/js/groupSelection/student.js"> </script>
+       <script src="~/Content/js/groupSelection/group.js"> </script>
+       <script src="~/Content/js/groupSelection/groupDetails.js"> </script>
+       <script src="~/Content/js/groupSelection/section.js"> </script>
+       <script src="~/Content/js/groupSelection/sectionList.js"> </script>
+       <script src="~/Content/js/groupSelection/topbar.js"> </script>
+       <script src="~/Content/js/groupSelection/main.js"> </script>
+	</body>

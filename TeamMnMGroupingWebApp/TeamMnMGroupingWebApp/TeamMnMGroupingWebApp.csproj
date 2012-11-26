@@ -147,12 +147,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Content\css\groupSelection.css" />
     <Content Include="Content\css\main.css" />
+    <Content Include="Content\img\add-icon.png" />
     <Content Include="Content\img\attachment-icon.png" />
     <Content Include="Content\img\attachment-paper-small.png" />
     <Content Include="Content\img\attachment-paper.png" />
     <Content Include="Content\img\divider-icon.png" />
     <Content Include="Content\img\group-close-icon.png" />
+    <Content Include="Content\img\group-edit-icon.png" />
     <Content Include="Content\img\group-info-icon.png" />
     <Content Include="Content\img\printer-icon.png" />
     <Content Include="Content\img\save-icon.png" />
@@ -166,6 +169,13 @@
     <Content Include="Content\js\fakes.js" />
     <Content Include="Content\js\filters.js" />
     <Content Include="Content\js\group.js" />
+    <Content Include="Content\js\groupSelection\group.js" />
+    <Content Include="Content\js\groupSelection\groupDetails.js" />
+    <Content Include="Content\js\groupSelection\main.js" />
+    <Content Include="Content\js\groupSelection\section.js" />
+    <Content Include="Content\js\groupSelection\sectionList.js" />
+    <Content Include="Content\js\groupSelection\student.js" />
+    <Content Include="Content\js\groupSelection\topbar.js" />
     <Content Include="Content\js\groupsList.js" />
     <Content Include="Content\js\main.js" />
     <Content Include="Content\js\popovers.js" />
@@ -241,6 +251,7 @@
     <Content Include="Views\Shared\LoginError.cshtml" />
     <Content Include="Views\Home\Group.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\GroupSelection.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
