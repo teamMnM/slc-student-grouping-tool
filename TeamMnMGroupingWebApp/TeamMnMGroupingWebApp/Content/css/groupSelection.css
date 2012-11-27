@@ -1,0 +1,330 @@
+﻿#txtRandomNumInGroup{
+	width:80px;
+	background-color: #8EB4E3;
+	height:30px;
+	margin-top:10px;
+}
+
+.hide-button {
+    float: right;
+    margin-top: -33px;
+    font-size: 11px;
+    font-family: helvetica;
+    color: gray;
+    display: none;
+}
+
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
+
+/**********************
+ * COMMON
+ *********************/
+.details-section-title {	
+	margin-bottom: 0.5em;
+	border-bottom: 0.15em solid #B9B7B7;
+	padding-bottom: 0.6em;
+}
+
+/**********************
+ * TOP BAR
+ *********************/
+.top-bar-controls {
+	margin-bottom: 1.6em;
+	width:auto;
+    background: #D7E4BD;
+}
+
+.top-bar-title {
+	color:white;
+	text-align: center;
+}
+
+.add-group-btn {
+	width: 1.8em;
+    cursor: pointer;
+}
+
+/**********************
+ * Main Content
+ *********************/
+.main-content {
+	position:relative;
+	background-color: #F2F2F2;
+}
+
+.group-section-list {
+	background-color: #FFFFFF;	
+	box-shadow: 0.5em 0em 1.0em #9C9C9C;
+    height:100%;
+}
+
+.group-details {
+	padding-top: 5em;
+	height:100%;
+}
+
+/**********************
+ * GROUP SECTION LIST
+ *********************/
+.group-section-list {
+	padding-top: 5em;
+}
+
+/**********************
+ * SECTION
+ *********************/
+.group-section {
+	padding-bottom: 2.5em;
+}
+
+.group-section-title {
+	margin-left: 1.2em;
+	font-size: large;
+	font-style: italic;
+}
+
+.group-checkbox {
+	float:left;
+	margin: 0em 0em 0em 1em;
+}
+
+.group-container {
+	border: 1px;
+	box-shadow: 0.2em 0.1em 1em #CCC;
+	margin: 0em 2em 2em 3em;
+	padding: 0.5em;
+}
+
+.group-title {
+	font-size:large;
+}
+
+.group-icon {
+	width:1.5em;
+	cursor: pointer;
+}
+
+.group-icon.group-delete-icon {
+	width:1em;
+	margin-left:0.5em;
+}
+
+.group-modified-timestamp {
+	float:right;
+	font-size:smaller;
+	font-style: italic;
+}
+
+/**********************
+ * STUDENT
+ *********************/
+.student-container {
+	box-shadow: 0.3em 0.5em 1em #6B6B6B;
+	padding: 0.5em 0.5em 0.3em 0.5em;
+	background-color: #FFFFFF;
+	border:1px solid #CCC;	
+	font-size: smaller;
+
+	display:inline-block;
+	margin:0.5em auto 0.8em 0.8em;	
+	position:relative;
+	width: 16.5em;
+	min-height:4em;
+	border-radius:0.8em;
+}
+
+.student-icon-div {
+	float:left;	
+}
+
+.student-icon {
+	width: 3.5em;
+	position:absolute;
+	top: 20%;
+}
+
+
+.student-container .student-full-profile {
+	float:right;   
+    font-size:0.8em;
+    position: absolute;
+    bottom: 0;
+    right: 0.5em;
+	display:none;
+}
+
+.student-container:hover .student-full-profile {
+	display:block;
+}
+
+.student-container .del-button{
+	margin-top:-1.0em;
+	margin-left: -1.5em;
+	width:1.5em;
+    float: left;
+    display:none;
+}
+
+.student-container:hover .del-button {
+    display: block;
+    cursor:pointer;
+}
+
+.student-name, .student-attributes {
+	margin-left:3.7em;
+}
+
+/**********************
+ * GROUP
+ *********************/
+.group-list-item {
+	cursor:pointer;	
+}
+
+/**********************
+ * GROUP DETAILS
+ *********************/
+.group-details .group-name {
+	font-size: large;
+	margin-bottom: 0.5em;
+}
+
+.group-name-txt {
+    display:inline;
+}
+
+.group-details-btn {
+    width: 1.5em;
+    margin-top: -0.5em;
+    cursor:pointer;
+}
+
+.group-description {
+	margin-bottom: 1.5em;
+}
+
+.group-details-controls {
+}
+
+.group-section-list {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	border: 4px solid #FFF;
+}
+
+#members-div {
+	font-size:large;
+	font-weight:bold;
+}
+
+.member-list {
+	margin-bottom: 2.5em;
+}
+
+.group-more-data, .group-add-student {
+	display:inline-block;
+}
+
+.group-add-student {
+	float:right;
+}
+
+/**********************
+ * LESSON PLAN
+ *********************/
+.group-lesson-plan-top  {
+	padding-bottom: 1.2em;
+}
+
+.group-lesson-plan, .group-lesson-plan-upload {
+	display: inline-block
+}
+
+.group-lesson-plan-upload {
+	float:right;
+}
+
+#group-lesson-plan-title {
+	font-size:large;
+	font-weight:bold;	
+}
+
+.real-upload-txt {
+    position:absolute;
+    top:0;
+    left:0em;
+
+    /* start of transparency styles */
+    opacity:0;
+    -moz-opacity:0;
+    filter:alpha(opacity:0);
+    /* end of transparency styles */
+
+    z-index:2; /* bring the real upload interactivity up front */
+    width:18em !important;
+}
+
+.fake-upload-txt{
+	height:1em;
+	width:15em;
+	background-color:transparent;
+	border-color:white;
+	color:white;
+}
+
+.attachment-img {
+	width: 1.8em;
+}
+
+.fakeupload {
+	display:inline-block;
+    position:relative;
+}
+
+.add-attachment-btn {
+	margin-top: -0.5em;
+}
+
+.group-lesson-plan-bottom {
+	display:none;
+}
+
+.lesson-plan-remove-icon {
+	float:right;
+	width: 1.0em;
+	cursor: pointer;
+}
+
+/**********************
+ * SHOW MORE DATA POPUP
+ *********************/
+#show-more-data-modal {
+	width: 25em;
+	color: white;
+	background-color: #92B843;
+}
+
+#show-more-data-modal .modal-body{
+	color: white;
+	background-color: #92B843;
+	border-radius: 1em;
+}
+
+#modal-attributes-list {
+	list-style:none;
+}
+
+.modal-attributes-list-div {
+    height:20em;
+    overflow-y:auto;
+}
+
+.modal-attributes-btn-div {
+    text-align: center;
+}
