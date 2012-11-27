@@ -19,5 +19,10 @@ namespace TeamMnMGroupingWebApp.Models
         /// lesson plan object
         /// </summary>
         public LessonPlan lessonPlan { get; set; }
+
+        /// <summary>
+        /// The last modified date time of the cohort in context
+        /// </summary>
+        public DateTime lastModifiedDate { get; set; }
     }
 }
