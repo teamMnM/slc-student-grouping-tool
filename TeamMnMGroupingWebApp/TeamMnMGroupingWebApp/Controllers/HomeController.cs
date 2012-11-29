@@ -313,7 +313,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
         private static void ProcessCustomResult(Result cohortResult, Task<HttpResponseMessage> cohortCustom, HttpStatusCode successStatus)
         {
-            var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
+            var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result, successStatus);
             if (cohortCustom.Result.StatusCode != successStatus)
                 cohortResult.completedSuccessfully = false;
 
@@ -480,7 +480,8 @@ namespace TeamMnMGroupingWebApp.Controllers
             var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStudentCohortAssociation(a);
 
-            return new ActionResponseResult { data = sId, status = result.StatusCode, message = result.Content.ReadAsStringAsync().Result };
+            return GetActionResponseResult(sId, result, HttpStatusCode.Created);
+            //return new ActionResponseResult { data = sId, status = result.StatusCode, message = result.Content.ReadAsStringAsync().Result };
         }
 
         /// <summary>
@@ -504,7 +505,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         public async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
             var response = await cs.DeleteStudentCohortAssociationById(association.id);
-            return GetActionResponseResult(association.studentId, response);
+            return GetActionResponseResult(association.studentId, response, HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -586,7 +587,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var result = new Result
                 {
                     completedSuccessfully = response.StatusCode == HttpStatusCode.Created,
-                    objectActionResult = new ActionResponseResult { status = response.StatusCode, message = await response.Content.ReadAsStringAsync() }
+                    objectActionResult = GetActionResponseResult("", response, HttpStatusCode.Created)
                 };
 
                 if (response.StatusCode == HttpStatusCode.Created)
@@ -627,7 +628,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 {
                     objectId = cohort.id,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent,
-                    objectActionResult = GetActionResponseResult(cohort.id, response)
+                    objectActionResult = GetActionResponseResult(cohort.id, response, HttpStatusCode.NoContent)
                 };
 
                 return result;
@@ -751,7 +752,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                     new ActionResponseResult
                     {
                         status = HttpStatusCode.ProxyAuthenticationRequired,
-                        message = "Session expired"
+                        message = "Session expired",
+                        isSuccess = false
                     }
             };
         }
@@ -773,7 +775,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                     new ActionResponseResult
                     {
                         status = HttpStatusCode.InternalServerError,
-                        message = "Message: " + e.Message + " Inner Exception: " + e.InnerException == null ? "" : e.InnerException.Message
+                        message = "Message: " + e.Message + " Inner Exception: " + e.InnerException == null ? "" : e.InnerException.Message,
+                        isSuccess = false
                     }
             };
         }
@@ -784,13 +787,14 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <param name="objId">The related object id</param>
         /// <param name="m"></param>
         /// <returns></returns>
-        private static ActionResponseResult GetActionResponseResult(string objId, HttpResponseMessage m)
+        private static ActionResponseResult GetActionResponseResult(string objId, HttpResponseMessage m, HttpStatusCode successStatus)
         {
             return new ActionResponseResult
             {
                 data = objId,
                 status = m.StatusCode,
                 message = m.Content.ReadAsStringAsync().Result,
+                isSuccess = m.StatusCode == successStatus
             };
         }
     }

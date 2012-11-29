@@ -21,6 +21,11 @@ namespace TeamMnMGroupingWebApp.Models
         /// <summary>
         /// response message
         /// </summary>
-        public string message {get; set;}
+        public string message { get; set; }
+
+        /// <summary>
+        /// Indicates whether this action was a success
+        /// </summary>
+        public bool isSuccess { get; set; }
     }
 }
