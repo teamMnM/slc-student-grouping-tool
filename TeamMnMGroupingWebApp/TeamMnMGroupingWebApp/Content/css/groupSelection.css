@@ -186,6 +186,10 @@
 	cursor:pointer;	
 }
 
+.group-attachment-link, .group-print-icon {
+    display:none;
+}
+
 /**********************
  * GROUP DETAILS
  *********************/
