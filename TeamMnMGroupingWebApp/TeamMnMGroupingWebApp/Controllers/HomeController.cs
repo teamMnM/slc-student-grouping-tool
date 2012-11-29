@@ -186,7 +186,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //2) create student cohort association                    
                     var newStudentsAssociations = GetNewStudentCohortAssociations(obj, cs);
                     //3) update cohort custom entity
-                    var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));
+                    var custom = obj.custom;
+                    if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
+                    else custom.lastModifiedDate = DateTime.UtcNow;
+                    var cohortCustom = cs.UpdateCohortCustom(obj.cohort.id, JsonConvert.SerializeObject(custom));
 
                     //4) remove students from cohort
                     Task<IEnumerable<ActionResponseResult>> removeStudents;
@@ -275,7 +278,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                         //2) start creating student cohort association
                         var newStudentsAssociations = GetNewStudentCohortAssociations(obj, cs);
                         //3) initial populate of the cohort custom entity
-                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(obj.custom ?? new CohortCustom()));                        
+                        var custom = obj.custom;
+                        if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
+                        else custom.lastModifiedDate = DateTime.UtcNow;
+                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(custom));                        
 
                         //contruct a list of tasks we're waiting for
                         var tasksToWaitFor = new List<Task>();
@@ -614,6 +620,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var result = new Result
                 {
+                    objectId = cohort.id,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent,
                     objectActionResult = GetActionResponseResult(cohort.id, response)
                 };
