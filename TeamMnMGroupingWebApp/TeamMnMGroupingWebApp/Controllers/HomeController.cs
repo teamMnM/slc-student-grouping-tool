@@ -218,9 +218,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
 
                     //determine whether custom was created successfully
-                    var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
-                    if (cohortCustom.Result.StatusCode != HttpStatusCode.NoContent)
-                        cohortResult.completedSuccessfully = false;
+                    var customResult = ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.NoContent);
 
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(obj.cohort.id);
@@ -294,9 +292,9 @@ namespace TeamMnMGroupingWebApp.Controllers
                             DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
 
                         //determine whether custom was created successfully
-                        var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
-                        if (cohortCustom.Result.StatusCode != HttpStatusCode.Created)
-                            cohortResult.completedSuccessfully = false;
+                        var customResult = ProcessCustomResult(cohortResult, cohortCustom,  HttpStatusCode.Created);
+
+                        cohortResult.customActionResult = customResult;
                             
                     }
 
@@ -313,6 +311,14 @@ namespace TeamMnMGroupingWebApp.Controllers
             {
                 return GetExceptionResult(obj.cohort.cohortIdentifier, e);
             }           
+        }
+
+        private static ActionResponseResult ProcessCustomResult(Result cohortResult, Task<HttpResponseMessage> cohortCustom, HttpStatusCode successStatus)
+        {
+            var customResult = GetActionResponseResult(cohortResult.objectId, cohortCustom.Result);
+            if (cohortCustom.Result.StatusCode != successStatus)
+                cohortResult.completedSuccessfully = false;
+            return customResult;
         }        
 
         /// <summary>
