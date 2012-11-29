@@ -10,7 +10,8 @@ group_selection.group = function(groupData){
 	this.originalStudents = groupData.students;
 	this.students = [];
 	this.selectedAttributes = [];
-	
+	this.attachedFile = null;
+
 	this.groupContainerId = '';
 	
 	this.groupTitleClass = '.group-title';
@@ -18,13 +19,16 @@ group_selection.group = function(groupData){
 	this.groupDescriptionClass = '.group-description';
 	this.groupToggleInfoClass = '.group-toggle-info';		
     
+	this.groupAttachmentLinkClass = '.group-attachment-link';
+	this.groupAttachmentIconClass = '.group-attachment-icon';
+	this.groupAttachmentPrintClass = '.group-print-icon';
 	this.groupDeleteIconClass = '.group-delete-icon';
 	this.groupTemplate = '<div class="group-list-item">' + 
 									'<div class="group-checkbox"><input type="checkbox" class="group-checkbox"/></div>' +
 									'<div class="group-container">' + 
 										'<div>' +
 											'<span class="group-title"></span>' +
-											'<img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img>' +
+											'<a class="group-attachment-link" href="#"><img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img></a>' +
 											'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
 											'<img src="/Content/img/trash-icon.png" class="group-icon group-delete-icon"></img>' +
 											'<span class="group-modified-timestamp"></span>' + 	
@@ -41,7 +45,7 @@ group_selection.group = function(groupData){
      **************************/
     this.init = function(){
     	me.groupContainerId = "#" + me.groupData.id; 
-    	$(me.groupContainerId).click(function(event){
+    	$(me.groupContainerId).click(function (event) {
     		me.pubSub.publish('show-group-details', me);
     	});
 
@@ -53,12 +57,36 @@ group_selection.group = function(groupData){
     	    me.removeStudent(studentId);
     	});
 
-        // make copy of student list for modifying
-    	_.each(me.originalStudents, function (student) {
-    	    me.students.push(student);
-    	});
+    	me.InitData();
     }							
-										 			
+	
+    /**
+     *
+     */
+    this.InitData = function () {
+        me.students = [];
+        // make copy of student list for modifying
+        _.each(me.originalStudents, function (student) {
+            me.students.push(student);
+        });
+
+        me.selectedAttributes = [];
+        var dataElements = me.group.custom.dataElements;
+        if (dataElements !== undefined && dataElements !== null && dataElements.length > 0) {
+            _.each(dataElements, function (dataElement) {
+                me.selectedAttributes.push(dataElement);
+            });
+        }
+
+        // if a file has been uploaded for the group, set as attached file
+        var lessonPlan = me.group.custom.lessonPlan;
+        if (lessonPlan !== undefined && lessonPlan !== null) {
+            me.attachedFile = lessonPlan;
+        }
+
+        me.showFileAttachment();
+    }
+
 	/**
 	 * Return the HTML content for this object 
 	 */										 
@@ -71,8 +99,28 @@ group_selection.group = function(groupData){
 	 	$(template).find(me.groupTitleClass).html(groupData.cohortIdentifier);
 	 	$(template).find(me.groupModifiedTimestampClass).html(custom.lastModified);
 	 	$(template).find(me.groupDescriptionClass).html(groupData.cohortDescription);
+
 	 	return template;	 	
-	 }			
+	 }
+
+
+    /**
+     * TODO implement better solution for cutting off long file names
+	 * Show the attached file
+	 */
+	 this.showFileAttachment = function () {
+	     var file = me.attachedFile;
+	     if (file !== null && file !== undefined) {
+	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).attr('href', file.type + "," + file.content);
+	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).attr('download', file.name);
+
+	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).show();
+	         $(me.groupContainerId).find(me.groupAttachmentPrintClass).show();
+	     } else {
+	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).hide();
+	         $(me.groupContainerId).find(me.groupAttachmentPrintClass).hide();
+	     }
+	 }
 	
 	 /**
 	  * Set the group's selected attributes to be the given attributes 
@@ -118,8 +166,8 @@ group_selection.group = function(groupData){
 	        url: method,
 	        contentType: 'application/json',
 	        data: JSON.stringify(cohortActionObject),
-	        success: me.successHandler(result),
-	        error: me.errorHandler(result)
+	        success: me.successHandler,
+	        error: me.errorHandler
 	    });
 	 }
 	 
@@ -267,5 +315,23 @@ group_selection.group = function(groupData){
 	        $(me.groupContainerId).spin(false);
 	    }
 	    me.processing = processing;
+	}
+
+    /**
+     * Add the given file attachment to this group
+     */
+	this.attachFile = function (file) {
+	    me.attachedFile = file;
+	    me.markDirty();
+	    me.showFileAttachment();
+	}
+
+    /**
+     * Remove the file attached to this group
+     */
+	this.removeFile = function () {
+	    me.attachedFile = null;
+	    me.markDirty();
+	    me.showFileAttachment();
 	}
 }

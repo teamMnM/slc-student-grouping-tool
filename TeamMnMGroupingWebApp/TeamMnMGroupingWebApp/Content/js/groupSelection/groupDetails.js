@@ -100,6 +100,9 @@ group_selection.groupDetails = function(){
             var confirmation = confirm("You have unsaved changes. If you continue these changes will be lost. Continue?");
             if (!confirmation) {
                 return;
+            } else {
+                // reset to original values
+                me.currGroup.initData();
             }
         }
        
@@ -133,6 +136,10 @@ group_selection.groupDetails = function(){
         $(me.memberListClass).append(studentObj.generateTemplate());
 
         studentObj.init();
+        var selectedStudentAttributes = me.currGroup.selectedAttributes;
+        if (selectedStudentAttributes.length > 0) {
+            studentObj.appendStudentAttributes(me.currGroup.selectedAttributes);
+        }
         me.students.push(studentObj);
     }
 
@@ -193,12 +200,12 @@ group_selection.groupDetails = function(){
 		        var type = result.substring(0, contentStartIndex);
 		        var content = result.substring(contentStartIndex+1);
 		        
-		        me.currGroup.attachedFile = {
+		        var lessonPlan = {
 		        	name: file.name,
 		        	type: type,
 		        	content: content
 		        }
-		        me.currGroup.markDirty();
+		        me.currGroup.attachFile(lessonPlan);
 		        
 		        // show the div with the attachment
 		        me.toggleLessonPlan();      
@@ -216,7 +223,7 @@ group_selection.groupDetails = function(){
      * Remove the attachment from the current group 
      */
     this.removeAttachment = function(){
-    	me.currGroup.attachedFile = null;
+        me.currGroup.removeFile();
     	me.toggleLessonPlan();
     }
     
@@ -293,6 +300,7 @@ group_selection.groupDetails = function(){
                 'top',
                 'manual',
                 3000);
+            me.currGroup.dirty = false;
         } else {
             me.saveGroupChangesErrorHandler(result);
         }
