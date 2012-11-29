@@ -273,6 +273,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //if cohort was created successfully then continue to create associations
                     if (cohortResult.completedSuccessfully)
                     {
+                        obj.cohort.id = cohortResult.objectId;
                         //2) start creating student cohort association
                         var newStudentsAssociations = GetNewStudentCohortAssociations(obj, cs);
                         //3) initial populate of the cohort custom entity
