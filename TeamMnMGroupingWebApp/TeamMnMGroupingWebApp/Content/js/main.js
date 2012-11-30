@@ -15,9 +15,17 @@ student_grouping.sections = [];
  * TODO add description and externalize element selectors
  */
 student_grouping.init = function(){
-		
+    var loaded = false;
     var me = this;
     $(".top-bar-controls").hide();
+
+    // give it a 60 second timeout
+    setTimeout(function () {
+        if (!loaded) {
+            // redirect to main page for authentication if req is taking too long
+            window.location = '/';
+        }
+    }, 60000);
 
 	$.ajax({
         type: 'GET',
@@ -61,6 +69,8 @@ student_grouping.init = function(){
             $(".main-content").css('opacity', 1);
 
             $(".top-bar-controls").show();
+
+            loaded = true;
         },
         error: function (errorMsg) {
             window.location = 'Error';

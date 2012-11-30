@@ -24,7 +24,7 @@ namespace TeamMnMGroupingWebApp.Controllers
     [HandleError(ExceptionType = typeof(HttpRequestException), View = "PermissionError")]
     public class HomeController : BaseController
     {
-        const string MAIN = "/Home/GroupSelection";
+        const string MAIN = "/Home/MultipleGroupsEdit";
         const string SLC_USER_SESSION = "slc_user";
 
         public void Index()

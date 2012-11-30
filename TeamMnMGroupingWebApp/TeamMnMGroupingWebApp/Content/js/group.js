@@ -853,7 +853,7 @@ student_grouping.group = function(groupData){
 	        success: function (result) {
 	            if (result.completedSuccessfully) {
 	                successHandler(result);
-	            } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess){
+	            } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess || !result.customActionResult.isSuccess){
 	                errorHandler(result);
 	            }
 	        },
@@ -910,13 +910,8 @@ student_grouping.group = function(groupData){
 	    if (confirmation) {
 	        // make sure we are not deleting newly created, unsaved groups
 	        if (groupId < 0) {
-	            // Let user know the created was successful
-	            utils.uiUtils.showTooltip(
-                    $(me.groupContainerId).find(me.groupNameLblClass),
-                    'Cannot delete this unsaved new group.',
-                    'top',
-                    'manual',
-                    3000);
+	            // just delete the group locally since it was not saved to the server
+	            me.deleteGroupSuccessHandler(null);
 	        } else {
 	            $.ajax({
 	                type: 'POST',
@@ -926,12 +921,13 @@ student_grouping.group = function(groupData){
 	                    me.deleteGroupSuccessHandler(result);
 	                },
 	                error: function (result) {
+                        // TODO if there is id then set it
 	                    me.deleteGroupErrorHandler(result);
 	                }
 	            });
-
-	            me.toggleGroupContainerProcessingState(true);
 	        }
+
+	        me.toggleGroupContainerProcessingState(true);
 	    }
 	}
 

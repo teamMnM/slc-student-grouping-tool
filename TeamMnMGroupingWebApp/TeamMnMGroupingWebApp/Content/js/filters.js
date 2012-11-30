@@ -274,6 +274,10 @@ student_grouping.filters = function(){
     				    return studentAttributeVal
                             .toLowerCase()
                             .lastIndexOf(value.toLowerCase(), 0) === 0;
+    			    case 'matches':
+    			        return studentAttributeVal
+                            .toLowerCase()
+                            .indexOf(value.toLowerCase()) !== -1;
     			}
     		});
     	});

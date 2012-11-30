@@ -79,6 +79,10 @@ student_grouping.student = function(studentData) {
 			me.removeGroupIndicator(groupId);
 		});
 
+		this.pubSub.subscribe('group-deleted', function (groupId) {
+		    me.removeGroupIndicator(groupId);
+		});
+
         /** 
          * Listen to when this student is removed from a group
          */

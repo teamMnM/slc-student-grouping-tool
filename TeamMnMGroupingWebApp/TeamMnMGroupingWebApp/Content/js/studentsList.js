@@ -37,7 +37,7 @@ student_grouping.studentsList = function(){
 			var filter = {
 				attributeName: 'name',
 				attributeId: 'name',
-				operator: 'startsWith',
+				operator: 'matches',
 				value: filterVal,
 				values: []
 			}
@@ -137,9 +137,10 @@ student_grouping.studentsList = function(){
 	 */
 	this.assignRandom = function () {
 
+        // TODO show warning only if there are students assigned to groups already
         // show warning and confirm that the user would like to perform the action
-	    var confirmation = confirm('Random will reorganize your students into groups randomly,' + 
-            + 'even the students that are already assigned to groups. Would you like to continue?');
+	    var confirmation = confirm('Random will reorganize your students into groups randomly,' 
+            + ' even the students that are already assigned to groups. Would you like to continue?');
 	    if (confirmation) {
 	        var me = this;
 	        var randomNum = $(this.randomNumTxt).val();

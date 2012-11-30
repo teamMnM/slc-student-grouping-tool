@@ -215,7 +215,11 @@ student_grouping.groupsList = function(){
 					    cohortIdentifier: 'New Group',
 					    cohortDescription: ''
 					},
-                    students: []
+					students: [],
+					custom: {
+					    lessonPlan: null,
+					    dataElements: null
+					}
 			    };
 			    	
 			    var newGroupObject = me.addGroup(group);
@@ -242,21 +246,9 @@ student_grouping.groupsList = function(){
      * Saving changes to all groups
      */
 	this.saveAllGroups = function () {
-
-	    // disable the groups area screen
-	    $(this.groupsAreaClass).spin();
-	    $(this.groupsAreaClass).css('opacity', 0.2);
-
-        // reset synching params
-	    this.groupsAdded = false;
-	    this.createGroupsResults = [];
-
-	    this.groupsUpdated = false;
-	    this.updateGroupsResults = [];
+	    var groups = me.groups;
 
 	    var groupsToSave = [];
-        
-	    var groups = me.groups;
 	    var originalGroupsToSave = []; // keep track of the actual group objects so we can later update with created ID
 	    _.each(groups, function (group) {
 	        if (group.dirty) {
@@ -265,7 +257,24 @@ student_grouping.groupsList = function(){
 	            originalGroupsToSave.push(group);
 	        }
 	    });
-        
+
+        // make sure there are dirty groups to save
+	    if (groupsToSave.length === 0) {
+	        alert("There are no groups to save. Please add some existing groups to modify or create new ones before saving.");
+	        return;
+	    }
+
+        // reset synching params
+	    this.groupsAdded = false;
+	    this.createGroupsResults = [];
+
+	    this.groupsUpdated = false;
+	    this.updateGroupsResults = [];
+
+	    // disable the groups area screen
+	    $(this.groupsAreaClass).spin();
+	    $(this.groupsAreaClass).css('opacity', 0.2);
+
 	    // call server to add all new groups
 	    $.ajax({
 	        type: 'POST',

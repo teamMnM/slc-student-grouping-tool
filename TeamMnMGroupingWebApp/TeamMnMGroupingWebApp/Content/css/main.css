@@ -186,9 +186,9 @@
 
 .groups-area {
     z-index: 1;
-	top:6em;	
+	top:5em;	
     bottom: 0;
-    padding-top:4em;
+    padding-top:5em;
     width: 97% !important;
     overflow-y: auto;
     position:absolute;
@@ -585,4 +585,8 @@
 
 #selected-filters.select2-choices{
 	border:0;
+}
+
+.tooltip {
+    z-index: 2;
 }
