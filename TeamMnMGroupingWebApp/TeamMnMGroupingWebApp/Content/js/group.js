@@ -946,7 +946,7 @@ student_grouping.group = function(groupData){
             3000);
 
 	    me.toggleGroupContainerProcessingState(false);
-	    this.dirty = false;
+	    me.dirty = false;
 
 	    // put the current list of students into the original list
 	    _.each(me.students, function(student){
@@ -992,7 +992,7 @@ student_grouping.group = function(groupData){
             'manual',
             3000);
 
-	    this.dirty = false;
+	    me.dirty = false;
 	}
 
     /**

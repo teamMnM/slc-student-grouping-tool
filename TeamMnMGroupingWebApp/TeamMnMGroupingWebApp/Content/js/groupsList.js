@@ -261,6 +261,7 @@ student_grouping.groupsList = function(){
         // make sure there are dirty groups to save
 	    if (groupsToSave.length === 0) {
 	        alert("There are no groups to save. Please add some existing groups to modify or create new ones before saving.");
+	        me.saveAllComplete();
 	        return;
 	    }
 
