@@ -334,4 +334,12 @@ group_selection.group = function(groupData){
 	    me.markDirty();
 	    me.showFileAttachment();
 	}
+
+	this.toggleVisible = function (visible) {
+	    if (visible) {
+	        $(me.groupContainerId).show();
+	    } else {
+	        $(me.groupContainerId).hide();
+	    }
+	}
 }

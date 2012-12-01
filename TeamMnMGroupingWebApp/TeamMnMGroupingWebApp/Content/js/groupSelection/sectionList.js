@@ -24,13 +24,14 @@ group_selection.groupSectionList = function(){
      * Add the group to the appropriate section 
      */
     this.addGroup = function(group){
-    	var custom = group.group.custom; 
-    	var key = custom.lastModified;
+        var custom = group.group.custom;
+        var lastModifiedDate = new Date(parseInt(custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+        var key = lastModifiedDate.toFormat('DDDD, MMM DD, YYYY');
 		var section = me.sections[key];
 		if (section === undefined || section === null){
 			var sectionInfo = {
 				id : me.newSectionId++,
-				title: "Last modified " + custom.lastModified
+				title: "Last modified " + key
 			}
 			section = new group_selection.groupSection(sectionInfo);			
 			section.init();

@@ -26,6 +26,8 @@ group_selection.groupSection = function(section){
         me.sectionContainerId = "#" + me.sectionData.id;
 
         me.pubSub.subscribe('group-deleted', me.removeGroup);
+
+        me.pubSub.subscribe('filter-group', me.filterGroup);
     }	 
     
     /**
@@ -58,5 +60,40 @@ group_selection.groupSection = function(section){
     	
     	$(template).find(me.groupSectionTitleClass).html(sectionData.title);
     	return template;
+    }
+
+    /**
+     * Filter the list of groups by name
+     */
+    this.filterGroup = function (groupName) {
+        var groups = me.groups;
+        var containsGroup = false;
+        _.each(groups, function (group) {
+            if (group.groupData.cohortIdentifier
+                .toLowerCase()
+                .indexOf(groupName.toLowerCase()) !== -1) {
+                containsGroup = true;
+                group.toggleVisible(true);
+            } else {
+                group.toggleVisible(false);
+            }
+        });
+
+        if (!containsGroup) {
+            me.toggleVisible(false);
+        } else {
+            me.toggleVisible(true);
+        }
+    }
+
+    /**
+     * Hide/show section
+     */
+    this.toggleVisible = function (visible) {
+        if (visible) {
+            $(me.sectionContainerId).show();
+        } else {
+            $(me.sectionContainerId).hide();
+        }
     }
 }
