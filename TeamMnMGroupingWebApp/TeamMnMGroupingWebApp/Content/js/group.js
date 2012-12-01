@@ -79,11 +79,11 @@ student_grouping.group = function(groupData){
 									    '<div class="add-data-div">' +
 										    '<button class="add-data-button btn btn-link">add data</button>' +
 									    '</div>' +
+									     '<div class="group-file-attachment">' +
+										     '<a class="file-attachment-name"/>' +
+										     '<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
+									     '</div>' +
 								     '</div>' +
-									 '<div class="group-file-attachment">' +
-										 '<a class="file-attachment-name"/>' +
-										 '<img class="del-attachment-img" src="/Content/img/trash-icon.png"/>' +
-									 '</div>' +
                                      '<div class="group-description-popover group-popover" data-groupContainerId="-1" style="display:none">' +
 			                                     '<strong>Description:</strong>' +
 			                                     '<div class="group-description-text">' +
@@ -108,7 +108,7 @@ student_grouping.group = function(groupData){
 					                            '<input type="file" class="real-upload-txt" class="realupload"/>' +
 				                            '</div>' +
 			                            '</div>' +
-		                            '</div>'+
+		                            '</div>' +
 			                       '</div>';
 
 	this.droppedElemClass = '.dropped-elem';
@@ -787,13 +787,9 @@ student_grouping.group = function(groupData){
 	 */
 	this.getPositionAndSize = function(){
 		var position = $(this.groupContainerId).offset();
-		var width = $(this.groupContainerId).width(); 
-		var height = $(this.groupContainerId).height();
-		
-		// need to subtract the height of the file attachment div if there is an attachment
-		if (this.attachedFile !== null) {
-			height -= $(this.groupAttachmentDivClass).height();
-		}
+		var width = $(this.groupContainerId).find(this.groupContainerClass).width(); 
+		var height = $(this.groupContainerId).find(this.groupContainerClass).height();
+				
 		var position_size = {
 			left: position.left,
 			top: position.top,
