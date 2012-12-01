@@ -18,6 +18,13 @@ group_selection.topbar = function(){
      		$(me.groupSearchTxtElem).append('<option value="' + group.cohort.id +'">' + group.cohort.cohortIdentifier + '</option>');
      	});
      	
-     	$(me.groupSearchTxtElem).select2( {width:'element'} );     	     	
+     	$(me.groupSearchTxtElem).select2({ width: 'element' });
+     	$(me.groupSearchTxtElem).change(function (event) {
+     	    me.filterGroupsByName();
+     	});
+     }
+
+     this.filterGroupsByName = function () {
+
      }
 }
