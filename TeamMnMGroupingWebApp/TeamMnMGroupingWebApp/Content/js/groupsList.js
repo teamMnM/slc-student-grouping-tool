@@ -5,6 +5,8 @@ student_grouping.groupsList = function(){
 	
 	this.pubSub = PubSub;
 	
+	this.allGroups = [];
+
 	// keep track of the current group we are dragging to
 	this.currGrp = null;
 	this.groups = [];
@@ -17,16 +19,7 @@ student_grouping.groupsList = function(){
 	this.saveAllGroupsModalElem = "#save-all-summary";
 	this.saveAllGroupsContentElem = "#save-all-summary-content";    
 
-    // colors for the groups
-	this.colorList = [
-        /*{ background: '#DBFDAA', title: '#7D9D38' },
-        { background: '#A5C5FF', title: '#2F62A0' },
-        { background: '#FFA5A4', title: '#A9322F' },
-        { background: '#CBB7E9', title: '#654788' },
-        { background: '#A7ECFF', title: '#35ADCD' },
-        { background: '#FFC08A', title: '#F79646' },
-        { background: '#D5D5D5', title: '#000000' }*/        
-	];
+	this.colorList = [];
 	this.currentColorIndex = 0;
 	
 	/**************************
@@ -44,10 +37,30 @@ student_grouping.groupsList = function(){
 	        me.colorList.push(color);
 	    });
     	
-		for (var i = 0; i < groups.length; i++){
-			var group = groups[i];
-			this.addGroup(group);			
-		}		
+	    _.each(groups, function (group) {
+	        me.allGroups.push(group);
+	    });
+
+	    // add the groups passed from the prev screen
+	    var urlParams = utils.uiUtils.getUrlParams();
+	    var numNewGroups = urlParams.create;
+	    if (numNewGroups !== undefined && numNewGroups !== null) {
+	        for (var i = 0; i < numNewGroups; i++) {
+	            var newGroup = me.createNewGroupObj();
+	            me.addGroup(newGroup);
+	        }
+	    }
+
+	    var selGroups = urlParams.selGroups;
+	    if (selGroups !== undefined && selGroups !== null) {
+	        var selGroupsArr = selGroups.split(',');
+	        _.each(selGroupsArr, function (selGroupId) {
+	            var selGroup = _.find(me.allGroups, function (group) {
+	                return group.cohort.id === selGroupId;
+	            });
+	            me.addGroup(selGroup);
+	        });
+	    }
 
 		this.pubSub.subscribe('add-group', function(group){
 		    var newGroup = me.addGroup(group);
@@ -209,19 +222,7 @@ student_grouping.groupsList = function(){
 			// should create a new group if student was not added to any existing group
 			if (!addedToGroup){
 					
-				var group = {
-					cohort: {
-					    id: me.lastNewGroupIndex--,
-					    cohortIdentifier: 'New Group',
-					    cohortDescription: ''
-					},
-					students: [],
-					custom: {
-					    lessonPlan: null,
-					    dataElements: null
-					}
-			    };
-			    	
+			    var group = me.createNewGroupObj();			    	
 			    var newGroupObject = me.addGroup(group);
 			    newGroupObject.assignStudentToGroup(student);
 			    newGroupObject.markDirty();
@@ -335,5 +336,24 @@ student_grouping.groupsList = function(){
 	    // re-enable the groups area screen
 	    $(this.groupsAreaClass).spin(false);
 	    $(this.groupsAreaClass).css('opacity', 1);
+	}
+
+    /**
+     * Creates a new empty group object
+     */
+	this.createNewGroupObj = function () {
+	    var group = {
+	        cohort: {
+	            id: me.lastNewGroupIndex--,
+	            cohortIdentifier: 'New Group',
+	            cohortDescription: ''
+	        },
+	        students: [],
+	        custom: {
+	            lessonPlan: null,
+	            dataElements: null
+	        }
+	    };
+	    return group;
 	}
 }

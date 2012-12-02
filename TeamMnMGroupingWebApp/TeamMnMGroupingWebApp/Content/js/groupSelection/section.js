@@ -96,4 +96,14 @@ group_selection.groupSection = function(section){
             $(me.sectionContainerId).hide();
         }
     }
+
+    /**
+     * Return the ids of the selected groups
+     */
+    this.getSelectedGroups = function () {
+        var selGroups = _.filter(me.groups, function (group) {
+            return group.isSelected();
+        });
+        return selGroups;
+    }
 }

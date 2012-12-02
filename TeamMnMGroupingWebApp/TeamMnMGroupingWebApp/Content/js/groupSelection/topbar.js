@@ -6,11 +6,12 @@ group_selection.topbar = function(){
 	
 	this.groups = [];
 	
+	this.editMultipleGroupsBtn = "#edit-multiple-groups-btn";
 	this.groupSearchTxtElem = "#group-search-txt";
 	this.groupSearchBtnClass = ".group-search-btn";
 	this.groupSearchClearBtnClass = ".group-search-clear-btn";
 	this.createGroupsBtn = '#create-groups-btn';
-	this.numGroupsCreateTxt = '#num-groups-create-txt';
+	this.numGroupsCreateTxt = '.num-groups-create-txt';
 	
 	 /**************************
      * METHODS
@@ -30,10 +31,13 @@ group_selection.topbar = function(){
      	$(me.groupSearchClearBtnClass).click(function (event) {
      	    me.clearGroupSearch();
      	});
-
          
      	$(me.createGroupsBtn).click(function(event){
      	    me.createGroups();
+     	});
+
+     	$(me.editMultipleGroupsBtn).click(function (event) {
+     	    me.editMultipleGroups();
      	});
      }
 
@@ -48,22 +52,20 @@ group_selection.topbar = function(){
      this.clearGroupSearch = function () {
          $(me.groupSearchTxtElem).select2('val', '');
          me.pubSub.publish('filter-group', '');
-     }
-
-    
+     }    
 
     /**
      * Create the specified number of groups
      */
      this.createGroups = function () {
          var numGroups = $(me.numGroupsCreateTxt).val();
+         window.location = "MultipleGroupsEdit?create=" + numGroups;
+     }
 
-         var groupsToCreate = [];
-         for (var i = 0; i < numGroups; i++) {
-             var groupData = {
-
-             };
-             var newGroup = new group_selection.group(groupData);
-             }
+    /**
+     * 
+     */
+     this.editMultipleGroups = function () {
+         me.pubSub.publish('edit-multiple-groups');
      }
 }

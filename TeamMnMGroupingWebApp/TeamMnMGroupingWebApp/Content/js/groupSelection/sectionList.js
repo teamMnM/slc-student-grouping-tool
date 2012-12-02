@@ -17,7 +17,9 @@ group_selection.groupSectionList = function(){
     	_.each(groups, function(group){   
     		var g = new group_selection.group(group); 		
     		me.addGroup(g);
-    	});    	
+    	});
+
+    	me.pubSub.subscribe('edit-multiple-groups', me.editMultipleGroups);
     }
     
     /**
@@ -40,5 +42,23 @@ group_selection.groupSectionList = function(){
 			$(me.groupSectionList).append(section.generateTemplate());
 		}
 		section.addGroup(group);
+    }
+
+    /**
+     *
+     */
+    this.editMultipleGroups = function () {
+        var selGroups = [];
+        for (var i in me.sections) {
+            var section = me.sections[i];
+            selGroups.push.apply(selGroups,section.getSelectedGroups());
+        }
+
+        var selGroupIds = _.map(selGroups, function (selGroup) {
+            return selGroup.groupData.id;
+        });
+
+        var selGroupIdsStr = selGroupIds.join(",");
+        window.location = 'MultipleGroupsEdit?selGroups=' + selGroupIdsStr;
     }
 }

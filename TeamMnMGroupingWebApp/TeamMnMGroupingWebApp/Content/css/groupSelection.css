@@ -64,7 +64,7 @@
 }
 
 .group-details {
-	padding-top: 5em;
+	padding-top: 4.5em;
 	height:100%;
 }
 
@@ -202,6 +202,18 @@
     display:inline;
 }
 
+.group-name-txtarea {
+    border-color: transparent;
+    background-color:transparent;
+    font-size:large;
+    font-style: italic;
+    resize: none;
+    height: 1em;
+    margin-top: 0.5em;
+    overflow: hidden;
+    display:none;
+}
+
 .group-details-btn {
     width: 1.5em;
     margin-top: -0.5em;
@@ -210,6 +222,17 @@
 
 .group-description {
 	margin-bottom: 1.5em;
+}
+
+.group-description-txtarea {    
+    border-color: transparent;
+    background-color:transparent;
+    font-style: italic;
+    resize: none;
+    height: 3em;
+    width: 20em;
+    margin-top: 0.5em;
+    display:none;
 }
 
 .group-details-controls {
