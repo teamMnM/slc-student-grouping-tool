@@ -57,13 +57,13 @@ group_selection.group = function(groupData){
     	    me.removeStudent(studentId);
     	});
 
-    	me.InitData();
+    	me.initData();
     }							
 	
     /**
      *
      */
-    this.InitData = function () {
+    this.initData = function () {
         me.students = [];
         // make copy of student list for modifying
         _.each(me.originalStudents, function (student) {
@@ -335,11 +335,38 @@ group_selection.group = function(groupData){
 	    me.showFileAttachment();
 	}
 
+    /**
+     * Hide/show the group
+     */
 	this.toggleVisible = function (visible) {
 	    if (visible) {
 	        $(me.groupContainerId).show();
 	    } else {
 	        $(me.groupContainerId).hide();
 	    }
+	}
+
+    /**
+     * Returns true if the group is selected
+     */
+	this.isSelected = function () {
+	    var checkbox = $(me.groupContainerId).find('input.group-checkbox');
+	    return $(checkbox).is(':checked');
+	}
+
+    /**
+     * Update the group's name
+     */
+	this.setName = function (newName) {
+	    me.groupData.cohortIdentifier = newName;
+	    $(me.groupContainerId).find(me.groupTitleClass).html(newName);
+	}
+
+    /**
+     * Update the group's description
+     */
+	this.setDescription = function (newGroupDescription) {
+	    me.groupData.cohortDescription = newGroupDescription;
+	    $(me.groupContainerId).find(me.groupDescriptionClass).html(newGroupDescription);
 	}
 }
