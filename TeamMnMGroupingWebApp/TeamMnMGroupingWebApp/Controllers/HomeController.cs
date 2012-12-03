@@ -364,11 +364,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var accessToken = Session["access_token"];
                 if (accessToken != null)
                 {
-                    var cs = new CohortService(Session["access_token"].ToString());
-                    var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
+                    var cs = new CohortService(Session["access_token"].ToString());                    
                     ////var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;               
                     var cohortResult = await DeleteCohort(cs, id);
-
+                    var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
                     if (associationToDelete != null && associationToDelete.Count() > 0)
                     {
                         IEnumerable<ActionResponseResult> removeStudents = await
@@ -710,7 +709,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             else
                 result.partialDeleteSuccess = false;
 
-            result.failToCreateAssocations = from r in associations where r.status != HttpStatusCode.NoContent select r;
+            result.failToDeleteAssociations = from r in associations where r.status != HttpStatusCode.NoContent select r;
         }
 
         /// <summary>
