@@ -13,7 +13,7 @@ group_selection.group = function(groupData){
 	this.attachedFile = null;
 
 	this.groupContainerId = '';
-	
+	this.groupContainerClass = '.group-container';
 	this.groupTitleClass = '.group-title';
 	this.groupModifiedTimestampClass = '.group-modified-timestamp';
 	this.groupDescriptionClass = '.group-description';
@@ -31,22 +31,22 @@ group_selection.group = function(groupData){
 											'<a class="group-attachment-link" href="#"><img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img></a>' +
 											//'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
 											'<img src="/Content/img/trash-icon.png" class="group-icon group-delete-icon"></img>' +
-											'<span class="group-modified-timestamp"></span>' + 	
+											'<i class="group-modified-timestamp"></i>' + 	
 										'</div>' + 
 										'<div>' + 
 											'<span class="group-description"></span>' +
 											'<a href="#" class="group-toggle-info"></a>' +
 										'</div>'
 									'</div>' +
-								'</div>';
-								
+								'</div>';    
+
 	/**************************
      * METHODS
      **************************/
     this.init = function(){
     	me.groupContainerId = "#" + me.groupData.id; 
     	$(me.groupContainerId).click(function (event) {
-    		me.pubSub.publish('show-group-details', me);
+    	    me.groupSelected();
     	});
 
     	$(me.groupContainerId).find(me.groupDeleteIconClass).click(function (event) {
@@ -98,7 +98,10 @@ group_selection.group = function(groupData){
 	 	
 	 	$(template).attr('id', groupData.id);
 	 	$(template).find(me.groupTitleClass).html(groupData.cohortIdentifier);
-	 	$(template).find(me.groupModifiedTimestampClass).html(custom.lastModified);
+
+	 	var lastModifiedDate = new Date(parseInt(custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+	 	var lastModifiedDateStr = lastModifiedDate.toFormat('MM/DD/YYYY HH:MI PP');
+	 	$(template).find(me.groupModifiedTimestampClass).html(lastModifiedDateStr);
 	 	$(template).find(me.groupDescriptionClass).html(groupData.cohortDescription);
 
 	 	return template;	 	
@@ -367,5 +370,16 @@ group_selection.group = function(groupData){
 	this.setDescription = function (newGroupDescription) {
 	    me.groupData.cohortDescription = newGroupDescription;
 	    $(me.groupContainerId).find(me.groupDescriptionClass).html(newGroupDescription);
+	}
+
+	this.groupSelected = function () {
+	    $(me.groupContainerClass).css('background-color', 'white');
+	    $('.group-section-list').find("img.group-indicator-arrow").remove();
+	    var img = $("<img>");
+	    $(img).attr('src', '/Content/img/sel-group-indicator-icon.png');
+	    $(img).addClass('group-indicator-arrow');
+	    $(me.groupContainerId).append(img);
+	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
+	    me.pubSub.publish('show-group-details', me);
 	}
 }

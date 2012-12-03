@@ -104,6 +104,7 @@ group_selection.groupDetails = function(){
     	// subscribe to events
     	me.pubSub.subscribe('show-group-details', me.viewGroupDetails);
     	me.pubSub.subscribe('remove-student', me.removeStudent);
+    	me.pubSub.subscribe('group-deleted', me.hideContent);
     }
     
     /**
@@ -136,11 +137,11 @@ group_selection.groupDetails = function(){
         $(me.groupNameTxtClass).html(groupData.cohortIdentifier);
 
         var groupDescription = groupData.cohortDescription;
-        if (utils.uiUtils.textIsEmpty(groupDescription)) {
-            groupDescription = "[add description here]";
+        if (groupDescription === null || utils.uiUtils.textIsEmpty(groupDescription)) {
+            groupDescription = "<i>[add description here]</i>";
         };
 
-        $(me.groupDescriptionClass).html(groupData.cohortDescription);
+        $(me.groupDescriptionClass).html(groupDescription);
 
         me.students = [];
         $(me.memberListClass).empty();
@@ -451,7 +452,7 @@ group_selection.groupDetails = function(){
 	 * Make the group description text editable, turns it into a textarea
 	 */
     this.makeGroupDescriptionEditable = function () {
-        var groupDescription = $(me.groupDescriptionClass).html();
+        var groupDescription = $(me.groupDescriptionClass).text();
         $(me.groupDescriptionClass).hide();
         $(me.groupDescriptionTxtAreaClass)
             .val(groupDescription)
@@ -482,5 +483,12 @@ group_selection.groupDetails = function(){
         } else {
             $(me.groupSaveImgClass).hide();
         }
+    }
+
+    /**
+     * Hide the group details panel
+     */
+    this.hideContent = function () {
+        $(me.groupDetails).hide();
     }
 }

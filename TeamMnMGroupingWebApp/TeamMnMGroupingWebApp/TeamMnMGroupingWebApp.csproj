@@ -160,6 +160,7 @@
     <Content Include="Content\img\printer-icon.png" />
     <Content Include="Content\img\save-icon.png" />
     <Content Include="Content\img\search-icon.png" />
+    <Content Include="Content\img\sel-group-indicator-icon.png" />
     <Content Include="Content\img\student-close-icon.png" />
     <Content Include="Content\img\student-icon-female.png" />
     <Content Include="Content\img\student-icon-female2.png" />
