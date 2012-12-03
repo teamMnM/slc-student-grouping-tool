@@ -43,5 +43,12 @@ utils.uiUtils = {
         });
  
         return params;
+    },
+    
+    /**
+     * Returns true if the given text is empty or blank text 
+     */
+    textIsEmpty: function (text) {
+        return !/\S/.test(text);
     }
 }

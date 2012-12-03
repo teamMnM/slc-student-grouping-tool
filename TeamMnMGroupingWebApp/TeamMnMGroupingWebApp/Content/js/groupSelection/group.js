@@ -85,6 +85,7 @@ group_selection.group = function(groupData){
         }
 
         me.showFileAttachment();
+        me.dirty = false;
     }
 
 	/**

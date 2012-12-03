@@ -45,6 +45,7 @@
 	margin-bottom: 1.6em;
 	width:auto;
     background: #D7E4BD;
+    box-shadow: 0.5em 0.35em 1.0em #9C9C9C;
 }
 
 #studentsBtnGrp {
@@ -68,6 +69,7 @@
 
 .logout-btn {
     cursor:pointer;
+    color:white;
 }
 
 /**********************
@@ -248,6 +250,10 @@
     cursor:pointer;
 }
 
+.save-group-icon {
+    width: 1.4em;
+}
+
 .group-description {
 	margin-bottom: 1.5em;
 }
@@ -258,7 +264,7 @@
     font-style: italic;
     resize: none;
     height: 3em;
-    width: 20em;
+    width: 100%;
     margin-top: 0.5em;
     display:none;
 }
@@ -281,6 +287,7 @@
 
 .member-list {
 	margin-bottom: 2.5em;
+    max-height: 65%;
 }
 
 .group-more-data, .group-add-student {
@@ -323,7 +330,7 @@
     /* end of transparency styles */
 
     z-index:2; /* bring the real upload interactivity up front */
-    width:18em !important;
+    width:16em !important;
 }
 
 .fake-upload-txt{
@@ -364,12 +371,14 @@
 	width: 25em;
 	color: white;
 	background-color: #92B843;
+    border-radius: 0.8em;
 }
 
 #show-more-data-modal .modal-body{
 	color: white;
 	background-color: #92B843;
 	border-radius: 1em;
+    max-height: 100%;
 }
 
 #modal-attributes-list {
@@ -377,7 +386,6 @@
 }
 
 .modal-attributes-list-div {
-    height:20em;
     overflow-y:auto;
 }
 

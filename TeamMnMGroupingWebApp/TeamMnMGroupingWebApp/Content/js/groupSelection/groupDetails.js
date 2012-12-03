@@ -11,7 +11,8 @@ group_selection.groupDetails = function(){
 	this.attributes = [];
 	this.processing = false;
 	this.attachedFile = null;
-	
+	this.dirty = false;
+
 	this.groupDetails = '.group-details';
 	this.groupNameClass = '.group-details .group-name';
 	this.groupNameTxtClass = '.group-details .group-name-txt';
@@ -24,7 +25,8 @@ group_selection.groupDetails = function(){
 	
 	this.studentSearchElem = "#student-search-txt";
 	this.addStudentBtnElem = "#add-student-btn";
-	
+	this.groupAddStudentClass = ".group-add-student";
+
 	this.showMoreDataBtnElem = "#show-more-data-btn";
 	this.showMoreDataModalElem = "#show-more-data-modal";
 	this.modalAttributesDiv = "#modal-attributes-list";
@@ -116,8 +118,8 @@ group_selection.groupDetails = function(){
         }
 
         // prompt user to save any changes he/she made
-        var currGroupDirty = me.currGroup.dirty;
-        if (currGroupDirty) {
+        var dirty = me.dirty;
+        if (dirty) {
             var confirmation = confirm("You have unsaved changes. If you continue these changes will be lost. Continue?");
             if (!confirmation) {
                 return;
@@ -132,6 +134,12 @@ group_selection.groupDetails = function(){
 
         var groupData = group.groupData;
         $(me.groupNameTxtClass).html(groupData.cohortIdentifier);
+
+        var groupDescription = groupData.cohortDescription;
+        if (utils.uiUtils.textIsEmpty(groupDescription)) {
+            groupDescription = "[add description here]";
+        };
+
         $(me.groupDescriptionClass).html(groupData.cohortDescription);
 
         me.students = [];
@@ -143,6 +151,9 @@ group_selection.groupDetails = function(){
 
         me.attachedFile = me.currGroup.attachedFile;
         me.toggleLessonPlan();
+
+        // only show save btn if there has been changes
+        me.toggleDirty(false);
         
     }
     
@@ -150,6 +161,23 @@ group_selection.groupDetails = function(){
      *
      */
     this.addStudent = function (studentId) {
+
+        // check if student has already been added to this group
+        var existingStudent = _.find(me.students, function (s) {
+            return s.studentData.id === studentId;
+        });
+
+        // exit out of func if student has already been added
+        if (existingStudent !== undefined && existingStudent !== null) {
+            utils.uiUtils.showTooltip(
+               $(me.groupAddStudentClass),
+               'Student is already in this group.',
+               'top',
+               'manual',
+               3000);
+            return;
+        }
+
         var matchingStudent = _.find(me.allStudents, function (s) {
             return s.id === studentId;
         });
@@ -181,7 +209,7 @@ group_selection.groupDetails = function(){
     		}
     	});
     	me.currGroup.setSelectedAttributes(selectedAttributes);
-    	
+    	me.toggleDirty(true);
     	_.each(me.students, function(student){
     		student.appendStudentAttributes(selectedAttributes);
     	});    	
@@ -229,7 +257,8 @@ group_selection.groupDetails = function(){
 		        me.attachedFile = lessonPlan;
 		        
 		        // show the div with the attachment
-		        me.toggleLessonPlan();      
+		        me.toggleLessonPlan();
+		        me.toggleDirty(true);
 		      };
 		    })(file);
 		
@@ -245,6 +274,7 @@ group_selection.groupDetails = function(){
      */
     this.removeAttachment = function () {
         me.attachedFile = null;
+        me.toggleDirty(true);
     	me.toggleLessonPlan();
     }
     
@@ -281,7 +311,7 @@ group_selection.groupDetails = function(){
         me.currGroup.addStudent(studentId);
 
         me.addStudent(studentId);
-
+        me.toggleDirty(true);
         // reset the search box
         $(me.studentSearchElem).select2('val', '');
     }
@@ -294,6 +324,7 @@ group_selection.groupDetails = function(){
         me.students = _.filter(me.students, function (student) {
             return student.studentData.id !== studentId;
         });
+        me.toggleDirty(true);
     }
 
     /**
@@ -318,12 +349,16 @@ group_selection.groupDetails = function(){
                 'top',
                 'manual',
                 3000);
-            me.currGroup.dirty = false;
+            me.toggleDirty(false);
 
             var groupName = $(me.groupNameTxtClass).html();
             me.currGroup.setName(groupName);
 
             var groupDescription = $(me.groupDescriptionClass).html();
+            // make sure we are not just assigning the default text
+            if (groupDescription === "<i>[add description here]</i>") {
+                groupDescription = "";
+            }
             me.currGroup.setDescription(groupDescription);
 
             if (me.attachedFile !== null) {
@@ -386,9 +421,12 @@ group_selection.groupDetails = function(){
             .show()
             .focus();
 
-        $(me.groupNameTxtAreaClass).unbind('blur');
-        $(me.groupNameTxtAreaClass).blur(function (event) {
-            me.saveGroupName();
+        $(me.groupNameTxtAreaClass).unbind('focusout');
+        $(me.groupNameTxtAreaClass).focusout(function (event) {
+            setTimeout(function () {
+                me.saveGroupName();
+            }, 100);
+            
         });
     }
 
@@ -406,8 +444,7 @@ group_selection.groupDetails = function(){
         $(me.groupNameTxtClass).html(newGroupName);
         $(me.groupNameTxtClass).show();
         $(me.groupNameTxtAreaClass).hide();
-
-        me.currGroup.markDirty();
+        me.toggleDirty(true);
     }
 
     /**
@@ -432,5 +469,18 @@ group_selection.groupDetails = function(){
         $(me.groupDescriptionClass).html(newGroupDescription);
         $(me.groupDescriptionClass).show();
         $(me.groupDescriptionTxtAreaClass).hide();
+        me.toggleDirty(true);
+    }
+
+    /**
+     *
+     */
+    this.toggleDirty = function (dirty) {
+        me.dirty = dirty;
+        if (dirty) {
+            $(me.groupSaveImgClass).show();
+        } else {
+            $(me.groupSaveImgClass).hide();
+        }
     }
 }

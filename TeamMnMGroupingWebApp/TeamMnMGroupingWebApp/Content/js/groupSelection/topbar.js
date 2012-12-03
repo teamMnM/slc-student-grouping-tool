@@ -42,6 +42,12 @@ group_selection.topbar = function(){
      	});
 
      	$(me.logoutBtnClass).click(function (event) {
+     	    if (group_selection.groupDetailsComponent.dirty) {
+     	        var confirmDirtyLogout = confirm("You have unsaved changes. Would you still like to log out?");
+     	        if (!confirmDirtyLogout) {
+     	            return;
+     	        }
+     	    }
      	    me.pubSub.publish('logout');
      	});
      }
