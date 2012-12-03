@@ -24,10 +24,18 @@
 /**********************
  * COMMON
  *********************/
+#group-selection {
+    color: #7F7F7F;
+}
+
 .details-section-title {	
 	margin-bottom: 0.5em;
 	border-bottom: 0.15em solid #B9B7B7;
 	padding-bottom: 0.6em;
+}
+
+#group-selection {
+    opacity: 0.5;
 }
 
 /**********************
@@ -39,6 +47,11 @@
     background: #D7E4BD;
 }
 
+#studentsBtnGrp {
+    margin-top: 0.4em;
+    padding-left: 0.5em;
+}
+
 .top-bar-title {
 	color:white;
 	text-align: center;
@@ -47,6 +60,14 @@
 .add-group-btn {
 	width: 1.8em;
     cursor: pointer;
+}
+
+#create-groups-ctrls {
+    margin-top: 0.4em;
+}
+
+.logout-btn {
+    cursor:pointer;
 }
 
 /**********************
@@ -65,6 +86,7 @@
 
 .group-details {
 	padding-top: 4.5em;
+    padding-right: 2em;
 	height:100%;
 }
 
@@ -79,29 +101,20 @@
  * SECTION
  *********************/
 .group-section {
-	padding-bottom: 2.5em;
+	padding-bottom: 1.5em;
 }
 
 .group-section-title {
-	margin-left: 1.2em;
 	font-size: large;
 	font-style: italic;
+    padding-bottom: 0.5em;
+    margin: 0em 1.5em 0.8em 1.2em;
+    border-bottom: 0.1em solid #B9B7B7;
 }
 
 .group-checkbox {
 	float:left;
 	margin: 0em 0em 0em 1em;
-}
-
-.group-container {
-	border: 1px;
-	box-shadow: 0.2em 0.1em 1em #CCC;
-	margin: 0em 2em 2em 3em;
-	padding: 0.5em;
-}
-
-.group-title {
-	font-size:large;
 }
 
 .group-icon {
@@ -131,7 +144,7 @@
 	font-size: smaller;
 
 	display:inline-block;
-	margin:0.5em auto 0.8em 0.8em;	
+	margin:0.5em 0.8em 0.8em 0em;	
 	position:relative;
 	width: 16.5em;
 	min-height:4em;
@@ -184,6 +197,21 @@
  *********************/
 .group-list-item {
 	cursor:pointer;	
+}
+
+.group-container {
+	border: 1px;
+	box-shadow: 0.1em 0.4em 1.5em #6B6B6B;
+	margin: 0em 2em 1.3em 2.7em;
+	padding: 0.5em;
+}
+
+.group-title {
+	font-size:large;
+}
+
+.group-icon {
+    vertical-align: top;
 }
 
 .group-attachment-link, .group-print-icon {
@@ -248,6 +276,7 @@
 #members-div {
 	font-size:large;
 	font-weight:bold;
+    vertical-align: middle;
 }
 
 .member-list {

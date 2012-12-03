@@ -109,6 +109,12 @@ group_selection.groupDetails = function(){
      */
     this.viewGroupDetails = function (group) {
 
+        // group-details pane is hidden by default, 
+        // we only show when a user clicks on a group for details
+        if ($(me.groupDetails).css('display') === 'none') {
+            $(me.groupDetails).show();
+        }
+
         // prompt user to save any changes he/she made
         var currGroupDirty = me.currGroup.dirty;
         if (currGroupDirty) {
@@ -203,7 +209,6 @@ group_selection.groupDetails = function(){
     	var files = $(me.attachmentFileInput).prop('files');
 	    var file = files[0];
 		if (file !== undefined){
-			me.attachedFile = file;
 			
 			var reader = new FileReader();
 
@@ -221,6 +226,7 @@ group_selection.groupDetails = function(){
 		        	type: type,
 		        	content: content
 		        }
+		        me.attachedFile = lessonPlan;
 		        
 		        // show the div with the attachment
 		        me.toggleLessonPlan();      
@@ -252,10 +258,6 @@ group_selection.groupDetails = function(){
 	        $(me.lessonPlanFileName).attr('download', file.name);
 
 	        var fileName = file.name;
-            // cut off filename if its too long
-	        if (fileName.length > 28) {
-	            fileName = file.name.substring(0, 28) + "...";
-	        }
 	        $(me.lessonPlanFileName).html(fileName);
 		    $(me.lessonPlanAttachmentDiv).show();		    
 	        $(me.lessonPlanUploadDiv).hide();	 
@@ -299,6 +301,7 @@ group_selection.groupDetails = function(){
      */
     this.saveGroupChanges = function () {
         me.toggleGroupContainerProcessingState(true);
+        me.currGroup.attachedFile = me.attachedFile;
         me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
     }
 

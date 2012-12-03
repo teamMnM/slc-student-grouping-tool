@@ -193,6 +193,7 @@
     <Content Include="Content\vendor\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\vendor\dateutils\js\dateUtils.min.js" />
     <Content Include="Content\vendor\highcharts\js\highcharts.js" />
+    <Content Include="Content\vendor\idletimer\js\idletimer.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />
     <Content Include="Content\vendor\jqplot\js\jqplot.donutRenderer.min.js" />
     <Content Include="Content\vendor\jqplot\js\jqplot.pieRenderer.min.js" />

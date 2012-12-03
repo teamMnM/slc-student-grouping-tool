@@ -53,13 +53,16 @@ namespace TeamMnMGroupingWebApp.Controllers
                 {
                     var ss = new SessionService(token.ToString());
                     var result = await ss.Logout();
+                    Session.Clear();
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception e)
                 {
                     //logout fail
+                    Session.Clear();
                     return Json(new LogOutResult { logout = false, msg = e.Message }, JsonRequestBehavior.AllowGet);
-                } 
+                }
+
             }
             else
             {

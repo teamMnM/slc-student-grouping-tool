@@ -29,7 +29,7 @@ group_selection.group = function(groupData){
 										'<div>' +
 											'<span class="group-title"></span>' +
 											'<a class="group-attachment-link" href="#"><img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img></a>' +
-											'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
+											//'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
 											'<img src="/Content/img/trash-icon.png" class="group-icon group-delete-icon"></img>' +
 											'<span class="group-modified-timestamp"></span>' + 	
 										'</div>' + 
@@ -322,7 +322,6 @@ group_selection.group = function(groupData){
      */
 	this.attachFile = function (file) {
 	    me.attachedFile = file;
-	    me.markDirty();
 	    me.showFileAttachment();
 	}
 
@@ -331,7 +330,6 @@ group_selection.group = function(groupData){
      */
 	this.removeFile = function () {
 	    me.attachedFile = null;
-	    me.markDirty();
 	    me.showFileAttachment();
 	}
 

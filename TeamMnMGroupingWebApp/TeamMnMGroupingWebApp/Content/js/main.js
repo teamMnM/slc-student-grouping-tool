@@ -32,6 +32,10 @@ student_grouping.init = function(){
         url: 'Group',
         success: function (data) {
 
+            if (data.sections === undefined) {
+                window.location = "/Home";
+            }
+
             // store lookups
             me.sections = data.sections;
 

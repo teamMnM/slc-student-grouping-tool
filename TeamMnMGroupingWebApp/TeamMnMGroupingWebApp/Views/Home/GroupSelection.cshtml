@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="~/Content/css/groupSelection.css" />	
 	</head>
 	<body>
-		<div>
+		<div id="group-selection">
 			 <div class="row-fluid">                
 	             <div class="span12 top-bar-controls navbar-fixed-top">                     
 					<div id="studentsBtnGrp" class="span5">
@@ -17,7 +17,7 @@
 								<button id="edit-multiple-groups-btn" class="btn btn-info">edit multiple groups</button>
 							</div>
 							<div class="span8">
-								<select id="group-search-txt" data-placeholder="Search for a group">
+								<select id="group-search-txt" data-placeholder="search for a group">
 									<option></option>
 								</select>
 								<button class="btn btn-success group-search-btn">search</button>
@@ -28,18 +28,14 @@
 					<div class="span2 top-bar-title">
 						<h4>MnM</h4>
 					</div>
-					<div class="span5">
-						<div class="row-fluid">
-							<div class="span10">
-								<img class="add-group-btn" src="~/Content/img/add-icon.png"/>
-								<span>create groups</span>
-								<input type="text" class="num-groups-create-txt"/>
-								 <button id="create-groups-btn" class="btn btn-success">create</button>
-							</div>
-							<div class="span2">
-								<h5>logout</h5>
-							</div>
-						</div>
+					<div id="create-groups-ctrls" class="span4">
+						<img class="add-group-btn" src="~/Content/img/add-icon.png"/>
+						<span>create groups</span>
+						<input type="text" class="num-groups-create-txt  input-medium search-query"/>
+						<button id="create-groups-btn" class="btn btn-success">create</button>
+					</div>
+                     <div class="span1">
+						<h5 class="logout-btn">logout</h5>
 					</div>
 				</div>	
             </div>
@@ -47,7 +43,7 @@
             	<div class="span6 group-section-list">
             		
             	</div>
-            	<div class="span6 group-details">
+            	<div class="span6 group-details" style="display:none">
             		<div class="group-name">
             			<h3 style="display:inline">
                             <i class="group-name-txt">Group Details Page</i>
@@ -100,7 +96,7 @@
        
        <div id="show-more-data-modal" class="modal hide fade">  
        	    <div class="modal-body">       			    	   		
-	       		select what you want to show	
+	       		<div style="text-align:center">select what you want to show</div>
 	       		<div class="modal-attributes-list-div">
                    <ul id="modal-attributes-list">
 	       		   </ul>
@@ -121,6 +117,7 @@
         <script src="~/Content/vendor/spin/js/spin.min.js"> </script>
         <script src="~/Content/vendor/spin/js/jquery.spin.js"> </script>
         <script src="~/Content/vendor/dateutils/js/dateUtils.min.js"> </script>
+        <script src="~/Content/vendor/idletimer/js/idletimer.js"> </script>
 		
        <!-- Load custom scripts -->
        <script src="~/Content/js/utils.js"> </script>

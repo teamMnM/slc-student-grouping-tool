@@ -15,7 +15,6 @@ group_selection.groupSection = function(section){
 	this.groupSectionTitleClass = '.group-section-title';
 	this.groupSectionTemplate = '<div class="group-section">' + 
 									'<div class="group-section-title"></div>' +
-									'<img src="" class="group-horizontal-divider"/>' +
 									'<div class="group-list"> </div>' +
 								'</div>';   
 								

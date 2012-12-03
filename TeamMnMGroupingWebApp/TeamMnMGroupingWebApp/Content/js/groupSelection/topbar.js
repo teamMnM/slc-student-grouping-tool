@@ -12,6 +12,7 @@ group_selection.topbar = function(){
 	this.groupSearchClearBtnClass = ".group-search-clear-btn";
 	this.createGroupsBtn = '#create-groups-btn';
 	this.numGroupsCreateTxt = '.num-groups-create-txt';
+	this.logoutBtnClass = '.logout-btn';
 	
 	 /**************************
      * METHODS
@@ -38,6 +39,10 @@ group_selection.topbar = function(){
 
      	$(me.editMultipleGroupsBtn).click(function (event) {
      	    me.editMultipleGroups();
+     	});
+
+     	$(me.logoutBtnClass).click(function (event) {
+     	    me.pubSub.publish('logout');
      	});
      }
 
