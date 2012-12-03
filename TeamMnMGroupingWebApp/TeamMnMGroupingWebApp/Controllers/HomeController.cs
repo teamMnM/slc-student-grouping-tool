@@ -40,6 +40,34 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Log user out of the current session
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> Logout()
+        {
+            var token = Session["access_token"];
+            if (token != null)
+            {
+                try
+                {
+                    var ss = new SessionService(token.ToString());
+                    var result = await ss.Logout();
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
+                    //logout fail
+                    return Json(new LogOutResult { logout = false, msg = e.Message }, JsonRequestBehavior.AllowGet);
+                } 
+            }
+            else
+            {
+                //user is already logged out
+                return Json(new LogOutResult { logout = true, msg = "There was no access token" }, JsonRequestBehavior.AllowGet);
+            }            
+        }
+
         //[OutputCache(Duration = 1200, VaryByParam = "none")]
         public ActionResult MultipleGroupsEdit()
         {
@@ -71,7 +99,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             {
                 //handle
                 throw;
-            }            
+            }
         }
 
         /// <summary>
@@ -84,14 +112,14 @@ namespace TeamMnMGroupingWebApp.Controllers
             try
             {
                 var result = await Task.WhenAll(from obj in objs select ProcessOneCohortCreate(obj));
-                return result;               
+                return result;
             }
             catch (Exception e)
             {
                 //handle
                 throw;
             }
-        }        
+        }
 
         /// <summary>
         /// AJAX to this method to update an existing group
@@ -103,13 +131,13 @@ namespace TeamMnMGroupingWebApp.Controllers
             try
             {
                 var cohortResult = await ProcessOneCohortUpdate(obj);
-                return Json(cohortResult, JsonRequestBehavior.AllowGet); 
+                return Json(cohortResult, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
                 //handle
                 throw;
-            }           
+            }
         }
 
         /// <summary>
@@ -141,7 +169,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             try
             {
                 var cohortResult = await ProcessOneCohortDelete(id);
-                return Json(cohortResult, JsonRequestBehavior.AllowGet); 
+                return Json(cohortResult, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -198,7 +226,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                         //Get a list of the current studentCohortAssociations so that we have the ids to delete them from group
                         var currentStudentCohortAssociation = await cs.GetStudentCohortAssociationsByCohortId(obj.cohort.id);
                         //get the studentCohortAssociationId for students to delete
-                        var associationToDelete = (from s in obj.studentsToDelete 
+                        var associationToDelete = (from s in obj.studentsToDelete
                                                    select (currentStudentCohortAssociation.FirstOrDefault(csca => csca.studentId == s)));
                         //delete the studentCohortAssociation
                         removeStudents = DeleteMultipleStudentCohortAssociations(cs, associationToDelete);
@@ -229,13 +257,13 @@ namespace TeamMnMGroupingWebApp.Controllers
                 {
                     //session expired
                     return GetSessionExpiredResult(obj.cohort.id);
-                }                
+                }
             }
             catch (Exception e)
             {
                 return GetExceptionResult(obj.cohort.id, e);
             }
-            
+
         }
 
         /// <summary>
@@ -280,7 +308,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                         var custom = obj.custom;
                         if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
                         else custom.lastModifiedDate = DateTime.UtcNow;
-                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(custom));                        
+                        var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(custom));
 
                         //contruct a list of tasks we're waiting for
                         var tasksToWaitFor = new List<Task>();
@@ -293,8 +321,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                             DetermineFailedToCreateFor(cohortResult, newStudentsAssociations.Result);
 
                         //determine whether custom was created successfully
-                        ProcessCustomResult(cohortResult, cohortCustom,  HttpStatusCode.Created);
-                            
+                        ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.Created);
+
                     }
 
                     return cohortResult;
@@ -304,12 +332,12 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //section expired
                     return GetSessionExpiredResult(obj.cohort.cohortIdentifier);
                 }
-                
+
             }
             catch (Exception e)
             {
                 return GetExceptionResult(obj.cohort.cohortIdentifier, e);
-            }           
+            }
         }
 
         private static void ProcessCustomResult(Result cohortResult, Task<HttpResponseMessage> cohortCustom, HttpStatusCode successStatus)
@@ -319,7 +347,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 cohortResult.completedSuccessfully = false;
 
             cohortResult.customActionResult = customResult;
-        }        
+        }
 
         /// <summary>
         /// Delete one cohort
@@ -340,7 +368,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                     if (associationToDelete != null && associationToDelete.Count() > 0)
                     {
-                        IEnumerable<ActionResponseResult> removeStudents = await 
+                        IEnumerable<ActionResponseResult> removeStudents = await
                             DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
                         if (removeStudents != null) DetermineFailedToDeleteFor(cohortResult, removeStudents);
                     }
@@ -348,18 +376,18 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(id);
 
-                    return cohortResult; 
+                    return cohortResult;
                 }
                 else
                 {
                     //session has expired
                     return GetSessionExpiredResult(id);
-                }                
+                }
             }
             catch (Exception e)
             {
                 return GetExceptionResult(id, e);
-            }           
+            }
         }
 
         /// <summary>
@@ -388,7 +416,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             catch
             {
                 throw;
-            }            
+            }
         }
 
         /// <summary>
@@ -437,7 +465,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
             //session has expired, refresh page
             return View("Index");
-            
+
         }
 
         /// <summary>
@@ -466,7 +494,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns>list of results</returns>
         public async Task<IEnumerable<ActionResponseResult>> CreateMultipleStudentCohortAssociations(CohortService cs, string cId, IEnumerable<string> sl)
         {
-            var result = await Task.WhenAll(from s in sl select CreateOneStudentCohortAssociation(cs, cId, s));          
+            var result = await Task.WhenAll(from s in sl select CreateOneStudentCohortAssociation(cs, cId, s));
             return result;
         }
 
@@ -513,7 +541,8 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// Get all cohorts from SLI for the current user session
         /// </summary>
         /// <returns>list of all cohorts the current user has access to</returns>
-        public async Task<IEnumerable<Cohort>> GetCohorts(){
+        public async Task<IEnumerable<Cohort>> GetCohorts()
+        {
             var c = new CohortService(Session["access_token"].ToString());
             var cohorts = await c.GetAll();
 
@@ -563,7 +592,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             catch
             {
                 throw;
-            }            
+            }
         }
 
         /// <summary>
@@ -574,14 +603,14 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];               
+                var userSession = (UserSession)Session[SLC_USER_SESSION];
 
                 //set temporary edorgid because it's null from the SLC API
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
                     cohort.educationOrgId = userSession.edOrgId;
                 else
                     cohort.educationOrgId = CURRENT_ED_ORG_ID;
-                    cohort.cohortType = SlcClient.Enum.CohortType.Other;
+                cohort.cohortType = SlcClient.Enum.CohortType.Other;
 
                 var response = await cs.Create(cohort);
 
@@ -603,9 +632,9 @@ namespace TeamMnMGroupingWebApp.Controllers
             catch
             {
                 throw;
-            }           
+            }
         }
-        
+
         /// <summary>
         /// Update a single cohort
         /// </summary>
@@ -614,7 +643,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];                
+                var userSession = (UserSession)Session[SLC_USER_SESSION];
 
                 //user session has edOrgId == null but we need edOrgId to update a cohort
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
@@ -622,7 +651,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 else
                     //cohort.educationOrgId = "2012dh-836f96e7-0b25-11e2-985e-024775596ac8"; // daom 
                     cohort.educationOrgId = CURRENT_ED_ORG_ID;
-                    
+
                 var response = await cs.Update(cohort);
 
                 var result = new Result
@@ -638,7 +667,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             {
                 throw;
             }
-            
+
         }
 
         /// <summary>
@@ -735,7 +764,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             {
                 ExceptionHelper.LogCaughtException(e);
                 Response.Redirect("Home/LoginError");
-            }            
+            }
         }
 
         /// <summary>

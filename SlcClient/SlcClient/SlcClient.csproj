@@ -84,6 +84,7 @@
     <Compile Include="Entities\LearningStandard.cs" />
     <Compile Include="Entities\LearningStandardId.cs" />
     <Compile Include="Entities\LearningStyles.cs" />
+    <Compile Include="Entities\LogOutResult.cs" />
     <Compile Include="Entities\Name.cs" />
     <Compile Include="Entities\ObjectiveAssessment.cs" />
     <Compile Include="Entities\OtherName.cs" />

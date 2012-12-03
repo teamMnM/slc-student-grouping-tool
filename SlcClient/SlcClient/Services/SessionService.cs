@@ -13,6 +13,8 @@ namespace SlcClient.Services
     {
         private SlcHttpClient _client;
         private const string SLC_API_SANDBOX_SESSION_URL = "SlcApiSandboxSessionUrl";
+        private const string SLC_API_SANDBOX_SESSION_CHECK_URL = "check/";
+        private const string SLC_API_SANDBOX_SESSION_LOGOUT_URL = "logout/";
 
         public SessionService(string token)
         {
@@ -23,7 +25,7 @@ namespace SlcClient.Services
         {
             try
             {
-                var response = await _client.GetDataString("");
+                var response = await _client.GetDataString(SLC_API_SANDBOX_SESSION_CHECK_URL);
                 var content = await response.Content.ReadAsStringAsync();
                 var session = JsonConvert.DeserializeObject<UserSession>(content);
                 return session; 
@@ -33,6 +35,22 @@ namespace SlcClient.Services
                 //log here
                 throw;
             }    
+        }
+
+        public async Task<LogOutResult> Logout()
+        {
+            try
+            {
+                var response = await _client.GetDataString(SLC_API_SANDBOX_SESSION_LOGOUT_URL);
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<LogOutResult>(content);
+                return result;
+            }
+            catch (Exception e)
+            {
+                //log here
+                throw;
+            }
         }
     }
 }
