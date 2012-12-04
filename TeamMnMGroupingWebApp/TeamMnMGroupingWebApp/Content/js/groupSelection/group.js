@@ -170,7 +170,25 @@ group_selection.group = function(groupData){
 	        url: method,
 	        contentType: 'application/json',
 	        data: JSON.stringify(cohortActionObject),
-	        success: me.successHandler,
+	        success: function (result) {
+	            
+	            if (!result.completedSuccessfully){
+
+                // determine which students could not be created
+	            var failedToCreateAssociations = result.failedToCreateAssociations;
+	            var newStudents = cohortActionObject.studentsToCreate;
+
+	            newStudents = _.filter(newStudents, function(newStudent){
+	                var failed = _.find(failedToCreateAssociations, function(failedAssociation){
+	                    return failedAssociation.data === newStudent;
+	                });
+	                return failed === undefined;
+	            });
+
+                if (failedToCreateAssociations.
+	            me.students.push.apply(me.students, cohortActionObject.studentsToCreate);
+	            me.successHandler(result)
+	        },
 	        error: me.errorHandler
 	    });
 	 }

@@ -807,7 +807,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     new ActionResponseResult
                     {
                         status = HttpStatusCode.InternalServerError,
-                        message = "Message: " + e.Message + " Inner Exception: " + e.InnerException == null ? "" : e.InnerException.Message,
+                        message = "Message: " + e.Message + " Inner Exception: " + (e.InnerException == null ? "" : e.InnerException.Message),
                         isSuccess = false
                     }
             };

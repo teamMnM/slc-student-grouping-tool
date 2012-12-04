@@ -46,8 +46,9 @@ student_grouping.groupsList = function(){
 	    var numNewGroups = urlParams.create;
 	    if (numNewGroups !== undefined && numNewGroups !== null) {
 	        for (var i = 0; i < numNewGroups; i++) {
-	            var newGroup = me.createNewGroupObj();
-	            me.addGroup(newGroup);
+	            var newGroup = me.createNewGroupObj();                
+	            var newGroupObj = me.addGroup(newGroup);
+	            newGroupObj.markDirty();
 	        }
 	    }
 
@@ -302,7 +303,7 @@ student_grouping.groupsList = function(){
             // assign id to newly created groups
 	        if (result.objectId !== null && result.objectId !== undefined) {
 	            var groupToSave = groupsToSave[i];
-	            groupToSave.groupData.id = result.objectId;
+	            groupToSave.updateId(result.objectId);
 	        }
 
 	        if (result.completedSuccessfully) {

@@ -13,6 +13,7 @@ student_grouping.group = function(groupData){
 	this.color = null;
 
 	this.groupContainerId = '';
+    this.groupTopContainerClass = '.group-top-container';
 	this.groupContainerClass = '.group-container';
 	this.groupClass = '.group';
 	this.groupNameClass = '.group-name';
@@ -236,6 +237,7 @@ student_grouping.group = function(groupData){
 	    // re-enable all group actions once save all is done
 		me.pubSub.subscribe('save-all-completed', function () {
 		    me.processing = false;
+		    me.dirty = false;
 		});
 	};
 		
@@ -1069,5 +1071,16 @@ student_grouping.group = function(groupData){
 	    _.each(students, function (student) {
 	        me.removeStudent(student);
 	    });
+	}
+
+    /**
+     * Update this group's id
+     */
+	this.updateId = function (id) {
+	    var origGroupContainerId = $("#gc" + me.groupData.id);
+	    me.groupData.id = id;
+	    me.groupContainerId = "#gc" + id;
+	    $(origGroupContainerId).find(me.groupClass).attr('id', id);
+	    $(origGroupContainerId).attr('id', "gc" + id);
 	}
 }
