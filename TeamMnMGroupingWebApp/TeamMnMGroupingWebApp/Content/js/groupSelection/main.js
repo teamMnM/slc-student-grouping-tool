@@ -8,6 +8,8 @@ group_selection.topbarComponent = new group_selection.topbar();
 group_selection.sections = [];
 
 group_selection.mainContent = "#group-selection";
+group_selection.userInactivityModal = "#user-inactivity-modal";
+group_selection.userInactivityOkBtn = ".user-inactivity-ok";
 
 group_selection.init = function() {
 	
@@ -44,26 +46,22 @@ group_selection.init = function() {
 	    }
 	});
 	
+	$(me.userInactivityOkBtn).click(function (event) {
+	    me.logout();
+	});
 
 	me.pubSub.subscribe('logout', group_selection.logout);
 }
 
 group_selection.setupIdleTimer = function () {
     $.idleTimer(1200000);
-    var confirmActivity = false;
     $(document).bind('idle.idleTimer', function () {
         setTimeout(function () {
-            if (!confirmActivity) {
-                group_selection.logout();
-            }
-        }, 5000);
-        var confirmActivity = confirm("You have been idle for 20 minutes. Please click continue OK to extend your session.");
-        if (!confirmActivity) {
-            group_selection.logout();
-        }
+           group_selection.logout();          
+        }, 10000);
+        $(group_selection.userInactivityModal).modal('show');
     });
 }
-
 
 /**
      * Log the user out, kill the session

@@ -84,6 +84,7 @@
 	padding-top: 4.5em;
     padding-right: 2em;
 	height:100%;
+    position:relative;
 }
 
 /**********************
@@ -101,7 +102,6 @@
 
 .group-section-list {
     position:absolute;
-    height:100%;
     width:100%;
     overflow-y:auto;
     overflow-x:hidden;
@@ -189,14 +189,14 @@
 
 .student-container .del-button{
 	margin-top:-1.0em;
-	margin-left: -1.5em;
+	margin-left: -0.5em;
 	width:1.5em;
     float: left;
     display:none;
 }
 
 .student-container:hover .del-button {
-    display: block;
+    display: inline;
     cursor:pointer;
 }
 
@@ -241,6 +241,15 @@
 /**********************
  * GROUP DETAILS
  *********************/
+.group-details-inner {
+    position:absolute;
+    overflow-y: auto;
+    top: 5em;
+    bottom: 0;
+    padding-right: 2em;
+    width: 97%;
+}
+
 .group-details .group-name {
 	font-size: large;
 	margin-bottom: 0.5em;
@@ -298,8 +307,6 @@
 
 .member-list {
 	margin-bottom: 2.5em;
-    max-height: 65%;
-    overflow-y:auto;
 }
 
 .group-more-data, .group-add-student {

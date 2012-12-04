@@ -71,7 +71,7 @@ group_selection.student = function(studentData){
 	        if (attribute.attributeId === 'sections') {
 	            var sectionNames = [];
 	            var studentSections = value;
-	            var sections = student_grouping.sections;
+	            var sections = group_selection.sections;
 	            _.each(studentSections, function (studentSection) {
 	                // find the corresponding section using the id
 	                var matchingSection = _.find(sections, function (section) {
@@ -81,7 +81,7 @@ group_selection.student = function(studentData){
 	                    sectionNames.push(matchingSection.courseTitle);
 	                }
 	            });
-	            value = sectionNames;
+                value = sectionNames;	            
 	        }
 
 			$(me.studentContainerId).find(me.studentAttributesClass).append("<div><strong>" + name + "</strong> " + value + "</div>");

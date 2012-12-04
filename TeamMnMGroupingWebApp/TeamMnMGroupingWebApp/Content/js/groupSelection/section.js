@@ -16,7 +16,9 @@ group_selection.groupSection = function(section){
 	this.groupSectionTemplate = '<div class="group-section">' + 
 									'<div class="group-section-title"></div>' +
 									'<div class="group-list"> </div>' +
-								'</div>';   
+								'</div>';
+	this.groupListClass = ".group-list";
+    this.groupListItemClass = ".group-list-item";
 								
 	/**************************
      * METHODS
@@ -27,6 +29,8 @@ group_selection.groupSection = function(section){
         me.pubSub.subscribe('group-deleted', me.removeGroup);
 
         me.pubSub.subscribe('filter-group', me.filterGroup);
+
+        me.pubSub.subscribe('reorder-group', me.moveGroupToTop);
     }	 
     
     /**
@@ -105,4 +109,14 @@ group_selection.groupSection = function(section){
         });
         return selGroups;
     }
+
+    /**
+     *
+     */
+    this.moveGroupToTop = function (groupId) {
+        var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + groupId);
+        if (groupLi.length !== 0) {
+            $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
+        }
+    }    
 }

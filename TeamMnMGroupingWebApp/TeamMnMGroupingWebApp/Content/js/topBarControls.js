@@ -34,6 +34,7 @@ student_grouping.topBarControls = function(){
     	    $(".select2-container").not('.span11').width('100%');
     	}, 500);
     	
+    	$(this.backBtnElem).click(this.navigateBack);
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
     	$(this.addNewGroupBtn).click(this.addNewGroup);
     	$(this.saveAllBtnElem).click(this.saveAllGroups);
@@ -143,5 +144,12 @@ student_grouping.topBarControls = function(){
             me.savingAll = true; // prevent user from trigger save all while saving
             me.pubSub.publish('save-all-groups');
         }
+    }
+
+    /**
+     * Navigates back to the first screen
+     */
+    this.navigateBack = function () {
+        window.location = "GroupSelection";
     }
 }

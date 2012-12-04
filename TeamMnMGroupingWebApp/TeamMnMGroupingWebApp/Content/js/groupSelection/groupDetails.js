@@ -131,6 +131,7 @@ group_selection.groupDetails = function(){
         }
        
         me.currGroup = group;
+        me.currGroup.showArrow();
         me.groupData = group.groupData;
 
         var groupData = group.groupData;
@@ -145,7 +146,7 @@ group_selection.groupDetails = function(){
 
         me.students = [];
         $(me.memberListClass).empty();
-        var students = group.group.students;
+        var students = group.students;
         _.each(students, function (studentId) {
             me.addStudent(studentId);
         });
@@ -159,7 +160,7 @@ group_selection.groupDetails = function(){
     }
     
     /**
-     *
+     * Return boolean indicating whether the given student was added
      */
     this.addStudent = function (studentId) {
 
@@ -176,7 +177,7 @@ group_selection.groupDetails = function(){
                'top',
                'manual',
                3000);
-            return;
+            return false;
         }
 
         var matchingStudent = _.find(me.allStudents, function (s) {
@@ -192,6 +193,7 @@ group_selection.groupDetails = function(){
             studentObj.appendStudentAttributes(me.currGroup.selectedAttributes);
         }
         me.students.push(studentObj);
+        return true;
     }
 
     /**
@@ -311,8 +313,8 @@ group_selection.groupDetails = function(){
         var studentId = $(me.studentSearchElem).val();
         me.currGroup.addStudent(studentId);
 
-        me.addStudent(studentId);
-        me.toggleDirty(true);
+        var added = me.addStudent(studentId);
+        me.toggleDirty(added);
         // reset the search box
         $(me.studentSearchElem).select2('val', '');
     }
@@ -332,25 +334,9 @@ group_selection.groupDetails = function(){
      * Save the changes made by user
      */
     this.saveGroupChanges = function () {
-        me.toggleGroupContainerProcessingState(true);
-        me.currGroup.attachedFile = me.attachedFile;
-        me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
-    }
 
-    /**
-     * Callback handler for successful group save
-     */
-    this.saveGroupChangesSuccessHandler = function (result) {
-
-        if (result.completedSuccessfully) {
-            // Let user know the delete was successful
-            utils.uiUtils.showTooltip(
-                $(me.groupNameTxtClass),
-                'Group has been successfully saved.',
-                'top',
-                'manual',
-                3000);
-            me.toggleDirty(false);
+        // hack to save name/description if they are being edited
+        setTimeout(function () {
 
             var groupName = $(me.groupNameTxtClass).html();
             me.currGroup.setName(groupName);
@@ -361,6 +347,27 @@ group_selection.groupDetails = function(){
                 groupDescription = "";
             }
             me.currGroup.setDescription(groupDescription);
+
+            me.toggleGroupContainerProcessingState(true);
+            me.currGroup.attachedFile = me.attachedFile;
+            me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
+        }, 100);
+    }
+
+    /**
+     * Callback handler for successful group save
+     */
+    this.saveGroupChangesSuccessHandler = function (result) {
+
+        if (result.completedSuccessfully) {
+            // Let user know the delete was successful
+            utils.uiUtils.showTooltip(
+                $(me.groupSaveImgClass),
+                'Group has been successfully saved.',
+                'right',
+                'manual',
+                3000);
+            me.toggleDirty(false);
 
             if (me.attachedFile !== null) {
                 me.currGroup.attachFile(me.attachedFile);
@@ -380,11 +387,11 @@ group_selection.groupDetails = function(){
     this.saveGroupChangesErrorHandler = function (result) {
         // Let user know the delete was not successful
         utils.uiUtils.showTooltip(
-            $(me.groupNameTxtClass),
+            $(me.groupSaveImgClass),
             'Group could not be saved. Please try again later or contact your system administrator if this problem persists.',
-            'top',
+            'right',
             'manual',
-            3000);
+            4000);
 
         me.toggleGroupContainerProcessingState(false);
     }
@@ -422,12 +429,11 @@ group_selection.groupDetails = function(){
             .show()
             .focus();
 
-        $(me.groupNameTxtAreaClass).unbind('focusout');
-        $(me.groupNameTxtAreaClass).focusout(function (event) {
+        $(me.groupNameTxtAreaClass).unbind('blur');
+        $(me.groupNameTxtAreaClass).blur(function (event) {
             setTimeout(function () {
                 me.saveGroupName();
-            }, 100);
-            
+            }, 50);
         });
     }
 
@@ -453,24 +459,36 @@ group_selection.groupDetails = function(){
 	 */
     this.makeGroupDescriptionEditable = function () {
         var groupDescription = $(me.groupDescriptionClass).text();
+        if (groupDescription === '[add description here]') {
+            groupDescription = "";
+        }
+
         $(me.groupDescriptionClass).hide();
         $(me.groupDescriptionTxtAreaClass)
             .val(groupDescription)
             .show()
             .focus();
 
-        $(me.groupDescriptionTxtAreaClass).unbind('blur');
-        $(me.groupDescriptionTxtAreaClass).blur(function (event) {
+        $(me.groupDescriptionTxtAreaClass).unbind('focusout');
+        $(me.groupDescriptionTxtAreaClass).focusout(function (event) {
             me.saveGroupDescription();
         });
     }
 
+    /**
+     * Save the group description
+     */
     this.saveGroupDescription = function () {
-        var newGroupDescription = $(me.groupDescriptionTxtAreaClass).val();        
-        $(me.groupDescriptionClass).html(newGroupDescription);
+        var newGroupDescription = $(me.groupDescriptionTxtAreaClass).val();
+
+        // make sure that there is a description
+        if (!utils.uiUtils.textIsEmpty(newGroupDescription)) {
+            $(me.groupDescriptionClass).html(newGroupDescription);
+            me.toggleDirty(true);
+        }
+
         $(me.groupDescriptionClass).show();
         $(me.groupDescriptionTxtAreaClass).hide();
-        me.toggleDirty(true);
     }
 
     /**

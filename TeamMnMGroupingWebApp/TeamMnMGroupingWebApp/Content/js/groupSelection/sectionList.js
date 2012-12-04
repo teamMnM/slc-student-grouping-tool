@@ -14,6 +14,14 @@ group_selection.groupSectionList = function(){
     this.init = function(groups){
     	var sections = [];
     	
+    	groups = _.sortBy(groups, function(group){
+    	    return parseInt(group
+                .custom.lastModifiedDate
+                .replace('/Date(', '')
+                .replace(')/', ''));
+    	});
+    	groups.reverse();
+
     	_.each(groups, function(group){   
     		var g = new group_selection.group(group); 		
     		me.addGroup(g);

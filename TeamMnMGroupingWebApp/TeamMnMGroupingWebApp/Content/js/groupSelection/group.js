@@ -170,24 +170,42 @@ group_selection.group = function(groupData){
 	        url: method,
 	        contentType: 'application/json',
 	        data: JSON.stringify(cohortActionObject),
-	        success: function (result) {
-	            
-	            if (!result.completedSuccessfully){
+	        success: function (result) {	            
 
-                // determine which students could not be created
-	            var failedToCreateAssociations = result.failedToCreateAssociations;
+                // add the newly created students
 	            var newStudents = cohortActionObject.studentsToCreate;
 
-	            newStudents = _.filter(newStudents, function(newStudent){
-	                var failed = _.find(failedToCreateAssociations, function(failedAssociation){
-	                    return failedAssociation.data === newStudent;
+	            if (!result.completedSuccessfully){
+	                // determine which students could not be created
+	                var failedToCreateAssociations = result.failedToCreateAssociations;
+
+	                newStudents = _.filter(newStudents, function(newStudent){
+	                    var failed = _.find(failedToCreateAssociations, function(failedAssociation){
+	                        return failedAssociation.data === newStudent;
+	                    });
+	                    return failed === undefined;
 	                });
-	                return failed === undefined;
+	            }
+	            
+	            _.each(newStudents, function(newStudent){
+	                me.originalStudents.push(newStudent);
 	            });
 
-                if (failedToCreateAssociations.
-	            me.students.push.apply(me.students, cohortActionObject.studentsToCreate);
-	            me.successHandler(result)
+                // remove deleted students
+                var studentsToDelete = cohortActionObject.studentsToDelete;
+                _.each(studentsToDelete, function (studentToDel) {
+                    me.originalStudents = _.filter(me.originalStudents, function (originalStudent) {
+                        return originalStudent !== studentToDel;
+                    });
+                });
+                
+	            // update the group's timestamp
+                var currTimestamp = new Date();
+                me.group.custom.lastModifiedDate = currTimestamp.getTime();
+                $(me.groupContainerId).find(me.groupModifiedTimestampClass).html(currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
+                me.pubSub.publish('reorder-group', me.groupData.id);
+
+                me.successHandler(result);
 	        },
 	        error: me.errorHandler
 	    });
@@ -390,7 +408,17 @@ group_selection.group = function(groupData){
 	    $(me.groupContainerId).find(me.groupDescriptionClass).html(newGroupDescription);
 	}
 
+    /**
+     *
+     */
 	this.groupSelected = function () {
+	    me.pubSub.publish('show-group-details', me);
+	}
+
+    /**
+     *
+     */
+	this.showArrow = function () {
 	    $(me.groupContainerClass).css('background-color', 'white');
 	    $('.group-section-list').find("img.group-indicator-arrow").remove();
 	    var img = $("<img>");
@@ -398,6 +426,5 @@ group_selection.group = function(groupData){
 	    $(img).addClass('group-indicator-arrow');
 	    $(me.groupContainerId).append(img);
 	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
-	    me.pubSub.publish('show-group-details', me);
 	}
 }
