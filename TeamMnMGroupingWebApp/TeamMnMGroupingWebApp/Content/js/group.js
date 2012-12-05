@@ -736,6 +736,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.saveGroupName = function(){
 	    var newGroupName = $(this.groupContainerId).find(this.groupNameTxtClass).val();
+	    newGroupName = utils.stringUtils.trim(newGroupName);
 
 	    // if no input, then set default name
 	    if (!/\S/.test(newGroupName)) {
@@ -775,6 +776,7 @@ student_grouping.group = function(groupData){
 	this.saveGroupDescription = function(){
 
 	    var newGroupDescription = $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).val();
+	    newGroupDescription = utils.stringUtils.trim(newGroupDescription);
 	    this.groupData.cohortDescription = newGroupDescription;
 	    $(this.groupContainerId).find(this.groupDescriptionTxtElem).html(newGroupDescription);
 	    $(this.groupContainerId).find(this.groupDescriptionTxtAreaElem).hide();

@@ -8,6 +8,7 @@ student_grouping.student = function(studentData) {
 	this.studentLiContainer = '';
 	this.studentLiContainerClass = '.studentListItem';
 	this.studentLiSelectedClass = 'studentListItem-selected'; // not using as selector, so dont need the .
+	this.visible = true;
 	
 	this.idAttributeName = 'data-studentId';
 	this.listItemClass = '.studentListItem';	
@@ -104,6 +105,7 @@ student_grouping.student = function(studentData) {
 		} else {
 			$(this.studentLiContainer).removeClass('ui-multidraggable');
 		}
+		$(this.studentLiContainer).find(this.selBoxClass).prop('checked', selected);
 	},
 	
 	/**
@@ -155,6 +157,7 @@ student_grouping.student = function(studentData) {
 		        $(me.studentLiContainer).find(me.selBoxClass).attr('checked', false);
 		    }
 		}
+		me.visible = visible;
 	}	
 	
 	/**

@@ -52,3 +52,13 @@ utils.uiUtils = {
         return !/\S/.test(text);
     }
 }
+
+utils.stringUtils = {
+
+    /**
+     * remove trailing whitespaces and line breaks
+     */
+    trim: function (str) {
+        return str.trim().replace(/(\r\n|\n|\r)/gm, " ");
+    }
+}

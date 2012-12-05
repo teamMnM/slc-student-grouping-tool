@@ -106,11 +106,10 @@ student_grouping.studentsList = function(){
 	 */
 	this.selectAllStudents = function(){		
 		_.each(this.students, function(student){
-			student.toggleStudentSelection(!me.allSelected);
+		    if (student.visible) {
+		        student.toggleStudentSelection(!me.allSelected);
+		    }
 		});
-		
-		// select/deselect the checkboxes
-		$(".student-selBox").prop('checked', !me.allSelected);		
 		
 		this.allSelected = !this.allSelected;
 		

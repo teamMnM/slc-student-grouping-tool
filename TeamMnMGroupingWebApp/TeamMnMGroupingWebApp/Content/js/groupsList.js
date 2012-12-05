@@ -81,6 +81,11 @@ student_grouping.groupsList = function(){
 		this.pubSub.subscribe('save-all-groups', function () {
 		    me.saveAllGroups();
 		});
+
+		this.pubSub.subscribe('has-dirty-groups-huh', function (callback) {
+		    var hasDirtyGroups = me.hasDirtyGroups();
+		    callback(hasDirtyGroups);
+		});
     }
     
     /**
@@ -355,5 +360,17 @@ student_grouping.groupsList = function(){
 	        }
 	    };
 	    return group;
+	}
+
+    /**
+     * Returns true if there are dirty groups
+     */
+	this.hasDirtyGroups = function () {
+
+	    var dirtyGroup = _.find(me.groups, function (g) {
+	        return g.dirty;
+	    });
+
+	    return dirtyGroup !== undefined;
 	}
 }

@@ -117,7 +117,9 @@ student_grouping.topBarControls = function(){
     	        cohortDescription: ''
     	    },
     	    students: [],
-    	    custom: {}
+    	    custom: {
+    	        lessonPlan: null
+    	    }
     	};
     	
     	me.pubSub.publish('add-group', group);
@@ -150,6 +152,14 @@ student_grouping.topBarControls = function(){
      * Navigates back to the first screen
      */
     this.navigateBack = function () {
-        window.location = "GroupSelection";
+        me.pubSub.publish('has-dirty-groups-huh', function (isDirty) {
+            if (isDirty) {
+                var confirmation = confirm("There are unsaved changes. Would you still like to navigate back?");
+                if (!confirmation) {
+                    return;
+                }
+            }
+            window.location = "GroupSelection";
+        });
     }
 }

@@ -198,10 +198,10 @@ student_grouping.filters = function(){
     	$(this.selectedFiltersElem).append(selectedFilterHtml);
     	
         // reset the selected attribute, operator and value
-    	$(me.filterAttributeElem).val('');
-    	$(me.filterOperatorElem).val('');
+    	$(me.filterAttributeElem).select2('val','');
+    	$(me.filterOperatorElem).select2('val','');
     	$(me.filterValueTxtElem).val('');
-    	$(me.filterValueSelElem).val('');
+    	$(me.filterValueSelElem).select2('val','');
 
     	// bind event handler for removing this filter
     	$(selectedFilterHtml).find(this.selectedFilterCloseBtn).click(function(event){

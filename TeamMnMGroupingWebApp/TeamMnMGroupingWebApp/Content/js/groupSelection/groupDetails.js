@@ -444,7 +444,7 @@ group_selection.groupDetails = function(){
         var newGroupName = $(me.groupNameTxtAreaClass).val();
 
         // trim whitespace and remove line breaks
-        newGroupName = newGroupName.trim().replace(/(\r\n|\n|\r)/gm, "");
+        newGroupName = utils.stringUtils.trim(newGroupName);
 
         // if no input then set default name
         if (!/\S/.test(newGroupName)) {
@@ -486,6 +486,7 @@ group_selection.groupDetails = function(){
 
         // make sure that there is a description
         if (!utils.uiUtils.textIsEmpty(newGroupDescription)) {
+            newGroupDescription = utils.stringUtils.trim(newGroupDescription);
             $(me.groupDescriptionClass).html(newGroupDescription);
             me.toggleDirty(true);
         }
