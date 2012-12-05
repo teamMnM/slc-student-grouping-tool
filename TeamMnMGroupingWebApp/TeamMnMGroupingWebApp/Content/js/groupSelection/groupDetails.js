@@ -443,6 +443,9 @@ group_selection.groupDetails = function(){
     this.saveGroupName = function () {
         var newGroupName = $(me.groupNameTxtAreaClass).val();
 
+        // trim whitespace and remove line breaks
+        newGroupName = newGroupName.trim().replace(/(\r\n|\n|\r)/gm, "");
+
         // if no input then set default name
         if (!/\S/.test(newGroupName)) {
             newGroupName = 'New Group';

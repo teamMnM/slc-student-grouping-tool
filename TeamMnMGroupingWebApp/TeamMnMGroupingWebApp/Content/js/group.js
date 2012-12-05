@@ -177,7 +177,7 @@ student_grouping.group = function(groupData){
 		});
 		
 		$(groupContainer).find(this.saveGroupBtnClass).click(function (event) {
-		    if (!me.processing && me.dirty) {
+		    if (!me.processing && (me.dirty || me.groupData.id < 0)) {
 		        me.saveGroupChanges();
 		    } else if (!me.dirty) {
 		        // Let user know the created was successful
@@ -582,9 +582,9 @@ student_grouping.group = function(groupData){
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).unbind('change');
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).change(function () {
 				    $(document).unbind('mouseup');
-				    var fileName = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).val()
+				    var file = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files')[0];
 				    $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt)
-                        .val(fileName);
+                        .val(file.name);
 				});
 
 			    // attach event handler to hide this if user clicks outside of it

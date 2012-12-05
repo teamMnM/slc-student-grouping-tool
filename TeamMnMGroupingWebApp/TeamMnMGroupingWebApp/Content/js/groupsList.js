@@ -48,7 +48,6 @@ student_grouping.groupsList = function(){
 	        for (var i = 0; i < numNewGroups; i++) {
 	            var newGroup = me.createNewGroupObj();                
 	            var newGroupObj = me.addGroup(newGroup);
-	            newGroupObj.markDirty();
 	        }
 	    }
 
@@ -65,7 +64,6 @@ student_grouping.groupsList = function(){
 
 		this.pubSub.subscribe('add-group', function(group){
 		    var newGroup = me.addGroup(group);
-		    newGroup.markDirty();
 		});
 		
 		this.pubSub.subscribe('group-removed', function(groupId){
@@ -253,7 +251,8 @@ student_grouping.groupsList = function(){
 	    var groupsToSave = [];
 	    var originalGroupsToSave = []; // keep track of the actual group objects so we can later update with created ID
 	    _.each(groups, function (group) {
-	        if (group.dirty) {
+            // find dirty and new groups
+	        if (group.dirty || group.groupData.id < 0) {
 	            var cohortActionObject = group.prepareGroupForSaving();
 	            groupsToSave.push(cohortActionObject);
 	            originalGroupsToSave.push(group);

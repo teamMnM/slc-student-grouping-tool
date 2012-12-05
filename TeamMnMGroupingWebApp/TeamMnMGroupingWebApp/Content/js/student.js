@@ -1,7 +1,8 @@
 var student_grouping = student_grouping || {};
 
 student_grouping.student = function(studentData) {
-	this.pubSub = PubSub;
+    var me = this;
+    this.pubSub = PubSub;
 	
 	this.studentData = studentData;
 	this.studentLiContainer = '';
@@ -146,7 +147,13 @@ student_grouping.student = function(studentData) {
 		if (visible) {
 			$("li[data-studentId='" + this.studentData.id + "']").show();
 		} else {
-			$("li[data-studentId='" + this.studentData.id + "']").hide();
+		    $("li[data-studentId='" + this.studentData.id + "']").hide();
+
+            // unselect the student if it 
+		    if ($(me.studentLiContainer).hasClass('ui-multidraggable')) {
+		        $(me.studentLiContainer).removeClass('ui-multidraggable');
+		        $(me.studentLiContainer).find(me.selBoxClass).attr('checked', false);
+		    }
 		}
 	}	
 	

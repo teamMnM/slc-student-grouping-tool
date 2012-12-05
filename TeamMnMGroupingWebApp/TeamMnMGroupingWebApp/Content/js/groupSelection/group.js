@@ -201,9 +201,9 @@ group_selection.group = function(groupData){
                 
 	            // update the group's timestamp
                 var currTimestamp = new Date();
-                me.group.custom.lastModifiedDate = currTimestamp.getTime();
+                me.group.custom.lastModifiedDate = currTimestamp.getTime().toString();
                 $(me.groupContainerId).find(me.groupModifiedTimestampClass).html(currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
-                me.pubSub.publish('reorder-group', me.groupData.id);
+                me.pubSub.publish('reorder-group', me.group);
 
                 me.successHandler(result);
 	        },
@@ -298,8 +298,15 @@ group_selection.group = function(groupData){
             'manual',
             2000);
 	    setTimeout(function () {
-	        $(me.groupContainerId).remove();
+	        me.remove();
 	    }, 2000);
+	}
+
+    /**
+     * Removes this group's DOM element
+     */
+	this.remove = function () {
+	    $(me.groupContainerId).remove();
 	}
 
     /**

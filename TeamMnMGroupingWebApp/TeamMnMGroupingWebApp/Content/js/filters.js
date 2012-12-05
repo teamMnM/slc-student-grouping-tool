@@ -196,7 +196,13 @@ student_grouping.filters = function(){
     	$(selectedFilterHtml).attr('data-selectedFilter', filter.attributeId);
     		
     	$(this.selectedFiltersElem).append(selectedFilterHtml);
-    	    	
+    	
+        // reset the selected attribute, operator and value
+    	$(me.filterAttributeElem).val('');
+    	$(me.filterOperatorElem).val('');
+    	$(me.filterValueTxtElem).val('');
+    	$(me.filterValueSelElem).val('');
+
     	// bind event handler for removing this filter
     	$(selectedFilterHtml).find(this.selectedFilterCloseBtn).click(function(event){
     		$(selectedFilterHtml).remove();

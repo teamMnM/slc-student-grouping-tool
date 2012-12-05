@@ -5,6 +5,7 @@ group_selection.groupSectionList = function(){
 	this.pubSub = PubSub;
 	
 	this.groupSectionList = '.group-section-list';
+	this.editMultipleGroupsBtn = "#edit-multiple-groups-btn";
 	this.sections = [];
 	
 	this.newSectionId = 1;
@@ -28,6 +29,7 @@ group_selection.groupSectionList = function(){
     	});
 
     	me.pubSub.subscribe('edit-multiple-groups', me.editMultipleGroups);
+    	me.pubSub.subscribe('add-new-group', me.addGroup);
     }
     
     /**
@@ -41,7 +43,8 @@ group_selection.groupSectionList = function(){
 		if (section === undefined || section === null){
 			var sectionInfo = {
 				id : me.newSectionId++,
-				title: "Last modified " + key
+				title: "Last modified " + key,
+                date: lastModifiedDate
 			}
 			section = new group_selection.groupSection(sectionInfo);			
 			section.init();
@@ -60,6 +63,17 @@ group_selection.groupSectionList = function(){
         for (var i in me.sections) {
             var section = me.sections[i];
             selGroups.push.apply(selGroups,section.getSelectedGroups());
+        }
+
+        // make sure groups have been selected
+        if (selGroups.length === 0) {
+            utils.uiUtils.showTooltip(
+                        $(me.editMultipleGroupsBtn),
+                        'Please select some groups for editing.',
+                        'right',
+                        'manual',
+                        3000);
+            return;
         }
 
         var selGroupIds = _.map(selGroups, function (selGroup) {

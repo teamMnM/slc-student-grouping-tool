@@ -85,19 +85,6 @@ student_grouping.studentsList = function(){
 	}
 	
 	/**
-	 * Filter list of students by name
-	 */
-	this.filterStudentsByName = function(listOfStudents){
-		var filterVal = $(this.studentSearchBox).val();
-		
-		filteredList = _.filter(listOfStudents, function(student){
-			
-		});
-		
-		return filteredList;
-	}
-	
-	/**
 	 *  
 	 */
 	this.filterStudentList = function(){				
@@ -109,6 +96,9 @@ student_grouping.studentsList = function(){
 			});
 			studentLi.toggleVisible(filteredStudent !== undefined);
 		});
+
+	    // if the deselect all btn has been toggled, change it back to select all
+		$(this.selectAllBtn).html('select all');
 	}
 	
 	/**
@@ -137,22 +127,26 @@ student_grouping.studentsList = function(){
 	 */
 	this.assignRandom = function () {
 
+	    var randomNum = $(this.randomNumTxt).val().trim();
+	    if (isNaN(randomNum) || randomNum === '' || parseInt(randomNum) <= 0) {
+	        utils.uiUtils.showTooltip(
+                        $(this.randomNumTxt),
+                        'Please enter a valid number',
+                        'bottom',
+                        'manual',
+                        3000);
+	        $(this.randomNumTxt).val('');
+	        return;
+	    }
+
         // TODO show warning only if there are students assigned to groups already
         // show warning and confirm that the user would like to perform the action
 	    var confirmation = confirm('Random will reorganize your students into groups randomly,' 
             + ' even the students that are already assigned to groups. Would you like to continue?');
 	    if (confirmation) {
 	        var me = this;
-	        var randomNum = $(this.randomNumTxt).val();
-	        if (randomNum !== '') {
-	            this.pubSub.publish('assign-random', this.students, randomNum);
-	            $(this.randomNumTxt).val('');
-	        } else {
-	            $(this.randomNumTxt).tooltip('show');
-	            setTimeout(function () {
-	                $(me.randomNumTxt).tooltip('hide');
-	            }, 4000);
-	        }
+	        this.pubSub.publish('assign-random', this.students, randomNum);
+	        $(this.randomNumTxt).val('');	        
 	    }
 	}
 	

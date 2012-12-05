@@ -36,11 +36,26 @@ group_selection.groupSection = function(section){
     /**
      * Add the given group to this seciton 
      */
-    this.addGroup = function(group){
-    	me.groups.push(group);
-    	
+    this.addGroup = function (group) {
+        var firstGroup = me.groups[0];
+        me.groups.push(group);
+
     	var groupTemplate = group.generateTemplate();
-    	$(me.sectionContainerId).find(me.groupListClass).append(groupTemplate);
+
+        // check if the new group was modified at a later date than the first group in the list,
+        // then insert at the beginning of the list
+    	if (firstGroup !== undefined) {
+    	    var firstGroupDate = new Date(parseInt(firstGroup.group.custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+    	    var groupDate = new Date(parseInt(group.group.custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+
+    	    if (groupDate.isAfter(firstGroupDate)) {
+    	        $(me.sectionContainerId).find(me.groupListClass).prepend(groupTemplate);
+    	    } else {
+    	        $(me.sectionContainerId).find(me.groupListClass).append(groupTemplate);
+    	    }
+    	} else {
+    	    $(me.sectionContainerId).find(me.groupListClass).append(groupTemplate);
+    	}
     	group.init();    	
     }
     
@@ -113,10 +128,30 @@ group_selection.groupSection = function(section){
     /**
      *
      */
-    this.moveGroupToTop = function (groupId) {
-        var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + groupId);
-        if (groupLi.length !== 0) {
-            $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
+    this.moveGroupToTop = function (group) {
+
+        var matchingGroup = _.find(me.groups, function (g) {
+            return g.groupData.id === group.cohort.id;
+        });
+
+        if (matchingGroup !== undefined && matchingGroup !== null) {            
+            // determine if group should be in this section or move to a new one
+            var sectionDate = me.sectionData.date;
+            var groupDate = new Date(parseInt(group.custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+
+            if (sectionDate.getDate() !== groupDate.getDate()) {
+                me.groups = _.reject(me.groups, function (g) {
+                    return g.groupData.id === group.cohort.id;
+                });
+                matchingGroup.remove();
+                me.pubSub.publish('add-new-group', matchingGroup);
+            } else {
+                // get the list item html
+                var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + group.cohort.id);
+
+                // move to the top of the list in this section as this would be the most recently update group
+                $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
+            }
         }
     }    
 }
