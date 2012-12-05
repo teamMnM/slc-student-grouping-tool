@@ -121,6 +121,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Global\JsonLargeResultValueProviderFactory.cs" />
+    <Compile Include="Helper\CohortActionHelper.cs" />
     <Compile Include="Helper\CohortHelper.cs" />
     <Compile Include="Helper\ExceptionHelper.cs" />
     <Compile Include="Helper\GlobalHelper.cs" />

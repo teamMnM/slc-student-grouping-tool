@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using TeamMnMGroupingWebApp.Models;
+using System.Net;
+using System.Net.Http;
 
 namespace TeamMnMGroupingWebApp.Helper
 {
@@ -26,7 +28,6 @@ namespace TeamMnMGroupingWebApp.Helper
                     string s = await GetJsonFromFile(path);
                     var list = JsonConvert.DeserializeObject<IEnumerable<DataElement>>(s);
                     return list;
-
             }
             catch(Exception e)
             {
@@ -56,6 +57,11 @@ namespace TeamMnMGroupingWebApp.Helper
             }
         }
 
+        /// <summary>
+        /// Return data from a file
+        /// </summary>
+        /// <param name="path">path of the file</param>
+        /// <returns>json data in the file</returns>
         public static async Task<string> GetJsonFromFile(string path)
         {
             try
@@ -70,6 +76,67 @@ namespace TeamMnMGroupingWebApp.Helper
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Get a Result object
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static Result GetExceptionResult(string id, Exception e)
+        {
+            ExceptionHelper.LogCaughtException(e);
+            return new Result
+            {
+                completedSuccessfully = false,
+                objectId = id,
+                objectActionResult =
+                    new ActionResponseResult
+                    {
+                        status = HttpStatusCode.InternalServerError,
+                        message = "Message: " + e.Message + " Inner Exception: " + (e.InnerException == null ? "" : e.InnerException.Message),
+                        isSuccess = false
+                    }
+            };
+        }
+
+        /// <summary>
+        /// Create a new ActionResponseResult object base on the HttpResponseMessage parameter
+        /// </summary>
+        /// <param name="objId">The related object id</param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static ActionResponseResult GetActionResponseResult(string objId, HttpResponseMessage m, HttpStatusCode successStatus)
+        {
+            return new ActionResponseResult
+            {
+                data = objId,
+                status = m.StatusCode,
+                message = m.Content.ReadAsStringAsync().Result,
+                isSuccess = m.StatusCode == successStatus
+            };
+        }
+
+        /// <summary>
+        /// Get a Result object with an expired status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Result GetSessionExpiredResult(string id = "")
+        {
+            return new Result
+            {
+                completedSuccessfully = false,
+                objectId = id,
+                objectActionResult =
+                    new ActionResponseResult
+                    {
+                        status = HttpStatusCode.ProxyAuthenticationRequired,
+                        message = "Session expired",
+                        isSuccess = false
+                    }
+            };
         }
     }
 }
