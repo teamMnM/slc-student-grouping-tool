@@ -390,6 +390,13 @@
     float:left;
 }
 
+.group-printer-img {
+    cursor: pointer;
+    width: 1.8em;
+    display:none;
+    float:left;
+}
+
 .group-num-students-badge {
     margin-left:-3.2em;
 }
