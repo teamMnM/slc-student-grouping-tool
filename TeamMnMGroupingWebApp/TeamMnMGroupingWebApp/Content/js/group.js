@@ -44,6 +44,7 @@ student_grouping.group = function(groupData){
 	this.groupDescriptionTxtAreaElem = '.group-description-textarea';
 	
 	this.groupAttachmentImgClass = '.group-attachment-img';
+	this.groupPrinterImgClass = '.group-printer-img';
 	this.groupNumStudentsBadgeClass = '.group-num-students-badge';
 	this.groupAttachmentPopoverElem = '.group-attachment-popover';
 	this.groupAttachmentPopoverFileInput = '.real-upload-txt';
@@ -75,6 +76,7 @@ student_grouping.group = function(groupData){
                                         '<div class="group"></div>' +
 									    '<div style="text-align:center">' +
 										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
+                                            '<img class="group-printer-img" src="/Content/img/printer-icon.png"/>' +
 										    '<span class="badge group-num-students-badge"></span>' +
 									    '</div>' +
 									    '<div class="add-data-div">' +
@@ -646,7 +648,8 @@ student_grouping.group = function(groupData){
 		me.attachedFile = null;
 		$(me.groupContainerId).find(me.groupAttachmentNameClass).html('');
 		$(me.groupContainerId).find(me.groupAttachmentDivClass).hide();
-		
+		$(me.groupContainerId).find(me.groupPrinterImgClass).hide();
+
 		this.markDirty();
 	}	
 	
@@ -661,12 +664,17 @@ student_grouping.group = function(groupData){
 	        $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('download', file.name);
 
 	        var fileName = file.name;
-            // cut off filename if its too long
+	        // cut off filename if its too long
 	        if (fileName.length > 28) {
 	            fileName = file.name.substring(0, 28) + "...";
 	        }
 	        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
 	        $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
+
+	        // show the printer
+	        $(me.groupContainerId).find(me.groupPrinterImgClass).show();
+	    } else {
+	        $(me.groupContainerId).find(me.groupPrinterImgClass).hide();
 	    }
 	}
 	
@@ -954,7 +962,7 @@ student_grouping.group = function(groupData){
 	    });
 
 	    // request to be added to list of existing groups
-	    me.pubSub.publish('add-to-existing-groups', me.groupData);
+	    me.pubSub.publish('add-to-existing-groups', me.group);
 	}
 
     /**

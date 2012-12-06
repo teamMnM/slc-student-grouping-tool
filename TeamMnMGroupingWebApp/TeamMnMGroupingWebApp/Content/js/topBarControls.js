@@ -52,7 +52,8 @@ student_grouping.topBarControls = function(){
         // add newly created (saved to server) group to dropdown list
     	this.pubSub.subscribe('add-to-existing-groups', function (group) {
     	    $(me.findGroupDropdownElem).
-    			append("<option value='" + group.id + "'>" + group.cohortIdentifier + "</option>");
+    			append("<option value='" + group.cohort.id + "'>" + group.cohort.cohortIdentifier + "</option>");
+    	    me.groups.push(group);
     	});
 
     }

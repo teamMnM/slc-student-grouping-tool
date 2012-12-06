@@ -65,6 +65,10 @@ student_grouping.groupsList = function(){
 		this.pubSub.subscribe('add-group', function(group){
 		    var newGroup = me.addGroup(group);
 		});
+
+		this.pubSub.subscribe('add-to-existing-groups', function (group) {
+		    me.allGroups.push(group);
+		});
 		
 		this.pubSub.subscribe('group-removed', function(groupId){
 			me.removeGroup(groupId);
