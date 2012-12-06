@@ -69,8 +69,9 @@ group_selection.groupDetails = function(){
     	});
     	
     	$(me.attachmentFileInput).change(function(event){
-    		var fileName = $(me.attachmentFileInput).val();
-    		$(me.attachmentFileTxt).val(fileName);
+    	    var file = $(me.attachmentFileInput).prop('files')[0];
+    		$(me.attachmentFileTxt).val(file.name);
+    		me.toggleDirty(true);
     	});
     	
     	$(me.groupEditImgClass).click(function (event) {
