@@ -145,19 +145,32 @@
 	color: white;
 }
 
+.student-container {
+    position: relative;
+}
+
+.student-name {
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .student-selBox {
 	float:right;
 }
 
 .student-info-btn {
-	margin-top: -2.3em;
-	float:right;
+	position: absolute;
+    float: right;
+    left: 90%;
+    top: 1em;
     width: 2.5em;
     cursor: pointer;
 }
 
 .studentListItem:hover .student-info-btn {
-	display:block;
+	display:inline;
 }
 
 .group-indicators {

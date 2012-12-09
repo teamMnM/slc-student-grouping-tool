@@ -31,10 +31,10 @@ group_selection.group = function(groupData){
 											'<a class="group-attachment-link" href="#"><img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img></a>' +
 											//'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
 											'<img src="/Content/img/trash-icon.png" class="group-icon group-delete-icon"></img>' +
-											'<i class="group-modified-timestamp"></i>' + 	
+											'<i class="group-modified-timestamp">Last modified: </i>' + 	
 										'</div>' + 
 										'<div>' + 
-											'<span class="group-description"></span>' +
+											'<p class="group-description"></p>' +
 											'<a href="#" class="group-toggle-info"></a>' +
 										'</div>'
 									'</div>' +
@@ -101,7 +101,7 @@ group_selection.group = function(groupData){
 
 	 	var lastModifiedDate = new Date(parseInt(custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
 	 	var lastModifiedDateStr = lastModifiedDate.toFormat('MM/DD/YYYY HH:MI PP');
-	 	$(template).find(me.groupModifiedTimestampClass).html(lastModifiedDateStr);
+	 	$(template).find(me.groupModifiedTimestampClass).html('Last modified: ' + lastModifiedDateStr);
 	 	$(template).find(me.groupDescriptionClass).html(groupData.cohortDescription);
 
 	 	return template;	 	

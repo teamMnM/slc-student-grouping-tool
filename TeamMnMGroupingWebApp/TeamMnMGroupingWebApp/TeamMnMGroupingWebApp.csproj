@@ -185,6 +185,9 @@
     <Content Include="Content\js\studentsList.js" />
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
+    <Content Include="Content\vendor\antiscroll\css\antiscroll.css" />
+    <Content Include="Content\vendor\antiscroll\js\antiscroll.js" />
+    <Content Include="Content\vendor\antiscroll\js\jquery-mousewheel.js" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap.css" />
@@ -202,6 +205,8 @@
     <Content Include="Content\vendor\jqplot\js\jquery.jqplot.min.js" />
     <Content Include="Content\vendor\jqueryui\js\jquery-ui.min.js" />
     <Content Include="Content\vendor\jquery\js\jquery.min.js" />
+    <Content Include="Content\vendor\jscrollpane\css\jscrollpane.css" />
+    <Content Include="Content\vendor\jscrollpane\js\jscrollpane.js" />
     <Content Include="Content\vendor\multidraggable\js\jquery.ui.multidraggable.js" />
     <Content Include="Content\vendor\pubsub\js\pubsub.js" />
     <Content Include="Content\vendor\select2\css\select2.css" />

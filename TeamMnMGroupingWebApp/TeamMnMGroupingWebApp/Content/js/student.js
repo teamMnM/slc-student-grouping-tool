@@ -33,10 +33,10 @@ student_grouping.student = function(studentData) {
 	this.listItemTemplate = '<li data-studentId="" class="studentListItem multidraggable disable-select">' +
 								'<div class="group-indicators"></div>' +
 								'<div class="student-icon-div"><img class="student-icon"/></div>' +								
-								'<div>' +
-									'<span class="student-name"></span>' + 
+								'<div class="student-container">' +
+									'<p class="student-name"></p>' + 
 									'<img class="hide-button student-info-btn" src="/Content/img/group-info-icon.png"></img>' + 
-									'<br>GPA <span class="gpa"></span>' +		
+									'GPA <span class="gpa"></span>' +		
 									'<input type="checkbox" class="student-selBox"/>' +							
 								'</div>' +																			
 							'</li>';

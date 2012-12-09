@@ -43,6 +43,7 @@
  *********************/
 .top-bar-controls {
 	margin-bottom: 1.6em;
+    padding-bottom: 0.2em;
 	width:auto;
     background: #D7E4BD;
     box-shadow: 0.5em 0.35em 1.0em #9C9C9C;
@@ -53,18 +54,26 @@
     padding-left: 0.5em;
 }
 
+#edit-multiple-groups-btn, .group-search-btn, .group-search-clear-btn, #create-groups-btn {
+    box-shadow: -0.05em 0.15em 0.4em #6B6B6B;
+}
+
 .top-bar-title {
 	color:white;
 	text-align: center;
 }
 
 .add-group-btn {
-	width: 1.8em;
+	width: 2.4em;
     cursor: pointer;
 }
 
 #create-groups-ctrls {
-    margin-top: 0.4em;
+    margin-top: 0.35em;
+}
+
+.num-groups-create-txt {
+    margin: 0 0.4em 0 0.3em !important;
 }
 
 .logout-btn {
@@ -100,14 +109,16 @@
 	box-shadow: 0.5em 0em 1.0em #9C9C9C;
 }
 
-.group-section-list {
-    position:absolute;
-    width:100%;
-    overflow-y:auto;
-    overflow-x:hidden;
-    top:5em;
-    bottom:0em;
+.box-wrap {
+    width: 100%;
+    height: 100%;
 }
+
+.box, .box .antiscroll-inner {
+        width: 100%;
+        height: 100%;
+        font: 14px Helvetica, Arial;
+      }
 
 /**********************
  * SECTION
@@ -204,6 +215,10 @@
 	margin-left:3.7em;
 }
 
+.student-attributes {
+    margin-bottom: 1em;
+}
+
 /**********************
  * GROUP
  *********************/
@@ -217,10 +232,18 @@
 	box-shadow: 0.1em 0.4em 1.5em #6B6B6B;
 	margin: 0em 2em 1.3em 2.7em;
 	padding: 0.5em;
+    padding-left: 2em;
+}
+
+.group-container .group-description {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-bottom: 0px;
 }
 
 .group-title {
-	font-size:large;
+	font-size:x-large;
 }
 
 .group-icon {
@@ -283,6 +306,7 @@
 
 .group-description {
 	margin-bottom: 1.5em;
+    font-size: small;
 }
 
 .group-description-txtarea {    
@@ -290,8 +314,8 @@
     background-color:transparent;
     font-style: italic;
     resize: none;
-    height: 3em;
-    width: 100%;
+    height: 4em;
+    width: 97%;
     margin-top: 0.5em;
     display:none;
 }
@@ -388,6 +412,7 @@
  *********************/
 #show-more-data-modal {
 	width: 25em;
+    margin-left: -12.5em;
 	color: white;
 	background-color: #92B843;
     border-radius: 0.8em;
@@ -410,4 +435,13 @@
 
 .modal-attributes-btn-div {
     text-align: center;
+}
+
+.attribute-list-item {
+    margin-bottom: 0.2em;
+}
+
+.attribute-checkbox {
+    margin-top:-0.15em !important;
+    margin-right:0.2em !important;
 }

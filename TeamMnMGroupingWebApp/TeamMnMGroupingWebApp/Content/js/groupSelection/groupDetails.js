@@ -62,7 +62,7 @@ group_selection.groupDetails = function(){
     	
     	me.attributes = attributes;
     	_.each(attributes, function(attribute){
-    		var checkbox = $('<li><input class="attribute-checkbox" type="checkbox" value="' + attribute.attributeId 
+    		var checkbox = $('<li class="attribute-list-item"><input class="attribute-checkbox" type="checkbox" value="' + attribute.attributeId 
     			+ '" data-displayName="' + attribute.attributeName + '"/>' 
     			+ attribute.attributeName +  "</li>");
     		$(me.modalAttributesDiv).append(checkbox);
@@ -106,6 +106,8 @@ group_selection.groupDetails = function(){
     	me.pubSub.subscribe('show-group-details', me.viewGroupDetails);
     	me.pubSub.subscribe('remove-student', me.removeStudent);
     	me.pubSub.subscribe('group-deleted', me.hideContent);
+
+    	//$('.group-details .box-wrap').antiscroll();
     }
     
     /**
@@ -157,6 +159,10 @@ group_selection.groupDetails = function(){
 
         // only show save btn if there has been changes
         me.toggleDirty(false);
+
+        // setup the antiscroll scrollbar
+        $('.group-details .box-wrap').antiscroll();
+        $('.group-details').css('padding-right', 0);
         
     }
     

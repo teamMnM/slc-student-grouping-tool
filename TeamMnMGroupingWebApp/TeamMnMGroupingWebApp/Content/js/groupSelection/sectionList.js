@@ -30,6 +30,8 @@ group_selection.groupSectionList = function(){
 
     	me.pubSub.subscribe('edit-multiple-groups', me.editMultipleGroups);
     	me.pubSub.subscribe('add-new-group', me.addGroup);
+
+    	$(".group-section-div .box-wrap").antiscroll();
     }
     
     /**
