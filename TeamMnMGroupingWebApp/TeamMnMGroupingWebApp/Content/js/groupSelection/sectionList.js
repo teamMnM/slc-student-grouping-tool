@@ -31,7 +31,10 @@ group_selection.groupSectionList = function(){
     	me.pubSub.subscribe('edit-multiple-groups', me.editMultipleGroups);
     	me.pubSub.subscribe('add-new-group', me.addGroup);
 
-    	$(".group-section-div .box-wrap").antiscroll();
+    	var scrollbar = $(".group-section-div .box-wrap").antiscroll();
+    	$('.group-section-div .antiscroll-inner').scroll(function () {
+    	    me.pubSub.publish('group-list-scrolled');
+    	});
     }
     
     /**

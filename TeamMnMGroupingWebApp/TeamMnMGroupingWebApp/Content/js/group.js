@@ -74,7 +74,7 @@ student_grouping.group = function(groupData){
 									    '<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									    '<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
                                         '<div class="group"></div>' +
-									    '<div style="text-align:center">' +
+									    '<div style="text-align:center; position:relative;">' +
 										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
                                             '<img class="group-printer-img" src="/Content/img/printer-icon.png"/>' +
 										    '<span class="badge group-num-students-badge"></span>' +

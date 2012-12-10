@@ -106,7 +106,7 @@
 }
 
 #txtStudentSearchBox {
-    width:95%;
+    width:90%;
 }
 
 #search-student-icon {
@@ -124,13 +124,25 @@
 
 #studentListDiv {
     box-shadow: 0.2em 0.1em 1em #CCC;
-    padding: 0.1em 0.8em 0em 0.8em;
-    top: 3em;
-    bottom: 0;
-    position: absolute;
+    padding: 3em 0.2em 0em 0.8em;
+    height: 100%;
     width: 100%;
-    overflow-y:auto;
 }
+
+.student-list-inner {
+    padding-right: 1.0em;
+}
+
+.box-wrap {
+    width: 100%;
+    height: 95%;
+}
+
+.box, .box .antiscroll-inner {
+        width: 100%;
+        height: 100%;
+        font: 14px Helvetica, Arial;
+      }
 
 .studentListItem {
 	height: 5.2em;
@@ -398,20 +410,22 @@
 
 .group-attachment-img {
 	cursor: pointer;
-	margin-left:1em;
-	width: 1.8em;
-    float:left;
+    width: 1.8em;
+    margin-top: -0.5em;
+    LEFT: 1.5em;
+    position: absolute;
 }
 
 .group-printer-img {
     cursor: pointer;
     width: 1.8em;
-    display:none;
-    float:left;
+    margin-top: -0.5em;
+    LEFT: 3.5em;
+    position: absolute;
 }
 
 .group-num-students-badge {
-    margin-left:-3.2em;
+    
 }
 
 .group-file-attachment {

@@ -420,18 +420,15 @@ group_selection.group = function(groupData){
      */
 	this.groupSelected = function () {
 	    me.pubSub.publish('show-group-details', me);
+
+        // apply selected styling
+	    $(me.groupContainerClass).css('background-color', 'white');
+	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
 	}
 
-    /**
-     *
-     */
-	this.showArrow = function () {
-	    $(me.groupContainerClass).css('background-color', 'white');
-	    $('.group-section-list').find("img.group-indicator-arrow").remove();
-	    var img = $("<img>");
-	    $(img).attr('src', '/Content/img/sel-group-indicator-icon.png');
-	    $(img).addClass('group-indicator-arrow');
-	    $(me.groupContainerId).append(img);
-	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
+
+	this.getOffsetTop = function () {
+	    var offset = $(me.groupContainerId).offset();
+	    return offset.top;
 	}
 }

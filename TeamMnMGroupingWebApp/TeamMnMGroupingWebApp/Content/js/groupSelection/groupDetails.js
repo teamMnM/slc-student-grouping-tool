@@ -41,6 +41,8 @@ group_selection.groupDetails = function(){
 	this.lessonPlanFileName = '.lesson-plan-file-name';
 	this.lessonPlanRemoveIcon = '.lesson-plan-remove-icon';
 	
+	this.scrollbar = null;
+
 	/**************************
      * METHODS
      **************************/
@@ -106,8 +108,7 @@ group_selection.groupDetails = function(){
     	me.pubSub.subscribe('show-group-details', me.viewGroupDetails);
     	me.pubSub.subscribe('remove-student', me.removeStudent);
     	me.pubSub.subscribe('group-deleted', me.hideContent);
-
-    	//$('.group-details .box-wrap').antiscroll();
+    	me.pubSub.subscribe('group-list-scrolled', me.moveArrow);
     }
     
     /**
@@ -134,7 +135,7 @@ group_selection.groupDetails = function(){
         }
        
         me.currGroup = group;
-        me.currGroup.showArrow();
+        me.moveArrow();
         me.groupData = group.groupData;
 
         var groupData = group.groupData;
@@ -161,9 +162,12 @@ group_selection.groupDetails = function(){
         me.toggleDirty(false);
 
         // setup the antiscroll scrollbar
-        $('.group-details .box-wrap').antiscroll();
-        $('.group-details').css('padding-right', 0);
-        
+        if (me.scrollbar === null) {
+            me.scrollbar = $('.group-details .box-wrap').antiscroll();
+        } else {
+            me.scrollbar.refresh();
+        }
+
     }
     
     /**
@@ -519,5 +523,12 @@ group_selection.groupDetails = function(){
      */
     this.hideContent = function () {
         $(me.groupDetails).hide();
+    }
+
+    this.moveArrow = function () {
+        if (me.currGroup !== undefined || me.currGroup !== null) {
+            var currGroupTop = me.currGroup.getOffsetTop();
+            $('.group-indicator-arrow').css('top', currGroupTop);
+        }
     }
 }

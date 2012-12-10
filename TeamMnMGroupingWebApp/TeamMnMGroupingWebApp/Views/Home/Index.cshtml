@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="~/Content/vendor/select2/css/select2.css" />		
 		<link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.min.css" />	
 		<link rel="stylesheet" href="~/Content/vendor/jqplot/css/jquery.jqplot.min.css" />
+        <link rel="stylesheet" href="~/Content/vendor/antiscroll/css/antiscroll.css" />
 		<link rel="stylesheet" href="~/Content/css/main.css" />	
 	</head>
 	<body>
@@ -71,9 +72,17 @@
 							        <input id="txtStudentSearchBox" placeholder="search by name" />
                                     <img id="search-student-icon" src="~/Content/img/search-icon.png" />
 						        </div>
-							    <ul id="studentList">
+                                <div class="box-wrap antiscroll-wrap">
+                                    <div class="box">
+                                        <div class="antiscroll-inner">  
+                                            <div class="box-inner student-list-inner">                                                                     
+							                    <ul id="studentList">
 								
-							    </ul>
+							                    </ul>
+                                            </div>          
+                                        </div>
+                                    </div>
+                                </div>
 						    </div>
                        </div>
 					</div>
@@ -173,11 +182,13 @@
 		<script src="~/Content/vendor/select2/js/select2.min.js"> </script>
 		<script src="~/Content/vendor/pubsub/js/pubsub.js"> </script>
         <script src="~/Content/vendor/spin/js/spin.min.js"> </script>
-        <script src="~/Content/vendor/spin/js/jquery.spin.js"> </script>
-		
+        <script src="~/Content/vendor/spin/js/jquery.spin.js"> </script>		
 		<script src="~/Content/vendor/jqplot/js/jquery.jqplot.min.js"> </script>
 		<script src="~/Content/vendor/jqplot/js/jqplot.donutRenderer.min.js"> </script>
 		<script src="~/Content/vendor/jqplot/js/jqplot.pieRenderer.min.js"> </script>
+        <script src="~/Content/vendor/idletimer/js/idletimer.js"> </script>
+        <script src="~/Content/vendor/antiscroll/js/jquery-mousewheel.js"> </script>
+        <script src="~/Content/vendor/antiscroll/js/antiscroll.js"> </script>
 		
 		<!-- Load custom scripts -->
 		<script src="~/Content/js/utils.js"> </script>

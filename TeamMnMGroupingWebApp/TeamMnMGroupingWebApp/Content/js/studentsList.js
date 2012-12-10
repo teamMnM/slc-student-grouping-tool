@@ -62,6 +62,8 @@ student_grouping.studentsList = function(){
 		this.pubSub.subscribe('student-selection-changed', function(studentId){
 			// TODO add method
 		});
+
+		$('#studentListDiv .box-wrap').antiscroll();
 				
 	}	
 	

@@ -58,6 +58,11 @@
     box-shadow: -0.05em 0.15em 0.4em #6B6B6B;
 }
 
+.group-search-btn {
+    margin-left: 0.3em;
+    margin-right:0.4em;
+}
+
 .top-bar-title {
 	color:white;
 	text-align: center;
@@ -91,8 +96,8 @@
 
 .group-details {
 	padding-top: 4.5em;
-    padding-right: 2em;
-	height:100%;
+    padding-right:0.2em;
+	height:99%;
     position:relative;
 }
 
@@ -105,6 +110,7 @@
 	height: 100%;
 	position: relative;
 	border: 4px solid #FFF;
+    border-right: 0;
 	background-color: #FFFFFF;	
 	box-shadow: 0.5em 0em 1.0em #9C9C9C;
 }
@@ -204,6 +210,7 @@
 	width:1.5em;
     float: left;
     display:none;
+    position: absolute;
 }
 
 .student-container:hover .del-button {
@@ -259,18 +266,14 @@
     top:0%;
     left:96%;
     height:3.0em;
+    z-index:5;
 }
 
 /**********************
  * GROUP DETAILS
  *********************/
-.group-details-inner {
-    position:absolute;
-    overflow-y: auto;
-    top: 5em;
-    bottom: 0;
+.group-details-inner {    
     padding-right: 2em;
-    width: 96%;
 }
 
 .group-details .group-name {
@@ -327,6 +330,7 @@
 	font-size:large;
 	font-weight:bold;
     vertical-align: middle;
+    margin-right: 1em;
 }
 
 .member-list {
