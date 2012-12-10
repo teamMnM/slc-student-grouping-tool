@@ -199,6 +199,30 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
+
+        /// <summary>
+        /// AJAX to this method to get Cohort by Id
+        /// </summary>
+        /// <param name="id">the id of the cohort to get</param>
+        /// <returns>return the requested Cohort object</returns>
+        public async Task<Cohort> GetGroupById(string id)
+        {
+            try
+            {
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cohort = await CohortHelper.GetCohortById(accessToken.ToString(), id);
+                    return cohort;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         /// <summary>
         /// Get all cohorts from SLI for the current user session
         /// </summary>

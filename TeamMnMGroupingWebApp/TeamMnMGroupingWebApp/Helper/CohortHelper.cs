@@ -12,6 +12,12 @@ namespace TeamMnMGroupingWebApp.Helper
 {
     public class CohortHelper
     {
+        /// <summary>
+        /// Get all information about a cohort
+        /// </summary>
+        /// <param name="cs"></param>
+        /// <param name="cohort"></param>
+        /// <returns></returns>
         public static async Task<CohortDisplayObject> GetCohortDisplayObject(CohortService cs, Cohort cohort)
         {
             //check to see if the item is already in cache. if so, return the cache item
@@ -33,12 +39,26 @@ namespace TeamMnMGroupingWebApp.Helper
             return displayObject;
         }
 
+        public static async Task<Cohort> GetCohortById(string accessToken, string id)
+        {
+            var cs = new CohortService(accessToken.ToString());
+            var result = await cs.GetById(id);
+            return result;
+        }
+
+        #region private
         private static async Task<IEnumerable<Student>> GetStudentsByCohortId(CohortService cs, string cohortId)
         {
             var result = await cs.GetStudentsByCohortId(cohortId);
             return result;
         }
 
+        /// <summary>
+        /// Get cohort custom
+        /// </summary>
+        /// <param name="cs"></param>
+        /// <param name="cohortId">the cohort id to get custom for</param>
+        /// <returns></returns>
         private static async Task<string> GetCohortCustomByCohortId(CohortService cs, string cohortId)
         {
             try
@@ -51,7 +71,8 @@ namespace TeamMnMGroupingWebApp.Helper
                 //when there isn't a custom yet, SLC throw a 404
                 return "";
             }
-            
+
         }
+        #endregion
     }
 }
