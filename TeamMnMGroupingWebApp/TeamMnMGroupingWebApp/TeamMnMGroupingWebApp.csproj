@@ -155,6 +155,7 @@
     <Content Include="Content\img\attachment-paper-small.png" />
     <Content Include="Content\img\attachment-paper.png" />
     <Content Include="Content\img\divider-icon.png" />
+    <Content Include="Content\img\download-icon.png" />
     <Content Include="Content\img\group-close-icon.png" />
     <Content Include="Content\img\group-edit-icon.png" />
     <Content Include="Content\img\group-info-icon.png" />
@@ -185,6 +186,7 @@
     <Content Include="Content\js\studentsList.js" />
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
+    <Content Include="Content\js\utils\print.js" />
     <Content Include="Content\vendor\antiscroll\css\antiscroll.css" />
     <Content Include="Content\vendor\antiscroll\js\antiscroll.js" />
     <Content Include="Content\vendor\antiscroll\js\jquery-mousewheel.js" />
@@ -197,6 +199,7 @@
     <Content Include="Content\vendor\bootstrap\js\bootstrap.js" />
     <Content Include="Content\vendor\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\vendor\dateutils\js\dateUtils.min.js" />
+    <Content Include="Content\vendor\filesaver\js\filesaver.min.js" />
     <Content Include="Content\vendor\highcharts\js\highcharts.js" />
     <Content Include="Content\vendor\idletimer\js\idletimer.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />

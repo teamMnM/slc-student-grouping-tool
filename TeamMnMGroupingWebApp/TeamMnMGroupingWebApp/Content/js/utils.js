@@ -62,3 +62,16 @@ utils.stringUtils = {
         return str.trim().replace(/(\r\n|\n|\r)/gm, " ");
     }
 }
+
+utils.printUtils = {
+    
+    /**
+     * prints the given div
+     */
+    print: function (html) {
+        var w = window.open();
+        w.document.write(html);
+        w.print();
+        w.close();
+    }
+}

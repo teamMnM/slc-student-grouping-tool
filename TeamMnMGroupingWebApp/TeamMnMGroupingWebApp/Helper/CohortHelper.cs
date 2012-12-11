@@ -46,6 +46,13 @@ namespace TeamMnMGroupingWebApp.Helper
             return result;
         }
 
+        public static Cohort GetGroupById(string accessToken, string id)
+        {
+            var cs = new CohortService(accessToken.ToString());
+            var result = cs.GetById(id);
+            return result.Result;
+        }
+
         #region private
         private static async Task<IEnumerable<Student>> GetStudentsByCohortId(CohortService cs, string cohortId)
         {

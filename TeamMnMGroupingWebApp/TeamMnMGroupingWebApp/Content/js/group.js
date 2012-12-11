@@ -150,6 +150,12 @@ student_grouping.group = function(groupData){
 		    }
 		});
 		
+		$(groupContainer).find(this.groupPrinterImgClass).click(function (event) {
+		    if (!me.processing) {
+		        me.printGroup();
+		    }
+		});
+
 		$(groupContainer).find(this.groupAttachmentDelImgClass).click(function(event){
 		    if (!me.processing) {
 		        me.deleteAttachment();
@@ -1092,5 +1098,38 @@ student_grouping.group = function(groupData){
 	    me.groupContainerId = "#gc" + id;
 	    $(origGroupContainerId).find(me.groupClass).attr('id', id);
 	    $(origGroupContainerId).attr('id', "gc" + id);
+	}
+
+    /**
+     *
+     */
+	this.groupGroup = function () {
+	    var div = me.generatePrintableHtml();
+	    utils.printUtils.print($(div).html());
+	}
+
+    /**
+     *
+     */
+	this.generatePrintableHtml = function () {
+	    var div = $("<div>");
+	    $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
+	    $(div).append("<p><i>" + me.groupData.cohortDescription + "</i></p>");
+
+	    var students = me.students;
+	    if (students.length > 0) {
+	        var studentList = $("<ul style='list-style:none'>");
+	        var allStudents = group_selection.groupDetailsComponent.allStudents;
+	        _.each(students, function (studentId) {
+	            var student = _.find(allStudents, function (s) {
+	                return s.id === studentId;
+	            });
+	            $(studentList).append("<li>" + student.name + "</li>");
+	        });
+	        $(div).append(studentList);
+	    } else {
+	        $(div).append("<div><i>[no students]</i></div>");
+	    }
+	    return div;
 	}
 }

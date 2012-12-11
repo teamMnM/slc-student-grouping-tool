@@ -145,6 +145,7 @@ group_selection.groupSection = function(section){
                 });
                 matchingGroup.remove();
                 me.pubSub.publish('add-new-group', matchingGroup);
+
             } else {
                 // get the list item html
                 var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + group.cohort.id);
@@ -152,6 +153,8 @@ group_selection.groupSection = function(section){
                 // move to the top of the list in this section as this would be the most recently update group
                 $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
             }
+            
+            me.pubSub.publish('move-arrow');
         }
     }    
 }

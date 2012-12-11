@@ -20,7 +20,7 @@ student_grouping.studentsList = function(){
      **************************/
 	this.init = function(students){		
 					
-		// temp code
+		// add all students to the list
 		for (var i = 0; i < students.length; i++){
 		    var studentDisplayObject = students[i];
 			

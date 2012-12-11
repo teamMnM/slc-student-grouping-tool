@@ -109,6 +109,7 @@ group_selection.groupDetails = function(){
     	me.pubSub.subscribe('remove-student', me.removeStudent);
     	me.pubSub.subscribe('group-deleted', me.hideContent);
     	me.pubSub.subscribe('group-list-scrolled', me.moveArrow);
+    	me.pubSub.subscribe('move-arrow', me.moveArrow);
     }
     
     /**
@@ -164,10 +165,7 @@ group_selection.groupDetails = function(){
         // setup the antiscroll scrollbar
         if (me.scrollbar === null) {
             me.scrollbar = $('.group-details .box-wrap').antiscroll();
-        } else {
-            me.scrollbar.refresh();
         }
-
     }
     
     /**
@@ -348,7 +346,6 @@ group_selection.groupDetails = function(){
 
         // hack to save name/description if they are being edited
         setTimeout(function () {
-
             var groupName = $(me.groupNameTxtClass).html();
             me.currGroup.setName(groupName);
 
@@ -358,10 +355,44 @@ group_selection.groupDetails = function(){
                 groupDescription = "";
             }
             me.currGroup.setDescription(groupDescription);
-
             me.toggleGroupContainerProcessingState(true);
-            me.currGroup.attachedFile = me.attachedFile;
-            me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
+
+            // check if selected file has been added, if not, then add it manually
+            var files = $(me.attachmentFileInput).prop('files');
+            if (files.length > 0) {
+                var file = files[0];
+                var reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        // Render thumbnail.
+                        var result = e.target.result;
+                        var contentStartIndex = result.indexOf(',');
+                        var type = result.substring(0, contentStartIndex);
+                        var content = result.substring(contentStartIndex + 1);
+
+                        var lessonPlan = {
+                            name: file.name,
+                            type: type,
+                            content: content
+                        }
+                        me.attachedFile = lessonPlan;
+
+                        // show the div with the attachment
+                        me.toggleLessonPlan();
+
+                        me.currGroup.attachedFile = me.attachedFile;
+                        me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
+                    };
+                })(file);
+
+                // Read in the file as a data URL.
+                reader.readAsDataURL(file);
+            } else {
+                me.currGroup.attachedFile = me.attachedFile;
+                me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
+            }
+
         }, 100);
     }
 
@@ -371,7 +402,7 @@ group_selection.groupDetails = function(){
     this.saveGroupChangesSuccessHandler = function (result) {
 
         if (result.completedSuccessfully) {
-            // Let user know the delete was successful
+            // Let user know the save was successful
             utils.uiUtils.showTooltip(
                 $(me.groupSaveImgClass),
                 'Group has been successfully saved.',
@@ -396,7 +427,7 @@ group_selection.groupDetails = function(){
      * Callback handler for unsuccessful group save
      */
     this.saveGroupChangesErrorHandler = function (result) {
-        // Let user know the delete was not successful
+        // Let user know the save was not successful
         utils.uiUtils.showTooltip(
             $(me.groupSaveImgClass),
             'Group could not be saved. Please try again later or contact your system administrator if this problem persists.',
@@ -457,15 +488,19 @@ group_selection.groupDetails = function(){
         // trim whitespace and remove line breaks
         newGroupName = utils.stringUtils.trim(newGroupName);
 
-        // if no input then set default name
-        if (!/\S/.test(newGroupName)) {
-            newGroupName = 'New Group';
+        var currName = $(me.groupNameTxtClass).html();
+        if (newGroupName !== currName) {
+            // if no input then set default name
+            if (!/\S/.test(newGroupName)) {
+                newGroupName = 'New Group';
+            }
+
+            $(me.groupNameTxtClass).html(newGroupName);
+            me.toggleDirty(true);
         }
 
-        $(me.groupNameTxtClass).html(newGroupName);
         $(me.groupNameTxtClass).show();
         $(me.groupNameTxtAreaClass).hide();
-        me.toggleDirty(true);
     }
 
     /**
@@ -498,8 +533,12 @@ group_selection.groupDetails = function(){
         // make sure that there is a description
         if (!utils.uiUtils.textIsEmpty(newGroupDescription)) {
             newGroupDescription = utils.stringUtils.trim(newGroupDescription);
-            $(me.groupDescriptionClass).html(newGroupDescription);
-            me.toggleDirty(true);
+
+            var currDescription = $(me.groupDescriptionClass).html();
+            if (currDescription !== newGroupDescription) {
+                $(me.groupDescriptionClass).html(newGroupDescription);
+                me.toggleDirty(true);
+            }
         }
 
         $(me.groupDescriptionClass).show();

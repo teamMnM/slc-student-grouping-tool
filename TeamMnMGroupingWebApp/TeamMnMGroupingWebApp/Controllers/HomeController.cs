@@ -87,6 +87,50 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         /// <summary>
+        /// Synchronous method for downloading a group's information as a text file
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public ActionResult DownloadGroup(string id)
+        {
+            try
+            {
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {   
+                    var cohort = CohortHelper.GetGroupById(accessToken.ToString(), id);                    
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("Name: " + cohort.cohortIdentifier + "\r\n\r\n");
+                    sb.Append("Description:" + cohort.cohortDescription + "\r\n\r\n");                    
+
+                    var cs = new CohortService(accessToken.ToString());
+                    var group = CohortHelper.GetCohortDisplayObject(cs, cohort);
+                    
+                    if (group.Result.students.Count() > 0){
+                        sb.Append("Students:\r\n");
+                        var st = GetStudents();
+                        var allStudents = st.Result;
+                        var studentIds = group.Result.students;
+                        foreach (string sid in studentIds)
+                        {
+                            var student = allStudents.First(c => c.id.Equals(sid));
+                            sb.Append(student.name.firstName + " " + student.name.lastSurName + "\r\n");
+                        }
+                    }
+                    
+                    return File(Encoding.UTF8.GetBytes(sb.ToString()),
+                         "text/plain",
+                          string.Format("{0}.txt", "groupses"));
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// AJAX to this method to create a brand new group with students
         /// </summary>
         /// <param name="obj">the cohort to delete</param>

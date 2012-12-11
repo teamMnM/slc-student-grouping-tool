@@ -19,6 +19,7 @@ group_selection.group = function(groupData){
 	this.groupDescriptionClass = '.group-description';
 	this.groupToggleInfoClass = '.group-toggle-info';		
     
+	this.groupDownloadLinkClass = '.group-download-link';
 	this.groupAttachmentLinkClass = '.group-attachment-link';
 	this.groupAttachmentIconClass = '.group-attachment-icon';
 	this.groupAttachmentPrintClass = '.group-print-icon';
@@ -28,8 +29,9 @@ group_selection.group = function(groupData){
 									'<div class="group-container">' + 
 										'<div>' +
 											'<span class="group-title"></span>' +
+                                            '<a class="group-download-link" href="#"><img src="/Content/img/download-icon.png" class="group-icon"></img></a>' +
 											'<a class="group-attachment-link" href="#"><img src="/Content/img/attachment-icon.png" class="group-icon group-attachment-icon"></img></a>' +
-											//'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
+											'<img src="/Content/img/printer-icon.png" class="group-icon group-print-icon"></img>' +
 											'<img src="/Content/img/trash-icon.png" class="group-icon group-delete-icon"></img>' +
 											'<i class="group-modified-timestamp">Last modified: </i>' + 	
 										'</div>' + 
@@ -51,6 +53,14 @@ group_selection.group = function(groupData){
 
     	$(me.groupContainerId).find(me.groupDeleteIconClass).click(function (event) {
     	    me.deleteGroup();
+    	});
+
+    	$(me.groupContainerId).find(me.groupAttachmentPrintClass).click(function (event) {
+    	    me.printGroup();
+    	});
+
+    	$(me.groupContainerId).find(me.groupDownloadLinkClass).click(function (event) {
+    	    me.downloadGroup();
     	});
 
     	me.pubSub.subscribe('remove-student', function (studentId) {
@@ -119,10 +129,8 @@ group_selection.group = function(groupData){
 	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).attr('download', file.name);
 
 	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).show();
-	         $(me.groupContainerId).find(me.groupAttachmentPrintClass).show();
 	     } else {
 	         $(me.groupContainerId).find(me.groupAttachmentLinkClass).hide();
-	         $(me.groupContainerId).find(me.groupAttachmentPrintClass).hide();
 	     }
 	 }
 	
@@ -199,11 +207,13 @@ group_selection.group = function(groupData){
                     });
                 });
                 
-	            // update the group's timestamp
-                var currTimestamp = new Date();
-                me.group.custom.lastModifiedDate = currTimestamp.getTime().toString();
-                $(me.groupContainerId).find(me.groupModifiedTimestampClass).html(currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
-                me.pubSub.publish('reorder-group', me.group);
+                if (result.completedSuccessfully) {
+                    // update the group's timestamp, if successful save
+                    var currTimestamp = new Date();
+                    me.group.custom.lastModifiedDate = currTimestamp.getTime().toString();
+                    $(me.groupContainerId).find(me.groupModifiedTimestampClass).html(currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
+                    me.pubSub.publish('reorder-group', me.group);
+                }
 
                 me.successHandler(result);
 	        },
@@ -416,7 +426,7 @@ group_selection.group = function(groupData){
 	}
 
     /**
-     *
+     * Handle this group's selected event
      */
 	this.groupSelected = function () {
 	    me.pubSub.publish('show-group-details', me);
@@ -426,9 +436,51 @@ group_selection.group = function(groupData){
 	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
 	}
 
-
+    /**
+     * Get the group widget's absolute top position
+     */
 	this.getOffsetTop = function () {
 	    var offset = $(me.groupContainerId).offset();
 	    return offset.top;
+	}
+
+    /**
+     *
+     */
+	this.printGroup = function () {
+	    var div = me.generatePrintableHtml();
+	    utils.printUtils.print($(div).html());
+    }
+
+    /**
+     * Download the contents of this group to a text file
+     */
+	this.downloadGroup = function () {
+	    window.open('DownloadGroup?id=' + me.groupData.id);
+	}
+
+    /**
+     *
+     */
+	this.generatePrintableHtml = function () {
+	    var div = $("<div>");
+	    $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
+	    $(div).append("<p><i>" + me.groupData.cohortDescription + "</i></p>");
+
+	    var students = me.students;
+	    if (students.length > 0) {
+	        var studentList = $("<ul style='list-style:none'>");
+	        var allStudents = group_selection.groupDetailsComponent.allStudents;
+	        _.each(students, function (studentId) {
+	            var student = _.find(allStudents, function (s) {
+	                return s.id === studentId;
+	            });
+	            $(studentList).append("<li>" + student.name + "</li>");
+	        });
+	        $(div).append(studentList);
+	    } else {
+	        $(div).append("<div><i>[no students]</i></div>");
+	    }
+	    return div;
 	}
 }
