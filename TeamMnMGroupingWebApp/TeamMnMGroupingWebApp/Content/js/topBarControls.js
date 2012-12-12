@@ -11,6 +11,7 @@ student_grouping.topBarControls = function(){
 	this.findGroupSelect2Elem = '#s2id_find-group-dropdown'; // this could change with plugin update - unstable
 	this.addExistingGroupBtn = '#add-existing-group-btn';
 	this.addNewGroupBtn = '#add-new-group-btn';
+	this.printBtnElem = '#img-print-btn';
 	this.saveAllBtnElem = '#img-save-btn';
 	
 	this.savingAll = false;
@@ -37,6 +38,7 @@ student_grouping.topBarControls = function(){
     	$(this.backBtnElem).click(this.navigateBack);
     	$(this.addExistingGroupBtn).click(this.addExistingGroup);
     	$(this.addNewGroupBtn).click(this.addNewGroup);
+    	$(this.printBtnElem).click(this.printAllGroups);
     	$(this.saveAllBtnElem).click(this.saveAllGroups);
 
         // remove group from dropdown if deleted
@@ -146,6 +148,15 @@ student_grouping.topBarControls = function(){
         if (!me.savingAll) {
             me.savingAll = true; // prevent user from trigger save all while saving
             me.pubSub.publish('save-all-groups');
+        }
+    }
+
+    /**
+     * Handle click of the print all groups button
+     */
+    this.printAllGroups = function () {
+        if (!me.savingAll) {
+            me.pubSub.publish('print-all-groups');
         }
     }
 

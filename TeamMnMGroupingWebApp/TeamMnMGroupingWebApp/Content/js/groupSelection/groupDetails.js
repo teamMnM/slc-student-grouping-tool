@@ -320,10 +320,12 @@ group_selection.groupDetails = function(){
      */
     this.addSelectedStudent = function () {
         var studentId = $(me.studentSearchElem).val();
-        me.currGroup.addStudent(studentId);
 
         var added = me.addStudent(studentId);
-        me.toggleDirty(added);
+        if (added) {
+            me.currGroup.addStudent(studentId);
+            me.toggleDirty(added);
+        }
         // reset the search box
         $(me.studentSearchElem).select2('val', '');
     }

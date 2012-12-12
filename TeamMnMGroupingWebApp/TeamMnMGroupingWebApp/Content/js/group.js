@@ -43,6 +43,7 @@ student_grouping.group = function(groupData){
 	this.groupDescriptionTxtElem = '.group-description-text';
 	this.groupDescriptionTxtAreaElem = '.group-description-textarea';
 	
+	this.groupDownloadImgClass = '.group-download-img';
 	this.groupAttachmentImgClass = '.group-attachment-img';
 	this.groupPrinterImgClass = '.group-printer-img';
 	this.groupNumStudentsBadgeClass = '.group-num-students-badge';
@@ -70,16 +71,15 @@ student_grouping.group = function(groupData){
 									    '</div>' +
 									    '<div class="group-name">' +
 										    '<div class="group-name-lbl"></div>' +
-										    '<textarea class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
+										    '<textarea maxlength="20" class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
 									    '<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									    '<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
                                         '<div class="group"></div>' +
 									    '<div style="text-align:center; position:relative;">' +
+                                            '<img class="group-download-img" src="/Content/img/download-icon.png"/>' +
 										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
                                             '<img class="group-printer-img" src="/Content/img/printer-icon.png"/>' +
 										    '<span class="badge group-num-students-badge"></span>' +
-									    '</div>' +
-									    '<div class="add-data-div">' +
 										    '<button class="add-data-button btn btn-link">add data</button>' +
 									    '</div>' +
 									     '<div class="group-file-attachment">' +
@@ -88,14 +88,14 @@ student_grouping.group = function(groupData){
 									     '</div>' +
 								     '</div>' +
                                      '<div class="group-description-popover group-popover" data-groupContainerId="-1" style="display:none">' +
-			                                     '<strong>Description:</strong>' +
+			                                     '<strong class="group-description-lbl">Description:</strong>' +
 			                                     '<div class="group-description-text">' +
 				                                     '&nbsp;' +
                                                  '</div>' +
-                                                 '<textarea class="group-description-textarea"></textarea>' +
+                                                 '<textarea maxlength="1024" class="group-description-textarea"></textarea>' +
                                      '</div>' +
                                      '<div class="student-data-popover group-popover" data-groupContainerId="-1" style="display: none">' +
-			                            'select what you want to show' +
+			                            '<div class="student-data-popover-txt">select what you want to show</div>' +
 			                            '<ul class="student-elements-list">' +
 			                            '</ul>' +
 		                             '</div>' +
@@ -144,6 +144,12 @@ student_grouping.group = function(groupData){
 		    }
 		});
 		
+		$(groupContainer).find(this.groupDownloadImgClass).click(function (event) {
+		    if (!me.processing) {
+		        me.downloadGroup();
+		    }
+		});
+
 		$(groupContainer).find(this.groupAttachmentImgClass).click(function(event){
 		    if (!me.processing) {
 		        me.showAttachmentPopover();
@@ -257,7 +263,7 @@ student_grouping.group = function(groupData){
 		var studentId = student.studentData.id;	
 		var groupId = this.groupData.id;
 			
-		// check if elem is in group already		
+	    // check if elem is in group already
 		if ($("#" + groupId + " #dr-" + studentId).length === 0){	
 			var droppedElem = this.createDroppedElem(student.studentData);
 			$("#" + groupId).append(droppedElem);
@@ -467,6 +473,7 @@ student_grouping.group = function(groupData){
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
 			$(popover).css('height', position_size.height);
+			$(popover).css('width', position_size.width);
 			$(popover).css('display','');	
 			
 		    // attach event handler to hide this if user clicks outside of it
@@ -532,9 +539,9 @@ student_grouping.group = function(groupData){
 			
 		    var description = this.groupData.cohortDescription;
 		    if (description !== null && description !== '') {
-		        $(this.groupDescriptionTxtElem).html(description);
+		        $(popover).find(this.groupDescriptionTxtElem).html(description);
 		    } else {
-		        $(this.groupDescriptionTxtElem).html('&nbsp;');
+		        $(popover).find(this.groupDescriptionTxtElem).html('&nbsp;');
 		    }						
 			
 			// place the popover relative to the group container
@@ -542,6 +549,7 @@ student_grouping.group = function(groupData){
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
 			$(popover).css('height', position_size.height);
+			$(popover).css('width', position_size.width);
 			$(popover).css('display', '');
 			
 			// if user clicks on text, make it editable					
@@ -807,7 +815,15 @@ student_grouping.group = function(groupData){
 		var position = $(this.groupContainerId).offset();
 		var width = $(this.groupContainerId).find(this.groupContainerClass).width(); 
 		var height = $(this.groupContainerId).find(this.groupContainerClass).height();
-				
+		
+	    // if has attachment, subtract the height of the attachment
+		var attachmentDiv = $(this.groupContainerId).find(me.groupAttachmentDivClass)
+		var attachmentVisible = $(attachmentDiv).css('display') !== 'none';
+		if (attachmentVisible) {
+		    var attachmentHeight = $(attachmentDiv).outerHeight();
+		    height -= attachmentHeight;
+		}
+
 		var position_size = {
 			left: position.left,
 			top: position.top,
@@ -888,12 +904,20 @@ student_grouping.group = function(groupData){
 	        });
 	        return matchingStudent === undefined;
 	    });
+	    // remove blanks
+	    newStudents = _.filter(newStudents, function (student) {
+	        return student !== "";
+	    });
 
 	    var studentsToDelete = _.filter(this.originalStudents, function (origStudentId) {
 	        var matchingStudent = _.find(me.students, function (student) {
 	            return origStudentId === student;
 	        });
 	        return matchingStudent === undefined;
+	    });
+	    // remove blanks
+	    studentsToDelete = _.filter(studentsToDelete, function (student) {
+	        return student !== "";
 	    });
 
         // if negative, then it is a new group so it doesn't have an id
@@ -1103,7 +1127,7 @@ student_grouping.group = function(groupData){
     /**
      *
      */
-	this.groupGroup = function () {
+	this.printGroup = function () {
 	    var div = me.generatePrintableHtml();
 	    utils.printUtils.print($(div).html());
 	}
@@ -1114,22 +1138,30 @@ student_grouping.group = function(groupData){
 	this.generatePrintableHtml = function () {
 	    var div = $("<div>");
 	    $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
-	    $(div).append("<p><i>" + me.groupData.cohortDescription + "</i></p>");
+	    $(div).append("<p><i>" +
+            me.groupData.cohortDescription !== null ? me.groupData.cohortDescription : '' + "</i></p>");
 
 	    var students = me.students;
 	    if (students.length > 0) {
 	        var studentList = $("<ul style='list-style:none'>");
-	        var allStudents = group_selection.groupDetailsComponent.allStudents;
+	        var allStudents = student_grouping.studentsListComponent.students;
 	        _.each(students, function (studentId) {
 	            var student = _.find(allStudents, function (s) {
-	                return s.id === studentId;
+	                return s.studentData.id === studentId;
 	            });
-	            $(studentList).append("<li>" + student.name + "</li>");
+	            $(studentList).append("<li>" + student.studentData.name + "</li>");
 	        });
 	        $(div).append(studentList);
 	    } else {
 	        $(div).append("<div><i>[no students]</i></div>");
 	    }
 	    return div;
+	}
+
+    /**
+     * Download the contents of this group to a text file
+     */
+	this.downloadGroup = function () {
+	    window.open('DownloadGroup?id=' + me.groupData.id);
 	}
 }

@@ -153,7 +153,7 @@ group_selection.groupSection = function(section){
                 // move to the top of the list in this section as this would be the most recently update group
                 $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
             }
-            
+            matchingGroup.applySelectedStyle();
             me.pubSub.publish('move-arrow');
         }
     }    

@@ -101,12 +101,13 @@ namespace TeamMnMGroupingWebApp.Controllers
                     var cohort = CohortHelper.GetGroupById(accessToken.ToString(), id);                    
                     StringBuilder sb = new StringBuilder();
                     sb.Append("Name: " + cohort.cohortIdentifier + "\r\n\r\n");
-                    sb.Append("Description:" + cohort.cohortDescription + "\r\n\r\n");                    
+                    sb.Append("Description: " + cohort.cohortDescription + "\r\n\r\n");                    
 
                     var cs = new CohortService(accessToken.ToString());
                     var group = CohortHelper.GetCohortDisplayObject(cs, cohort);
-                    
-                    if (group.Result.students.Count() > 0){
+
+                    if (group.Result.students.Count() > 0)
+                    {
                         sb.Append("Students:\r\n");
                         var st = GetStudents();
                         var allStudents = st.Result;
@@ -117,10 +118,14 @@ namespace TeamMnMGroupingWebApp.Controllers
                             sb.Append(student.name.firstName + " " + student.name.lastSurName + "\r\n");
                         }
                     }
+                    else
+                    {
+                        sb.Append("[no students]");
+                    }
                     
                     return File(Encoding.UTF8.GetBytes(sb.ToString()),
                          "text/plain",
-                          string.Format("{0}.txt", "groupses"));
+                          string.Format("{0}.txt", cohort.cohortIdentifier));
                 }
                 return null;
             }

@@ -82,6 +82,10 @@ student_grouping.groupsList = function(){
 			me.assignRandomGroups(students, numInGroup);
 		});
 
+		this.pubSub.subscribe('print-all-groups', function () {
+		    me.printAllGroups();
+		});
+
 		this.pubSub.subscribe('save-all-groups', function () {
 		    me.saveAllGroups();
 		});
@@ -376,5 +380,11 @@ student_grouping.groupsList = function(){
 	    });
 
 	    return dirtyGroup !== undefined;
+	}
+
+    /**
+     * Print all the groups in the workspace
+     */
+	this.printAllGroups = function () {
 	}
 }

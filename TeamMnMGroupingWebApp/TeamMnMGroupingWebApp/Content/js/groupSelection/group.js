@@ -268,12 +268,20 @@ group_selection.group = function(groupData){
 	        });
 	        return matchingStudent === undefined;
 	    });
+	    // remove blanks
+	    newStudents = _.filter(newStudents, function (student) {
+	        return student !== "";
+	    });
 
 	    var studentsToDelete = _.filter(this.originalStudents, function (origStudentId) {
 	        var matchingStudent = _.find(me.students, function (student) {
 	            return origStudentId === student;
 	        });
 	        return matchingStudent === undefined;
+	    });
+	    // remove blanks
+	    studentsToDelete = _.filter(studentsToDelete, function (student) {
+	        return student !== "";
 	    });
 
         // if negative, then it is a new group so it doesn't have an id
@@ -431,7 +439,14 @@ group_selection.group = function(groupData){
 	this.groupSelected = function () {
 	    me.pubSub.publish('show-group-details', me);
 
-        // apply selected styling
+	    // apply selected styling
+	    me.applySelectedStyle();
+	}
+
+    /**
+     *
+     */
+	this.applySelectedStyle = function () {
 	    $(me.groupContainerClass).css('background-color', 'white');
 	    $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
 	}

@@ -151,9 +151,12 @@
 	cursor: pointer;
 }
 
+.group-icon.group-print-icon {
+    width:1.68em;
+}
+
 .group-icon.group-delete-icon {
-	width:1em;
-	margin-left:0.5em;
+	width:0.92em;
 }
 
 .group-modified-timestamp {
@@ -250,11 +253,13 @@
 }
 
 .group-title {
-	font-size:x-large;
+	font-size:1.5em;
+    margin-right: 0.5em;
 }
 
 .group-icon {
     vertical-align: top;
+    margin-left: 0.4em;
 }
 
 .group-attachment-link {
@@ -310,6 +315,7 @@
 .group-description {
 	margin-bottom: 1.5em;
     font-size: small;
+    word-wrap: break-word;
 }
 
 .group-description-txtarea {    
