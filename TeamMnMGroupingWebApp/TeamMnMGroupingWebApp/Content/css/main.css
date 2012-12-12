@@ -262,7 +262,7 @@
 }
 
 .dropped-elem.expanded {
-	width: 16.0em;
+	width: 80%;
 	min-height:4em;
     position:relative;
 }
@@ -351,6 +351,7 @@
 }
 
 .group-container {
+    padding-right: 0.5em;
 	border-radius: 0.8em;	
 	width: 20em;
     float:left;
@@ -366,20 +367,21 @@
 
 .group-info-btn {
     margin-top: -2.6em;
-    margin-right: -1.5em;
+    margin-left: 24em;
     width: 3.5em;
-	cursor:pointer;
+    cursor: pointer;
+    position: absolute;
 }
 
 .group-container:hover .group-close-btn {
 	display:block;
 }
 .group-close-btn {
-	float:left;
-    margin-left: -1.1em;
+	margin-left: -1.1em;
     margin-top: -1.7em;
     width: 2.5em;
-	cursor:pointer;
+    cursor: pointer;
+    position: absolute;
 }
 
 .group-name {	
@@ -391,7 +393,7 @@
 }
 
 .group-name-lbl {	
-	height:2.5em;
+	line-height:2.5em;
 }
 
 .group-name-text {
@@ -407,11 +409,15 @@
 	float:left;
 }
 
-.group {
-	height: 15em;
+.group-wrap {
+    height:15em;    
 	padding-top: 0.3em;
-    overflow-y: auto;
-    margin: 1.5em 0.5em 0.5em 0.5em;
+    margin: 1em 0.5em 0.5em 0.5em;
+    overflow:visible !important;
+}
+
+.group {
+	padding-top: 0.5em;
 }
 
 .group-download-img, .group-attachment-img, .group-printer-img {

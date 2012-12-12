@@ -118,9 +118,10 @@ student_grouping.groupsList = function(){
 			}
 
 			// make group droppable
-			$(group.groupContainerId).find('.group').droppable({
-				drop: function(event){
-					me.dropFunc(this);
+			$(group.groupContainerId).find('.group-wrap').droppable({
+			    drop: function (event) {
+			        var groupDiv = $(group.groupContainerId).find('.group');
+					me.dropFunc(groupDiv);
 				}		
 			});	
 			
@@ -386,5 +387,6 @@ student_grouping.groupsList = function(){
      * Print all the groups in the workspace
      */
 	this.printAllGroups = function () {
+
 	}
 }

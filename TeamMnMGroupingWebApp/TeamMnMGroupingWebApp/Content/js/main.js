@@ -77,7 +77,7 @@ student_grouping.init = function(){
             loaded = true;
         },
         error: function (errorMsg) {
-            //window.location = 'Error';
+            window.location = 'Error';
             $(".main-content").spin(false);
             $(".main-content").css('opacity', 1);
         }

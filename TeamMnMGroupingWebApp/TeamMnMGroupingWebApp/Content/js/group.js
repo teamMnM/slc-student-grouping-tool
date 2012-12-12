@@ -74,7 +74,15 @@ student_grouping.group = function(groupData){
 										    '<textarea maxlength="20" class="group-name-txt" style="display:none; overflow:hidden; resize:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
 									    '<img class="hide-button group-close-btn" src="/Content/img/group-close-icon.png"></img>' +
 									    '<img class="hide-button group-info-btn" src="/Content/img/group-info-icon.png"></img>' +
-                                        '<div class="group"></div>' +
+                                        '<div class="box-wrap antiscroll-wrap group-wrap">' +
+                                            '<div class="box">' +
+                                                '<div class="antiscroll-inner">' +
+                                                    '<div class="box-inner">' +                                                                    	
+                                                        '<div class="group"></div>' +						                            
+                                                    '</div>' +          
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
 									    '<div style="text-align:center; position:relative;">' +
                                             '<img class="group-download-img" src="/Content/img/download-icon.png"/>' +
 										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
@@ -242,6 +250,8 @@ student_grouping.group = function(groupData){
 		    this.attachedFile = this.group.custom.lessonPlan;
 		    this.showFileAttachment();
 		}
+
+		$(groupContainer).find('.antiscroll-wrap').antiscroll();
 
 	    // disable all group actions while save all is going on
 		me.pubSub.subscribe('save-all-groups', function () {
@@ -751,6 +761,11 @@ student_grouping.group = function(groupData){
 		$(this.groupContainerId).find(this.groupNameTxtClass).blur(function(event){
 			me.saveGroupName();
 		});
+		$(this.groupContainerId).find(this.groupNameTxtClass).unbind('blur keyup');
+		$(this.groupContainerId).find(this.groupNameTxtClass).bind('blur keyup', function(e) {
+		    if(e.type === 'keyup' && e.keyCode !== 10 && e.keyCode !== 13) return;
+		    me.saveGroupName();
+		});
 	}
 	
 	/**
@@ -1136,7 +1151,7 @@ student_grouping.group = function(groupData){
      *
      */
 	this.generatePrintableHtml = function () {
-	    var div = $("<div>");
+	    var div = $("<div style='page-break-after:always'>");
 	    $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
 	    $(div).append("<p><i>" +
             me.groupData.cohortDescription !== null ? me.groupData.cohortDescription : '' + "</i></p>");
