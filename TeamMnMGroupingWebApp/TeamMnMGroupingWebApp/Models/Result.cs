@@ -13,6 +13,11 @@ namespace TeamMnMGroupingWebApp.Models
         public string objectId { get; set; }
 
         /// <summary>
+        /// Main object name
+        /// </summary>
+        public string objectName { get; set; }
+
+        /// <summary>
         /// Indicates whether the entire action was completed succesfully
         /// </summary>
         public bool completedSuccessfully { get; set; }
@@ -35,7 +40,7 @@ namespace TeamMnMGroupingWebApp.Models
         /// <summary>
         /// this list contains all the Id's that the action failed to create new objects for
         /// </summary>
-        public IEnumerable<ActionResponseResult> failToCreateAssocations { get; set; }
+        public IEnumerable<ActionResponseResult> failToCreateAssociations { get; set; }
 
         /// <summary>
         /// this list contains all the Id's that the action failed to delete for

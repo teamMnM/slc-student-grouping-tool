@@ -329,6 +329,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var result = new Result
                 {
+                    objectName = cohort.cohortIdentifier,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.Created,
                     objectActionResult = GlobalHelper.GetActionResponseResult("", response, HttpStatusCode.Created)
                 };
@@ -369,6 +370,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var result = new Result
                 {
                     objectId = cohort.id,
+                    objectName = cohort.cohortIdentifier,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent,
                     objectActionResult = GlobalHelper.GetActionResponseResult(cohort.id, response, HttpStatusCode.NoContent)
                 };
