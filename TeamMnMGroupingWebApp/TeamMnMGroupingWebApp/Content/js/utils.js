@@ -30,10 +30,14 @@ utils.uiUtils = {
             trigger: trigger
         });
 
-        $(elem).tooltip('show');
-        setTimeout(function () {
-            $(elem).tooltip('hide');
-        }, timeout);
+        if (trigger === 'manual') {
+            $(elem).tooltip('show');
+        }
+        if (timeout !== undefined && timeout !== null) {
+            setTimeout(function () {
+                $(elem).tooltip('hide');
+            }, timeout);
+        }
     }, 
 
     getUrlParams: function () {

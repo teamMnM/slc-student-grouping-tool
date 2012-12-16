@@ -132,7 +132,7 @@ student_grouping.studentsList = function(){
 	    if (isNaN(randomNum) || randomNum === '' || parseInt(randomNum) <= 0) {
 	        utils.uiUtils.showTooltip(
                         $(this.randomNumTxt),
-                        'Please enter a valid number',
+                        'Please enter a number greater than 0',
                         'bottom',
                         'manual',
                         3000);

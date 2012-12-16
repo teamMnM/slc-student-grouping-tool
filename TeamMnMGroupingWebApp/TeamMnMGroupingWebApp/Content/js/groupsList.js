@@ -310,8 +310,11 @@ student_grouping.groupsList = function(){
 	this.saveAllGroupsSuccessHandler = function(results, groupsToSave){
 	    var numSuccessfulSaves = 0;
 	    var numResults = results.length;
+	    var successDiv = $("<ul>");
+	    var failDiv = $("<ul>");
 	    for (var i = 0; i < numResults; i++) {
 	        var result = results[i];
+	        var groupToSave = groupsToSave[i];
 
             // assign id to newly created groups
 	        if (result.objectId !== null && result.objectId !== undefined) {
@@ -321,12 +324,23 @@ student_grouping.groupsList = function(){
 
 	        if (result.completedSuccessfully) {
 	            numSuccessfulSaves++;
+	            groupToSave.dirty = false;
+
+	            $(successDiv).append("<li>" + result.objectName + "</li>");
+	        } else {
+	            $(failDiv).append("<li><div>" + result.objectName + "</div>" +
+                                        "<div>Status - " + result.objectActionResult.status + "</div>" +
+                                        "<div>Message - " + result.objectActionResult.message + "</div>" +
+                                  "</li>");                    
 	        }
+	        groupToSave.processing = false;
 	    }
 
-	    $(me.saveAllGroupsContentElem).html("<div class='well label-success save-all-msg'>Number of successful saves: " + numSuccessfulSaves + 
-            "</div> <div class='well label-important save-all-msg'>Number of unsuccessful saves: " + (numResults - numSuccessfulSaves) + "</div>"
-        );
+	    var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);
+	    var failDiv = $("<div class='well label-important save-all-msg'><div>Number of unsuccessful saves: " + (numResults - numSuccessfulSaves) + "</div>").append(failDiv);
+        
+	    $(me.saveAllGroupsContentElem).empty();
+	    $(me.saveAllGroupsContentElem).append(successDiv).append(failDiv);
 	    $(me.saveAllGroupsModalElem).modal('show');
 
 	    me.saveAllComplete();
@@ -387,6 +401,14 @@ student_grouping.groupsList = function(){
      * Print all the groups in the workspace
      */
 	this.printAllGroups = function () {
+	    var div = $("<div>");
 
+	    var groups = me.groups;
+	    _.each(groups, function (g) {
+	        var groupDiv = g.generatePrintableHtml();
+	        $(div).append(groupDiv);
+	    });
+
+	    utils.printUtils.print($(div).html());
 	}
 }

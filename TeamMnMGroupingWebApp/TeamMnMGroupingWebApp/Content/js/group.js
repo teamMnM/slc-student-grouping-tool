@@ -56,6 +56,9 @@ student_grouping.group = function(groupData){
 	this.groupAttachmentDelImgClass = '.del-attachment-img';
 	this.attachedFile = null;
 	
+    // elems with tooltips
+	this.tooltipElems = [this.groupDownloadImgClass, this.groupAttachmentImgClass, this.groupPrinterImgClass];
+
 	this.groupUnsavedChangesModalElem = '#group-unsaved-changes-modal';
 	this.groupUnsavedChangesGroupName = '#group-unsaved-changes-group-name';
 	this.groupUnsavedChangesConfirmBtnElem = '#group-unsaved-changes-confirm-btn';
@@ -104,8 +107,16 @@ student_grouping.group = function(groupData){
                                      '</div>' +
                                      '<div class="student-data-popover group-popover" data-groupContainerId="-1" style="display: none">' +
 			                            '<div class="student-data-popover-txt">select what you want to show</div>' +
-			                            '<ul class="student-elements-list">' +
-			                            '</ul>' +
+                                        '<div class="box-wrap antiscroll-wrap student-data-wrap">' +
+                                            '<div class="box">' +
+                                                '<div class="antiscroll-inner">' +
+                                                    '<div class="box-inner">' +                                                         
+                                                        '<ul class="student-elements-list">' +
+			                                            '</ul>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>'+
 		                             '</div>' +
                                      '<div class="group-attachment-popover" data-groupContainerId="-1" style="display: none">' +
 			                            '<div class="attachment-top-bar">' +
@@ -251,17 +262,19 @@ student_grouping.group = function(groupData){
 		    this.showFileAttachment();
 		}
 
-		$(groupContainer).find('.antiscroll-wrap').antiscroll();
+		$(groupContainer).find('.group-wrap').antiscroll();
 
 	    // disable all group actions while save all is going on
 		me.pubSub.subscribe('save-all-groups', function () {
 		    me.processing = true;
 		});
 
-	    // re-enable all group actions once save all is done
-		me.pubSub.subscribe('save-all-completed', function () {
-		    me.processing = false;
-		    me.dirty = false;
+	    // set up the tooltips
+		var tooltipElems = this.tooltipElems;
+		_.each(tooltipElems, function (e) {
+		    var tooltip = tooltipText[e];
+		    var elem = $(groupContainer).find(e);
+		    utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
 		});
 	};
 		
@@ -503,10 +516,12 @@ student_grouping.group = function(groupData){
 		
 		$(this.groupContainerId).find(attributeCheckBoxes).unbind('click');
 		$(this.groupContainerId).find(attributeCheckBoxes).click(function (event) {
-			var cbox = event.currentTarget;
-			me.toggleSelectedAttributes();
-			me.toggleStudentAttributeVisibility(me.selectedAttributes);
-		})
+		    var cbox = event.currentTarget;
+		    me.toggleSelectedAttributes();
+		    me.toggleStudentAttributeVisibility(me.selectedAttributes);
+		});
+
+		$(this.groupContainerId).find('.student-data-wrap').antiscroll();
 	}
 	
 	/**
@@ -1152,12 +1167,13 @@ student_grouping.group = function(groupData){
      */
 	this.generatePrintableHtml = function () {
 	    var div = $("<div style='page-break-after:always'>");
-	    $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
-	    $(div).append("<p><i>" +
+	    $(div).append("<h2>Name: " + me.groupData.cohortIdentifier + "</h2>");
+	    $(div).append("<p>Description:<i>" +
             me.groupData.cohortDescription !== null ? me.groupData.cohortDescription : '' + "</i></p>");
 
 	    var students = me.students;
 	    if (students.length > 0) {
+	        $(div).append("<p>Students</p>");
 	        var studentList = $("<ul style='list-style:none'>");
 	        var allStudents = student_grouping.studentsListComponent.students;
 	        _.each(students, function (studentId) {
@@ -1177,6 +1193,16 @@ student_grouping.group = function(groupData){
      * Download the contents of this group to a text file
      */
 	this.downloadGroup = function () {
+	    if (me.groupData.id < 0) {
+	        var downloadBtn = $(me.groupContainerId).find(me.groupDownloadImgClass);
+	        utils.uiUtils.showTooltip(downloadBtn,
+                "Group must be saved before it can be downloaded",
+                "top",
+                "manual",
+                3000);
+	        return;
+	    }
 	    window.open('DownloadGroup?id=' + me.groupData.id);
+
 	}
 }

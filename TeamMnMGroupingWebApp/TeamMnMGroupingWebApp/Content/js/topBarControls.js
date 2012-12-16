@@ -13,6 +13,7 @@ student_grouping.topBarControls = function(){
 	this.addNewGroupBtn = '#add-new-group-btn';
 	this.printBtnElem = '#img-print-btn';
 	this.saveAllBtnElem = '#img-save-btn';
+	this.logoutBtnElem = '#logout-btn';
 	
 	this.savingAll = false;
 	this.groups = [];
@@ -40,6 +41,7 @@ student_grouping.topBarControls = function(){
     	$(this.addNewGroupBtn).click(this.addNewGroup);
     	$(this.printBtnElem).click(this.printAllGroups);
     	$(this.saveAllBtnElem).click(this.saveAllGroups);
+    	$(this.logoutBtnElem).click(this.logout);
 
         // remove group from dropdown if deleted
     	this.pubSub.subscribe('group-deleted', function (id) {
@@ -173,5 +175,19 @@ student_grouping.topBarControls = function(){
             }
             window.location = "GroupSelection";
         });
+    }
+
+    /**
+     *
+     */
+    this.logout = function () {
+        var hasDirtyGroups = student_grouping.groupsListComponent.hasDirtyGroups();
+        if (hasDirtyGroups) {
+            var confirmDirtyLogout = confirm("You have unsaved changes. Would you still like to log out?");
+            if (!confirmDirtyLogout) {
+                return;
+            }
+        }
+        me.pubSub.publish('logout');
     }
 }

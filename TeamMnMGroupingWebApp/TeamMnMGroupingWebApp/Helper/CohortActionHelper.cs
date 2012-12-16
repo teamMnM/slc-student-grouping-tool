@@ -108,7 +108,7 @@ namespace TeamMnMGroupingWebApp.Helper
             else
                 result.partialCreateSuccess = false;
 
-            result.failToCreateAssocations = from r in associations where r.status != HttpStatusCode.Created select r;
+            result.failToCreateAssociations = from r in associations where r.status != HttpStatusCode.Created select r;
         }
 
         /// <summary>

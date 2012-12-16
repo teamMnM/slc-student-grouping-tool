@@ -27,6 +27,9 @@ student_grouping.student = function(studentData) {
 	this.gpaClass = '.gpa';
 	this.selBoxClass = '.student-selBox';
 	
+    // elems with tooltips
+	this.tooltipElems = [this.selBoxClass];
+
 	/**
 	 * HTML template to be rendered to screen 
 	 */
@@ -92,6 +95,14 @@ student_grouping.student = function(studentData) {
 		    if (me.studentData.id === studentId) {
 		        me.removeGroupIndicator(groupId);
 		    }
+		});
+
+        // set up the tooltips
+		var tooltipElems = this.tooltipElems;
+		_.each(tooltipElems, function (e) {
+		    var tooltip = tooltipText[e];
+		    var elem = $(me.studentLiContainer).find(e);
+		    utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
 		});
     };
     

@@ -61,12 +61,16 @@
 }
 
 .top-bar-buttons {
+    padding-top: 0.3em;
     text-align: right;
     padding-right: 1em;
 }
 
 #logout-btn{
-	
+	color:white;
+    cursor:pointer; 
+    vertical-align:middle;
+    display:inline;
 }
 
 #student-controls {
@@ -128,13 +132,13 @@
 
 #studentListDiv {
     box-shadow: 0.2em 0.1em 1em #CCC;
-    padding: 3em 0.2em 0em 0.8em;
+    padding: 3em 0.2em 0em 0.6em;
     height: 100%;
     width: 100%;
 }
 
 .student-list-inner {
-    padding-right: 1.0em;
+    padding-right: 0.6em;
 }
 
 .box-wrap {
@@ -206,6 +210,7 @@
 .content {
     height:100%;
     padding-top: 3em;
+    margin-left: 1em !important;
 }
 
 .content-row {
@@ -221,6 +226,8 @@
     width: 97% !important;
     overflow-y: auto;
     position:absolute;
+    margin-left: 0 !important;
+    padding-left: 3em;
 }
 
 /**********************
@@ -333,7 +340,7 @@
  * STUDENT INFO POPOVER
  *********************/
 #student-info-popover {
-	margin: 0em 0 0 0.4em;	
+	margin: 0em 0 0 0.37em;	
 	padding:0.8em 0.5em 0 1em;	
 	color:white;
 	background-color: #BFBFBF;
@@ -414,6 +421,10 @@
 	padding-top: 0.3em;
     margin: 1em 0.5em 0.5em 0.5em;
     overflow:visible !important;
+}
+
+.student-data-wrap {
+	height:90%;
 }
 
 .group {

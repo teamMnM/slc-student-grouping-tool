@@ -90,6 +90,25 @@ student_grouping.init = function(){
 	var studentCtrlMargin = $("#student-controls").css('margin-bottom');
 	var studentListMargin = $("#studentListDiv").css('margin-top');
 	$("#studentListDiv").height();
+
+	me.pubSub.subscribe('logout', me.logout);
+}
+
+student_grouping.logout = function () {
+    $.ajax({
+        type: 'GET',
+        url: 'Logout',
+        success: function (result) {
+            if (result.logout) {
+                window.location = "/Home";
+            } else {
+                window.location = "Error";
+            }
+        },
+        error: function (result) {
+            window.location = "Error";
+        }
+    });
 }
 
 // initialize module

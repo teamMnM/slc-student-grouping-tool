@@ -184,6 +184,7 @@
     <Content Include="Content\js\popovers.js" />
     <Content Include="Content\js\student.js" />
     <Content Include="Content\js\studentsList.js" />
+    <Content Include="Content\js\tooltipText.js" />
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
     <Content Include="Content\js\utils\print.js" />
