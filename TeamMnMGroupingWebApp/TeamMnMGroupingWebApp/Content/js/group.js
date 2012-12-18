@@ -951,8 +951,8 @@ student_grouping.group = function(groupData){
 	    });
 
         // if negative, then it is a new group so it doesn't have an id
-	    var id = parseInt(this.groupData.id) > 0 ?
-             this.groupData.id : null;
+	    var id = parseInt(this.groupData.id) < 0 ?
+             null : this.groupData.id;
         
 	    var cohortActionObject = {
 	        cohort: {
@@ -1002,8 +1002,8 @@ student_grouping.group = function(groupData){
     /**
      * Handle successful saving of group
      */
-	this.createGroupSuccessHandler = function(result) {
-	    me.groupData.id = result.objectId;
+	this.createGroupSuccessHandler = function (result) {
+	    me.updateId(result.objectId);
 
 	    // Let user know the created was successful
 	    utils.uiUtils.showTooltip(
@@ -1033,9 +1033,25 @@ student_grouping.group = function(groupData){
 
 	    var msg = "Group could not be created. Please try again later or contact your system administrator.";
 
-	    if (result.completedSuccessfully && (result.failToCreateIds.length > 0)){
+	    var groupCreatedSuccessfully = result.objectActionResult.isSuccess;
+	    if (groupCreatedSuccessfully && (result.failToCreateAssociations.length > 0)) {
+	        me.updateId(result.objectId);
 	        msg = "Group was created successfully. However some students could not be assigned to the group.";
+
+	        // put the students that were created into the group's list of original
+	        var failedStudents = result.failToCreateAssociations;
+	        _.each(me.students, function (student) {
+	            var failed = _.find(failedStudents, function (fs) {
+	                return fs === student;
+	            });
+                // if did not fail
+	            if (failed === undefined) {
+	                // add to original list
+	                me.originalStudents.push(student);
+	            }
+	        });
 	    }
+       
 
 	    // Let user know the create was not successful
 	    utils.uiUtils.showTooltip(

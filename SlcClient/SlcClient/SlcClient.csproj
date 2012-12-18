@@ -63,6 +63,10 @@
     <Compile Include="Entities\AssessmentItem.cs" />
     <Compile Include="Entities\AssessmentPerformanceLevel.cs" />
     <Compile Include="Entities\AssessmentPeriodDescriptor.cs" />
+    <Compile Include="Entities\Authentication\Authentication.cs" />
+    <Compile Include="Entities\Authentication\Entity.cs" />
+    <Compile Include="Entities\Authentication\Principal.cs" />
+    <Compile Include="Entities\Authentication\UserAuthentication.cs" />
     <Compile Include="Entities\BirthData.cs" />
     <Compile Include="Entities\CalendarDate.cs" />
     <Compile Include="Entities\ClassRanking.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="Entities\Credential.cs" />
     <Compile Include="Entities\CredentialFieldDescriptor.cs" />
     <Compile Include="Entities\Credits.cs" />
+    <Compile Include="Entities\DebugResult.cs" />
     <Compile Include="Entities\Disability.cs" />
     <Compile Include="Entities\EducationOrganization.cs" />
     <Compile Include="Entities\EducationOrgIdentificationCode.cs" />

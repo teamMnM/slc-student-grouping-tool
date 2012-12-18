@@ -29,14 +29,14 @@ namespace SlcClient.Entities
         /// </summary>
         public bool studentRecordAccess { get; set; }
 
-        /// <summary>
-        /// Reference to the cohort associated with the staff.
-        /// </summary>
-        public List<Cohort> cohorts { get; set; }
+        ///// <summary>
+        ///// Reference to the cohort associated with the staff.
+        ///// </summary>
+        //public List<Cohort> cohorts { get; set; }
 
-        /// <summary>
-        /// The staff associated with the cohort of students.
-        /// </summary>
-        public List<Staff> staffs { get; set; }
+        ///// <summary>
+        ///// The staff associated with the cohort of students.
+        ///// </summary>
+        //public List<Staff> staffs { get; set; }
     }
 }

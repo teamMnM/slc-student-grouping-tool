@@ -68,6 +68,20 @@ namespace TeamMnMGroupingWebApp.Helper
         }
 
         /// <summary>
+        /// Create a StaffCohortAssociation object
+        /// </summary>
+        /// <param name="cs">the service to use for this action</param>
+        /// <param name="associations">the StaffCohortAssociation to create</param>
+        /// <returns>result of this action</returns>
+        public static async Task<ActionResponseResult> CreateOneStaffCohortAssociation(CohortService cs, string cId, string sId)
+        {
+            var a = new StaffCohortAssociation { cohortId = cId, staffId = sId, beginDate = DateTime.Now };
+            var result = await cs.CreateStaffCohortAssociation(a);
+
+            return GlobalHelper.GetActionResponseResult(sId, result, HttpStatusCode.Created);            
+        }
+
+        /// <summary>
         /// Delete multiple StudentCohortAssociation objects
         /// </summary>
         /// <param name="cs">the service to use for this action</param>

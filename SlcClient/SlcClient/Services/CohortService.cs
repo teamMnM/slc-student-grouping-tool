@@ -152,7 +152,7 @@ namespace SlcClient.Services
         /// <returns>request response</returns>
         public async Task<HttpResponseMessage> CreateStaffCohortAssociation(StaffCohortAssociation obj)
         {
-            var response = await _client.PostData(Constants.Cohort.STUDENT_COHORT_ASSOCIATION, obj);           
+            var response = await _client.PostData(Constants.Cohort.STAFF_COHORT_ASSOCIATION, obj);           
             return response;
         }
 

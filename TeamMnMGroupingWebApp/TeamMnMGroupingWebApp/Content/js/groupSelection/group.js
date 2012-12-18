@@ -285,8 +285,8 @@ group_selection.group = function(groupData){
 	    });
 
         // if negative, then it is a new group so it doesn't have an id
-	    var id = parseInt(this.groupData.id) > 0 ?
-             this.groupData.id : null;
+	    var id = parseInt(this.groupData.id) < 0 ?
+             null : this.groupData.id;
         
 	    var cohortActionObject = {
 	        cohort: {

@@ -26,6 +26,7 @@ namespace TeamMnMGroupingWebApp.Controllers
     {
         const string MAIN = "/Home/GroupSelection";
         const string SLC_USER_SESSION = "slc_user";
+        const string SLC_USER_DEBUG_SESSION = "slc_user_id";
 
         public void Index()
         {
@@ -483,7 +484,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //if cohort was created successfully then continue to create associations
                     if (cohortResult.completedSuccessfully)
                     {
-                        await ProcessASuccessfulCohortCreate(obj, cs, cohortResult);
+                        var staffId = ((DebugResult)Session[SLC_USER_DEBUG_SESSION]).authentication.principal.entity.entityId;
+                        await ProcessASuccessfulCohortCreate(obj, cs, cohortResult, staffId);
                     }
 
                     return cohortResult;
@@ -501,11 +503,12 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
-        private static async Task ProcessASuccessfulCohortCreate(CohortActionObject obj, CohortService cs, Result cohortResult)
+        private static async Task ProcessASuccessfulCohortCreate(CohortActionObject obj, CohortService cs, Result cohortResult, string staffId)
         {
             obj.cohort.id = cohortResult.objectId;
-            //1) start creating student cohort association
+            //1) start creating staff/student cohort association
             var newStudentsAssociations = CohortActionHelper.GetNewStudentCohortAssociations(obj, cs);
+            var newStaffAssociation = CohortActionHelper.CreateOneStaffCohortAssociation(cs, obj.cohort.id, staffId);
             //2) initial populate of the cohort custom entity
             var custom = obj.custom;
             if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
@@ -516,6 +519,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             var tasksToWaitFor = new List<Task>();
             if (newStudentsAssociations != null) tasksToWaitFor.Add(newStudentsAssociations);
             if (cohortCustom != null) tasksToWaitFor.Add(cohortCustom);
+            if (newStaffAssociation != null) tasksToWaitFor.Add(newStaffAssociation);
 
             await Task.WhenAll(tasksToWaitFor);
 
@@ -731,7 +735,10 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //Get the current user session info
                     var ss = new SessionService(access_token);
                     var userSession = ss.Get().Result;
+                    var debugSession = ss.Debug().Result;
+
                     Session.Add(SLC_USER_SESSION, userSession);
+                    Session.Add(SLC_USER_DEBUG_SESSION, debugSession);
 
                     // Redirect to app main page.
                     Response.Redirect(redirectUrl);
