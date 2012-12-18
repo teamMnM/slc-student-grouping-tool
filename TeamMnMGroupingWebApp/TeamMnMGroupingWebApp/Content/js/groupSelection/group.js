@@ -185,7 +185,7 @@ group_selection.group = function(groupData){
 
 	            if (!result.completedSuccessfully){
 	                // determine which students could not be created
-	                var failedToCreateAssociations = result.failedToCreateAssociations;
+	                var failToCreateAssociations = result.failToCreateAssociations;
 
 	                newStudents = _.filter(newStudents, function(newStudent){
 	                    var failed = _.find(failedToCreateAssociations, function(failedAssociation){

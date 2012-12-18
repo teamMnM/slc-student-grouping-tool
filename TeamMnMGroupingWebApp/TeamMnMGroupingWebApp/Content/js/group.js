@@ -911,6 +911,34 @@ student_grouping.group = function(groupData){
 	        contentType: 'application/json',
 	        data: JSON.stringify(cohortActionObject),
 	        success: function (result) {
+
+	            // add the newly created students
+	            var newStudents = cohortActionObject.studentsToCreate;
+
+	            if (!result.completedSuccessfully) {
+	                // determine which students could not be created
+	                var failToCreateAssociations = result.failToCreateAssociations;
+
+	                newStudents = _.filter(newStudents, function (newStudent) {
+	                    var failed = _.find(failToCreateAssociations, function (failedAssociation) {
+	                        return failedAssociation.data === newStudent;
+	                    });
+	                    return failed === undefined;
+	                });
+	            }
+
+	            _.each(newStudents, function (newStudent) {
+	                me.originalStudents.push(newStudent);
+	            });
+
+	            // remove deleted students
+	            var studentsToDelete = cohortActionObject.studentsToDelete;
+	            _.each(studentsToDelete, function (studentToDel) {
+	                me.originalStudents = _.filter(me.originalStudents, function (originalStudent) {
+	                    return originalStudent !== studentToDel;
+	                });
+	            });
+
 	            if (result.completedSuccessfully) {
 	                successHandler(result);
 	            } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess || !result.customActionResult.isSuccess){
@@ -1014,12 +1042,7 @@ student_grouping.group = function(groupData){
             3000);
 
 	    me.toggleGroupContainerProcessingState(false);
-	    me.dirty = false;
-
-	    // put the current list of students into the original list
-	    _.each(me.students, function(student){
-	        me.originalStudents.push(student);
-	    });
+	    me.dirty = false;	 
 
 	    // request to be added to list of existing groups
 	    me.pubSub.publish('add-to-existing-groups', me.group);
@@ -1036,23 +1059,9 @@ student_grouping.group = function(groupData){
 	    var groupCreatedSuccessfully = result.objectActionResult.isSuccess;
 	    if (groupCreatedSuccessfully && (result.failToCreateAssociations.length > 0)) {
 	        me.updateId(result.objectId);
-	        msg = "Group was created successfully. However some students could not be assigned to the group.";
-
-	        // put the students that were created into the group's list of original
-	        var failedStudents = result.failToCreateAssociations;
-	        _.each(me.students, function (student) {
-	            var failed = _.find(failedStudents, function (fs) {
-	                return fs === student;
-	            });
-                // if did not fail
-	            if (failed === undefined) {
-	                // add to original list
-	                me.originalStudents.push(student);
-	            }
-	        });
+	        msg = "Group was created successfully. However some students could not be assigned to the group.";	       
 	    }
        
-
 	    // Let user know the create was not successful
 	    utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
