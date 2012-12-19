@@ -47,8 +47,11 @@ group_selection.group = function(groupData){
      **************************/
     this.init = function(){
     	me.groupContainerId = "#" + me.groupData.id; 
-    	$(me.groupContainerId).click(function (event) {
-    	    me.groupSelected();
+    	$(me.groupContainerId).click(function (event) {    	    
+    	    var processing = group_selection.groupDetailsComponent.processing;
+    	    if (!processing) {
+    	        me.groupSelected();
+    	    }
     	});
 
     	$(me.groupContainerId).find(me.groupDeleteIconClass).click(function (event) {
@@ -211,7 +214,7 @@ group_selection.group = function(groupData){
                     // update the group's timestamp, if successful save
                     var currTimestamp = new Date();
                     me.group.custom.lastModifiedDate = currTimestamp.getTime().toString();
-                    $(me.groupContainerId).find(me.groupModifiedTimestampClass).html(currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
+                    $(me.groupContainerId).find(me.groupModifiedTimestampClass).html("Last modified: " + currTimestamp.toFormat('MM/DD/YYYY HH:MI PP'))
                     me.pubSub.publish('reorder-group', me.group);
                 }
 
@@ -310,7 +313,7 @@ group_selection.group = function(groupData){
 
 	    // Let user know the delete was successful
 	    utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupTitleClass),
+            $(me.groupContainerId).find(me.groupDeleteIconClass),
             'Group has been successfully deleted.',
             'top',
             'manual',
@@ -333,7 +336,7 @@ group_selection.group = function(groupData){
 	this.deleteGroupErrorHandler = function () {
 	    // Let user know the delete was not successful
 	    utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupNameLblClass),
+            $(me.groupContainerId).find(me.groupDeleteIconClass),
             'Group could not be deleted. Please try again later or contact your system administrator.',
             'top',
             'manual',

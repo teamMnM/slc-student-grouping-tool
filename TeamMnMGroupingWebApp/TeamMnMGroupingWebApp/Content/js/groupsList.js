@@ -41,7 +41,7 @@ student_grouping.groupsList = function(){
 	        me.allGroups.push(group);
 	    });
 
-	    // add the groups passed from the prev screen
+        // create number of groups specified from previous screen
 	    var urlParams = utils.uiUtils.getUrlParams();
 	    var numNewGroups = urlParams.create;
 	    if (numNewGroups !== undefined && numNewGroups !== null) {
@@ -51,6 +51,7 @@ student_grouping.groupsList = function(){
 	        }
 	    }
 
+	    // add the groups passed from the prev screen
 	    var selGroups = urlParams.selGroups;
 	    if (selGroups !== undefined && selGroups !== null) {
 	        var selGroupsArr = selGroups.split(',');
@@ -58,7 +59,9 @@ student_grouping.groupsList = function(){
 	            var selGroup = _.find(me.allGroups, function (group) {
 	                return group.cohort.id === selGroupId;
 	            });
-	            me.addGroup(selGroup);
+	            if (selGroup !== undefined) {
+	                me.addGroup(selGroup);
+	            }
 	        });
 	    }
 
@@ -329,11 +332,10 @@ student_grouping.groupsList = function(){
 	            $(successDiv).append("<li>" + result.objectName + "</li>");
 	        } else {
 	            $(failDiv).append("<li><div>" + result.objectName + "</div>" +
-                                        "<div>Status - " + result.objectActionResult.status + "</div>" +
-                                        "<div>Message - " + result.objectActionResult.message + "</div>" +
+                                        //"<div>Status - " + result.objectActionResult.status + "</div>" +
+                                        //"<div>Message - " + result.objectActionResult.message + "</div>" +
                                   "</li>");                    
 	        }
-	        groupToSave.processing = false;
 	    }
 
 	    var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);

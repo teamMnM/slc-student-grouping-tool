@@ -88,6 +88,10 @@ student_grouping.student = function(studentData) {
 		    me.removeGroupIndicator(groupId);
 		});
 
+		this.pubSub.subscribe('update-group-id', function (originalGroupId, newGroupId) {
+		    me.updateGroupIndicatorId(originalGroupId, newGroupId);
+		});
+
         /** 
          * Listen to when this student is removed from a group
          */
@@ -138,6 +142,14 @@ student_grouping.student = function(studentData) {
 			.find("div[data-groupId='" + groupId + "']").remove();
 	}
 	
+    /**
+     * Update the group id on the matching group indicator
+     */
+	this.updateGroupIndicatorId = function (originalGroupId, newGroupId) {
+	    var groupIndicator = $(me.studentLiContainer).find("div[data-groupId='" + originalGroupId + "']");
+	    $(groupIndicator).attr('data-groupId', newGroupId);
+	}
+
 	/**
 	 * Fill html template with student data
 	 */
