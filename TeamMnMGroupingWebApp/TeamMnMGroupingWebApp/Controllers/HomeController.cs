@@ -539,17 +539,9 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var accessToken = Session["access_token"];
                 if (accessToken != null)
                 {
-                    var cs = new CohortService(Session["access_token"].ToString());                    
-                    ////var associationToDelete = from csca in currentStudentCohortAssociation select csca.studentId;               
-                    var cohortResult = await DeleteCohort(cs, id);
-                    var associationToDelete = await cs.GetStudentCohortAssociationsByCohortId(id);
-                    if (associationToDelete != null && associationToDelete.Count() > 0)
-                    {
-                        IEnumerable<ActionResponseResult> removeStudents = await
-                            CohortActionHelper.DeleteMultipleStudentCohortAssociations(cs, associationToDelete); //remove associations for cohorts
-                        if (removeStudents != null) CohortActionHelper.DetermineFailedToDeleteFor(cohortResult, removeStudents);
-                    }
+                    var cs = new CohortService(Session["access_token"].ToString());                                 
 
+                    var cohortResult = await DeleteCohort(cs, id);
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(id);
 
