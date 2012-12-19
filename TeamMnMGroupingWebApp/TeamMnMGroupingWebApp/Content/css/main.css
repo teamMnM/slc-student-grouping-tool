@@ -93,7 +93,11 @@
  *********************/
 
 #select-all-btn, #random-btn {
-    width:35%;
+    width:40%;
+}
+
+#random-btn {
+    width: 35%
 }
 
 #random-num-btn {

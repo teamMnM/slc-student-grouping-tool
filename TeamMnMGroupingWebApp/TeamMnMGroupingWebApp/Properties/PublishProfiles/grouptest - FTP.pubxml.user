@@ -8,4 +8,318 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAN3cd9EBpa0qYMG5GFPGk9gAAAAACAAAAAAAQZgAAAAEAACAAAABM57bGulp0IB2+spAeEQTOOS/uXzhhSjNDRxq/Snh7mwAAAAAOgAAAAAIAACAAAADTTzXQwuxyGN1DFUTQf2+gl/i5jiAgn02H0h03VwL8y4AAAACqTOovlz4alD2iN2NFmmq4+UlmyWT+BWPBVpzEfV4UOZdUjYHVGMNDqpL2Qci9jUA6xiLkfW837rZrQ0dH7EwLUkKwju86kC21vpXj+W9S+83t/wq10QAl2okcKLIg6ajoXcteGNZr8U3fM3z1Lsui288smTOcMs8Wjw7J68qUrEAAAACKK3hH2lG1imaP9aIOqFdEPVepBsOK6+QXHpHU+eksMxENxnBdlvwT49b3P4ljfzMDObmVUkydB4+fas9nnyoE</EncryptedPassword>
   </PropertyGroup>
+  <ItemGroup>
+    <File Include="App_Readme/Elmah.txt">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="bin/Elmah.dll">
+      <publishTime>12/09/2012 01:33:55</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>12/09/2012 01:34:03</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>12/09/2012 01:34:00</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>12/09/2012 01:34:01</publishTime>
+    </File>
+    <File Include="bin/SlcClient.dll">
+      <publishTime>12/17/2012 13:19:57</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>12/09/2012 01:33:57</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>12/09/2012 01:33:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>12/09/2012 01:33:57</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>12/09/2012 01:33:58</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>12/09/2012 01:33:56</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>12/09/2012 01:33:56</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>12/09/2012 01:33:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>12/09/2012 01:33:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>12/09/2012 01:33:59</publishTime>
+    </File>
+    <File Include="bin/TeamMnMGroupingWebApp.dll">
+      <publishTime>12/18/2012 21:39:32</publishTime>
+    </File>
+    <File Include="Content/css/groupSelection.css">
+      <publishTime>12/11/2012 20:51:13</publishTime>
+    </File>
+    <File Include="Content/css/main.css">
+      <publishTime>12/18/2012 22:52:44</publishTime>
+    </File>
+    <File Include="Content/img/add-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/attachment-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/attachment-paper-small.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/attachment-paper.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/divider-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/download-icon.png">
+      <publishTime>12/10/2012 10:12:38</publishTime>
+    </File>
+    <File Include="Content/img/group-close-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/group-edit-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/group-info-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/printer-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/save-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/search-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/sel-group-indicator-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/student-close-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/student-icon-female.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/student-icon-female2.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/student-icon-male.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/student-icon-male2.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/img/trash-icon.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/fakes.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/filters.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/group.js">
+      <publishTime>12/18/2012 21:03:52</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/group.js">
+      <publishTime>12/18/2012 22:32:12</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/groupDetails.js">
+      <publishTime>12/18/2012 17:42:29</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/main.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/section.js">
+      <publishTime>12/11/2012 20:55:19</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/sectionList.js">
+      <publishTime>12/09/2012 23:14:26</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/student.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/groupSelection/topbar.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/groupsList.js">
+      <publishTime>12/18/2012 18:34:59</publishTime>
+    </File>
+    <File Include="Content/js/main.js">
+      <publishTime>12/14/2012 23:38:15</publishTime>
+    </File>
+    <File Include="Content/js/popovers.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/js/student.js">
+      <publishTime>12/18/2012 17:32:08</publishTime>
+    </File>
+    <File Include="Content/js/studentsList.js">
+      <publishTime>12/18/2012 21:32:26</publishTime>
+    </File>
+    <File Include="Content/js/tooltipText.js">
+      <publishTime>12/16/2012 18:36:02</publishTime>
+    </File>
+    <File Include="Content/js/topBarControls.js">
+      <publishTime>12/14/2012 23:36:18</publishTime>
+    </File>
+    <File Include="Content/js/utils.js">
+      <publishTime>12/16/2012 14:38:36</publishTime>
+    </File>
+    <File Include="Content/js/utils/print.js">
+      <publishTime>12/10/2012 10:08:46</publishTime>
+    </File>
+    <File Include="Content/vendor/antiscroll/css/antiscroll.css">
+      <publishTime>12/09/2012 14:01:40</publishTime>
+    </File>
+    <File Include="Content/vendor/antiscroll/js/antiscroll.js">
+      <publishTime>12/09/2012 13:59:14</publishTime>
+    </File>
+    <File Include="Content/vendor/antiscroll/js/jquery-mousewheel.js">
+      <publishTime>12/09/2012 14:00:23</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/css/bootstrap-responsive.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/css/bootstrap-responsive.min.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/css/bootstrap.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/css/bootstrap.min.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/img/glyphicons-halflings-white.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/img/glyphicons-halflings.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/js/bootstrap.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/bootstrap/js/bootstrap.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/dateutils/js/dateUtils.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/filesaver/js/filesaver.min.js">
+      <publishTime>12/10/2012 12:27:43</publishTime>
+    </File>
+    <File Include="Content/vendor/highcharts/js/highcharts.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/idletimer/js/idletimer.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jqplot/css/jquery.jqplot.min.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jqplot/js/jqplot.donutRenderer.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jqplot/js/jqplot.pieRenderer.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jqplot/js/jquery.jqplot.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jquery/js/jquery.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jqueryui/js/jquery-ui.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/jscrollpane/css/jscrollpane.css">
+      <publishTime>12/09/2012 14:44:55</publishTime>
+    </File>
+    <File Include="Content/vendor/jscrollpane/js/jscrollpane.js">
+      <publishTime>12/09/2012 14:44:11</publishTime>
+    </File>
+    <File Include="Content/vendor/multidraggable/js/jquery.ui.multidraggable.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/pubsub/js/pubsub.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/select2/css/select2.css">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/select2/css/select2.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/select2/css/select2x2.png">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/select2/css/spinner.gif">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/select2/js/select2.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/spin/js/jquery.spin.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/spin/js/spin.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Content/vendor/underscore/js/underscore.min.js">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Data/Colors.txt">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Data/DataElements.txt">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Home/Group.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Home/GroupSelection.cshtml">
+      <publishTime>12/11/2012 20:28:23</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>12/18/2012 21:26:39</publishTime>
+    </File>
+    <File Include="Views/Home/Sample.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Home/Student.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Shared/LoginError.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Shared/PermissionError.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Shared/Timeout.cshtml">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>12/09/2012 01:33:05</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>12/18/2012 22:17:25</publishTime>
+    </File>
+  </ItemGroup>
 </Project>
