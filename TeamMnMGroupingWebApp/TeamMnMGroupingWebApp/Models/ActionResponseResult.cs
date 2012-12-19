@@ -14,12 +14,17 @@ namespace TeamMnMGroupingWebApp.Models
         public HttpStatusCode status { get; set; }
 
         /// <summary>
-        /// data associated with the response
+        /// Object Id associated with the response
         /// </summary>
-        public string data { get; set; }
+        public string objectId { get; set; }
 
         /// <summary>
-        /// response message
+        /// Object name associated with the response
+        /// </summary>
+        public string objectName { get; set; }
+
+        /// <summary>
+        /// Response message
         /// </summary>
         public string message { get; set; }
 

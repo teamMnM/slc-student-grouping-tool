@@ -326,12 +326,45 @@ student_grouping.groupsList = function(){
 	            numSuccessfulSaves++;
 	            groupToSave.dirty = false;
 
-	            $(successDiv).append("<li>" + result.objectName + "</li>");
+	            $(successDiv).append("<li>Group Name - " + result.objectName + "</li>");
 	        } else {
-	            $(failDiv).append("<li><div>" + result.objectName + "</div>" +
-                                        "<div>Status - " + result.objectActionResult.status + "</div>" +
-                                        "<div>Message - " + result.objectActionResult.message + "</div>" +
-                                  "</li>");                    
+	            var failListItem = $("<li>");
+	            var objectActionResult = result.objectActionResult;
+	            $(failListItem).append("<div><b>Group Name - " + result.objectName + "</b></div>");
+
+	            /*if (!objectActionResult.isSuccess) {
+	                $(failListItem).append("<div>Status - " + result.objectActionResult.status + "</div>");
+	                $(failListItem).append("<div>Message - " + result.objectActionResult.message + "</div>");
+	            }
+	            
+	            var failToCreate = result.failToCreateAssociations;
+	            if (failToCreate !== null && failToCreate.length > 0) {
+	                $(failListItem).append("<div>Failed to create these associations: </div>");
+	                var failToCreateList = $("<ul>");
+	                _.each(failToCreate, function (fail) {
+	                    var fcListItem = $("<li>");
+	                    $(fcListItem).append("<div>Student - " + fail.data + "</div>");
+	                    $(fcListItem).append("<div>Status - " + fail.status + "</div>");
+	                    $(fcListItem).append("<div>Message - " + fail.message + "</div>");
+	                    $(failToCreateList).append(fcListItem);
+	                });
+	                $(failListItem).append(failToCreateList);
+	            }
+
+	            var failToDelete = result.failToDeleteAssociations;
+	            if (failToDelete !== null && failToDelete.length > 0) {
+	                $(failListItem).append("<div>Failed to delete these associations: </div>");
+	                var failToDeleteList = $("<ul>");
+	                _.each(failToCreate, function (fail) {
+	                    var fcListItem = $("<li>");
+	                    $(fcListItem).append("<div>Student - " + fail.data + "</div>");
+	                    $(fcListItem).append("<div>Status - " + fail.status + "</div>");
+	                    $(fcListItem).append("<div>Message - " + fail.message + "</div>");
+	                    $(failToDeleteList).append(fcListItem);
+	                });
+	                $(failListItem).append(failToDeleteList);
+	            }*/
+	            $(failDiv).append(failListItem);
 	        }
 	        groupToSave.processing = false;
 	    }

@@ -330,16 +330,15 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var result = new Result
                 {
-                    objectName = cohort.cohortIdentifier,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.Created,
-                    objectActionResult = GlobalHelper.GetActionResponseResult("", response, HttpStatusCode.Created)
+                    objectActionResult = GlobalHelper.GetActionResponseResult("", cohort.cohortIdentifier, response, HttpStatusCode.Created)
                 };
 
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
                     //another way of getting the Id: result.Headers.Location.AbsolutePath.Substring(result.Headers.Location.AbsolutePath.LastIndexOf("/") + 1)              
-                    result.objectId = response.Headers.Location.Segments[5]; //getting the id from header location
-                    result.objectActionResult.data = result.objectId;
+                    result.objectActionResult.objectId = response.Headers.Location.Segments[5]; //getting the id from header location
+                    result.objectActionResult.objectName = cohort.cohortIdentifier;
                 }
 
                 return result;
@@ -370,10 +369,8 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 var result = new Result
                 {
-                    objectId = cohort.id,
-                    objectName = cohort.cohortIdentifier,
                     completedSuccessfully = response.StatusCode == HttpStatusCode.NoContent,
-                    objectActionResult = GlobalHelper.GetActionResponseResult(cohort.id, response, HttpStatusCode.NoContent)
+                    objectActionResult = GlobalHelper.GetActionResponseResult(cohort.id, cohort.cohortIdentifier, response, HttpStatusCode.NoContent)
                 };
 
                 return result;
@@ -505,7 +502,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
         private static async Task ProcessASuccessfulCohortCreate(CohortActionObject obj, CohortService cs, Result cohortResult, string staffId)
         {
-            obj.cohort.id = cohortResult.objectId;
+            obj.cohort.id = cohortResult.objectActionResult.objectId;
             //1) start creating staff/student cohort association
             var newStudentsAssociations = CohortActionHelper.GetNewStudentCohortAssociations(obj, cs);
             var newStaffAssociation = CohortActionHelper.CreateOneStaffCohortAssociation(cs, obj.cohort.id, staffId);
@@ -513,7 +510,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             var custom = obj.custom;
             if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
             else custom.lastModifiedDate = DateTime.UtcNow;
-            var cohortCustom = cs.CreateCohortCustom(cohortResult.objectId, JsonConvert.SerializeObject(custom));
+            var cohortCustom = cs.CreateCohortCustom(cohortResult.objectActionResult.objectId, JsonConvert.SerializeObject(custom));
 
             //contruct a list of tasks we're waiting for
             var tasksToWaitFor = new List<Task>();

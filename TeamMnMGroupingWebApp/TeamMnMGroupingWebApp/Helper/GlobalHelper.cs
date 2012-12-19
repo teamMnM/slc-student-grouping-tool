@@ -90,10 +90,10 @@ namespace TeamMnMGroupingWebApp.Helper
             return new Result
             {
                 completedSuccessfully = false,
-                objectId = id,
                 objectActionResult =
                     new ActionResponseResult
                     {
+                        objectId = id,
                         status = HttpStatusCode.InternalServerError,
                         message = "Message: " + e.Message + " Inner Exception: " + (e.InnerException == null ? "" : e.InnerException.Message),
                         isSuccess = false
@@ -105,13 +105,16 @@ namespace TeamMnMGroupingWebApp.Helper
         /// Create a new ActionResponseResult object base on the HttpResponseMessage parameter
         /// </summary>
         /// <param name="objId">The related object id</param>
+        /// <param name="objName">The related object name</param>
+        /// <param name="successStatus">The HttpStatusCode that indicates a successful response</param>
         /// <param name="m"></param>
         /// <returns></returns>
-        public static ActionResponseResult GetActionResponseResult(string objId, HttpResponseMessage m, HttpStatusCode successStatus)
+        public static ActionResponseResult GetActionResponseResult(string objId, string objName, HttpResponseMessage m, HttpStatusCode successStatus)
         {
             return new ActionResponseResult
             {
-                data = objId,
+                objectId = objId,
+                objectName = objName,
                 status = m.StatusCode,
                 message = m.Content.ReadAsStringAsync().Result,
                 isSuccess = m.StatusCode == successStatus
@@ -128,10 +131,10 @@ namespace TeamMnMGroupingWebApp.Helper
             return new Result
             {
                 completedSuccessfully = false,
-                objectId = id,
                 objectActionResult =
                     new ActionResponseResult
                     {
+                        objectId = id,
                         status = HttpStatusCode.ProxyAuthenticationRequired,
                         message = "Session expired",
                         isSuccess = false

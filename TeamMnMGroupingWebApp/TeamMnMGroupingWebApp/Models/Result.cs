@@ -8,16 +8,6 @@ namespace TeamMnMGroupingWebApp.Models
     public class Result
     {
         /// <summary>
-        /// Main object Id
-        /// </summary>
-        public string objectId { get; set; }
-
-        /// <summary>
-        /// Main object name
-        /// </summary>
-        public string objectName { get; set; }
-
-        /// <summary>
         /// Indicates whether the entire action was completed succesfully
         /// </summary>
         public bool completedSuccessfully { get; set; }

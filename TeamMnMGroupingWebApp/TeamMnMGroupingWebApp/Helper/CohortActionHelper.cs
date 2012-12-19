@@ -63,7 +63,7 @@ namespace TeamMnMGroupingWebApp.Helper
             var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStudentCohortAssociation(a);
 
-            return GlobalHelper.GetActionResponseResult(sId, result, HttpStatusCode.Created);
+            return GlobalHelper.GetActionResponseResult(sId, "", result, HttpStatusCode.Created);
             //return new ActionResponseResult { data = sId, status = result.StatusCode, message = result.Content.ReadAsStringAsync().Result };
         }
 
@@ -78,7 +78,7 @@ namespace TeamMnMGroupingWebApp.Helper
             var a = new StaffCohortAssociation { cohortId = cId, staffId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStaffCohortAssociation(a);
 
-            return GlobalHelper.GetActionResponseResult(sId, result, HttpStatusCode.Created);            
+            return GlobalHelper.GetActionResponseResult(sId, "", result, HttpStatusCode.Created);            
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace TeamMnMGroupingWebApp.Helper
         public static async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
             var response = await cs.DeleteStudentCohortAssociationById(association.id);
-            return GlobalHelper.GetActionResponseResult(association.studentId, response, HttpStatusCode.NoContent);
+            return GlobalHelper.GetActionResponseResult(association.studentId, "", response, HttpStatusCode.NoContent);
         }     
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace TeamMnMGroupingWebApp.Helper
         /// <param name="successStatus">HttpStatusCode that indicates a successful response</param>
         public static void ProcessCustomResult(Result cohortResult, Task<HttpResponseMessage> cohortCustom, HttpStatusCode successStatus)
         {
-            var customResult = GlobalHelper.GetActionResponseResult(cohortResult.objectId, cohortCustom.Result, successStatus);
+            var customResult = GlobalHelper.GetActionResponseResult(cohortResult.objectActionResult.objectId, cohortResult.objectActionResult.objectId, cohortCustom.Result, successStatus);
             if (cohortCustom.Result.StatusCode != successStatus)
                 cohortResult.completedSuccessfully = false;
 
