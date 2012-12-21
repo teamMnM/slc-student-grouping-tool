@@ -62,9 +62,8 @@ namespace TeamMnMGroupingWebApp.Helper
         {
             var a = new StudentCohortAssociation { cohortId = cId, studentId = sId, beginDate = DateTime.Now };
             var result = await cs.CreateStudentCohortAssociation(a);
-
-            return GlobalHelper.GetActionResponseResult(sId, "", result, HttpStatusCode.Created);
-            //return new ActionResponseResult { data = sId, status = result.StatusCode, message = result.Content.ReadAsStringAsync().Result };
+            var student = (StudentDisplayObject)HttpContext.Current.Cache[sId];
+            return GlobalHelper.GetActionResponseResult(sId, student != null ? student.name : "", result, HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -102,7 +101,8 @@ namespace TeamMnMGroupingWebApp.Helper
         public static async Task<ActionResponseResult> DeleteOneStudentCohortAssociation(CohortService cs, StudentCohortAssociation association)
         {
             var response = await cs.DeleteStudentCohortAssociationById(association.id);
-            return GlobalHelper.GetActionResponseResult(association.studentId, "", response, HttpStatusCode.NoContent);
+            var student = (StudentDisplayObject)HttpContext.Current.Cache[association.studentId];
+            return GlobalHelper.GetActionResponseResult(association.studentId, student != null ? student.name : "", response, HttpStatusCode.NoContent);
         }     
 
         /// <summary>
@@ -123,6 +123,11 @@ namespace TeamMnMGroupingWebApp.Helper
                 result.partialCreateSuccess = false;
 
             result.failToCreateAssociations = from r in associations where r.status != HttpStatusCode.Created select r;
+
+            //log fail operations to Elmah
+            foreach (var a in result.failToCreateAssociations)
+                ExceptionHelper.LogAMessageAsAnException("Id: " + a.objectId + " Name: " + a.objectName + " Message: " + a.message);
+
         }
 
         /// <summary>
@@ -143,6 +148,11 @@ namespace TeamMnMGroupingWebApp.Helper
                 result.partialDeleteSuccess = false;
 
             result.failToDeleteAssociations = from r in associations where r.status != HttpStatusCode.NoContent select r;
+
+            //log fail operations to Elmah
+            foreach (var a in result.failToDeleteAssociations)
+                ExceptionHelper.LogAMessageAsAnException("Id: " + a.objectId + " Name: " + a.objectName + " Message: " + a.message);
+
         }
 
         /// <summary>

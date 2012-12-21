@@ -724,7 +724,14 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //Get the current user session info
                     var ss = new SessionService(access_token);
                     var userSession = ss.Get().Result;
-                    var debugSession = ss.Debug().Result;
+                    var debugSession = ss.Debug().Result;                    
+
+                    //Get edOrg through staff service because SLC user session service call always comes back with a null edOrg
+                    var staffService = new StaffService(access_token);
+                    var staffOrg = staffService.GetStaffEducationOrganizationAssociations(((DebugResult)debugSession).authentication.principal.entity.entityId).Result;
+                    
+                    if(staffOrg.FirstOrDefault() != null)
+                        userSession.edOrgId = staffOrg.FirstOrDefault().educationOrganizationReference;
 
                     Session.Add(SLC_USER_SESSION, userSession);
                     Session.Add(SLC_USER_DEBUG_SESSION, debugSession);
