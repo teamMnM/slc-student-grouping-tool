@@ -262,12 +262,22 @@ student_grouping.group = function(groupData){
 		    this.showFileAttachment();
 		}
 
-		$(groupContainer).find('.group-wrap').antiscroll();
+        // only use antiscroll if its chrome
+		if ($.browser.webkit) {
+		    $(groupContainer).find('.group-wrap').antiscroll();
+		} else {
+		    $(groupContainer).find('.antiscroll-inner').css('overflow', 'auto');
+		}
+        
 
 	    // disable all group actions while save all is going on
 		me.pubSub.subscribe('save-all-groups', function () {
 		    me.processing = true;
 		});
+
+		me.pubSub.subscribe('save-all-completed', function () {		   	
+            me.processing = false;		
+        });
 
 	    // set up the tooltips
 		var tooltipElems = this.tooltipElems;
@@ -622,7 +632,7 @@ student_grouping.group = function(groupData){
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileTxt).val('');
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).unbind('change');
 				$(this.groupContainerId).find(this.groupAttachmentPopoverFileInput).change(function () {
-				    $(document).unbind('mouseup');
+				    // why am i doing this? $(document).unbind('mouseup');
 				    var file = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files')[0];
 				    $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt)
                         .val(file.name);
@@ -687,7 +697,6 @@ student_grouping.group = function(groupData){
 		me.attachedFile = null;
 		$(me.groupContainerId).find(me.groupAttachmentNameClass).html('');
 		$(me.groupContainerId).find(me.groupAttachmentDivClass).hide();
-		$(me.groupContainerId).find(me.groupPrinterImgClass).hide();
 
 		this.markDirty();
 	}	
@@ -709,11 +718,7 @@ student_grouping.group = function(groupData){
 	        }
 	        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
 	        $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
-
-	        // show the printer
-	        $(me.groupContainerId).find(me.groupPrinterImgClass).show();
-	    } else {
-	        $(me.groupContainerId).find(me.groupPrinterImgClass).hide();
+	        
 	    }
 	}
 	
@@ -874,12 +879,12 @@ student_grouping.group = function(groupData){
      * Handle outside click event to hide popover
      */
 	this.handleOutsideClick = function (triggetBtn, container){
-	    $(document).unbind('click');
-	    $(document).click(function (e) {
+	    $('.groups-area').unbind('click');
+	    $('.groups-area').click(function (e) {
 	        if ((!$(container).is(e.target) && $(container).has(e.target).length === 0)
                     && (!$(triggetBtn).is(e.target) && $(triggetBtn).has(e.target).length === 0)) {
 	            $(container).hide();
-	            $(document).unbind('click');
+	            $('.groups-area').unbind('click');
 	        }
 	    });
 	}
@@ -921,7 +926,7 @@ student_grouping.group = function(groupData){
 
 	                newStudents = _.filter(newStudents, function (newStudent) {
 	                    var failed = _.find(failToCreateAssociations, function (failedAssociation) {
-	                        return failedAssociation.data === newStudent;
+	                        return failedAssociation.objectId === newStudent;
 	                    });
 	                    return failed === undefined;
 	                });
@@ -1014,7 +1019,11 @@ student_grouping.group = function(groupData){
 	                url: 'DeleteGroup?id=' + groupId,
 	                contentType: 'application/json',
 	                success: function (result) {
-	                    me.deleteGroupSuccessHandler(result);
+	                    if (result.completedSuccessfully) {
+	                        me.deleteGroupSuccessHandler(result);
+	                    } else {
+	                        me.deleteGroupErrorHandler(result);
+	                    }
 	                },
 	                error: function (result) {
                         // TODO if there is id then set it
@@ -1031,7 +1040,7 @@ student_grouping.group = function(groupData){
      * Handle successful saving of group
      */
 	this.createGroupSuccessHandler = function (result) {
-	    me.updateId(result.objectId);
+	    me.updateId(result.objectActionResult.objectId);
 
 	    // Let user know the created was successful
 	    utils.uiUtils.showTooltip(
@@ -1172,11 +1181,14 @@ student_grouping.group = function(groupData){
      * Update this group's id
      */
 	this.updateId = function (id) {
+	    var originalId = me.groupData.id;
 	    var origGroupContainerId = $("#gc" + me.groupData.id);
 	    me.groupData.id = id;
 	    me.groupContainerId = "#gc" + id;
 	    $(origGroupContainerId).find(me.groupClass).attr('id', id);
 	    $(origGroupContainerId).attr('id', "gc" + id);
+
+	    me.pubSub.publish('update-group-id', originalId, id);
 	}
 
     /**

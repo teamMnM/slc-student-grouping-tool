@@ -64,6 +64,12 @@ student_grouping.studentsList = function(){
 		});
 
 		$('#studentListDiv .box-wrap').antiscroll();
+
+	    // if firefox or IE, fix the width of the antiscroll-inner to hide the default scrollbars	
+        if (!$.browser.webkit) {		
+               var listWidth = $('#studentListDiv').find('.antiscroll-inner').width();		
+               $('#studentListDiv').find('.antiscroll-inner').css('width', listWidth + 4);		    	
+        }
 				
 	}	
 	
