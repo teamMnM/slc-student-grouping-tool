@@ -936,8 +936,19 @@ student_grouping.group = function(groupData){
 	                me.originalStudents.push(newStudent);
 	            });
 
-	            // remove deleted students
+	            // remove deleted students 
+	            var failToDeleteAssociations = result.failToDeleteAssociations;
+
+                // filter out unsuccessful deletes
 	            var studentsToDelete = cohortActionObject.studentsToDelete;
+	            studentsToDelete = _.filter(studentsToDelete, function (studentToDel) {
+	                var failed = _.find(failToDeleteAssociations, function (failedDelete) {
+	                    return failedDelete.objectId === studentToDel;
+	                });
+	                return failed === undefined;
+	            });
+
+                // remove deleted students from list
 	            _.each(studentsToDelete, function (studentToDel) {
 	                me.originalStudents = _.filter(me.originalStudents, function (originalStudent) {
 	                    return originalStudent !== studentToDel;
@@ -1067,7 +1078,7 @@ student_grouping.group = function(groupData){
 
 	    var groupCreatedSuccessfully = result.objectActionResult.isSuccess;
 	    if (groupCreatedSuccessfully && (result.failToCreateAssociations.length > 0)) {
-	        me.updateId(result.objectId);
+	        me.updateId(result.objectActionResult.objectId);
 	        msg = "Group was created successfully. However some students could not be assigned to the group.";	       
 	    }
        
@@ -1102,10 +1113,19 @@ student_grouping.group = function(groupData){
      */
 	this.updateGroupErrorHandler = function (result) {
 	    me.toggleGroupContainerProcessingState(false);
+
+	    var msg = 'Group could not be updated. Please try again later or contact your system administrator.';
+
+	    var groupUpdatedSuccessfully = result.objectActionResult.isSuccess;
+	    if (groupUpdatedSuccessfully && (result.failToCreateAssociations.length > 0 || result.failToDeleteAssociations.length > 0)) {
+	        me.updateId(result.objectId);
+	        msg = "Group was updated successfully. However some students could not be assigned to or deleted from the group.";
+	    }
+
 	    // Let user know the update was not successful
 	    utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
-            'Group could not be updated. Please try again later or contact your system administrator.',
+            msg,
             'top',
             'manual',
             3000);
@@ -1175,6 +1195,13 @@ student_grouping.group = function(groupData){
 	    _.each(students, function (student) {
 	        me.removeStudent(student);
 	    });
+	}
+
+    /**
+     * Adds newly created students and removes deleted students
+     */
+	this.syncStudentList = function (result) {
+
 	}
 
     /**

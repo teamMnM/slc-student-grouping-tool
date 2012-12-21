@@ -320,9 +320,9 @@ student_grouping.groupsList = function(){
 	        var groupToSave = groupsToSave[i];
 
             // assign id to newly created groups
-	        if (result.objectId !== null && result.objectId !== undefined) {
+	        if (result.objectActionResult.objectId !== null && result.objectActionResult.objectId !== undefined) {
 	            var groupToSave = groupsToSave[i];
-	            groupToSave.updateId(result.objectId);
+	            groupToSave.updateId(result.objectActionResult.objectId);
 	        }
 
 	        if (result.completedSuccessfully) {
