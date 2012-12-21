@@ -564,6 +564,7 @@ group_selection.groupDetails = function(){
      */
     this.hideContent = function () {
         $(me.groupDetails).hide();
+        $('.group-indicator-arrow').css('top', 0); // this will hide the arrow
     }
 
     this.moveArrow = function () {

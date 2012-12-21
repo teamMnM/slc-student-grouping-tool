@@ -41,7 +41,7 @@ student_grouping.groupsList = function(){
 	        me.allGroups.push(group);
 	    });
 
-	    // add the groups passed from the prev screen
+	    // // create number of groups specified from previous screen
 	    var urlParams = utils.uiUtils.getUrlParams();
 	    var numNewGroups = urlParams.create;
 	    if (numNewGroups !== undefined && numNewGroups !== null) {
@@ -51,6 +51,7 @@ student_grouping.groupsList = function(){
 	        }
 	    }
 
+	    // add the groups passed from the prev screen
 	    var selGroups = urlParams.selGroups;
 	    if (selGroups !== undefined && selGroups !== null) {
 	        var selGroupsArr = selGroups.split(',');
@@ -58,7 +59,9 @@ student_grouping.groupsList = function(){
 	            var selGroup = _.find(me.allGroups, function (group) {
 	                return group.cohort.id === selGroupId;
 	            });
-	            me.addGroup(selGroup);
+	            if (selGroup !== undefined) {
+	                me.addGroup(selGroup);
+	            }
 	        });
 	    }
 
@@ -326,47 +329,39 @@ student_grouping.groupsList = function(){
 	            numSuccessfulSaves++;
 	            groupToSave.dirty = false;
 
-	            $(successDiv).append("<li>Group Name - " + result.objectName + "</li>");
+	            $(successDiv).append("<li>Group Name - " + result.objectActionResult.objectName + "</li>");
 	        } else {
-	            var failListItem = $("<li>");
-	            var objectActionResult = result.objectActionResult;
-	            $(failListItem).append("<div><b>Group Name - " + result.objectName + "</b></div>");
-
-	            /*if (!objectActionResult.isSuccess) {
-	                $(failListItem).append("<div>Status - " + result.objectActionResult.status + "</div>");
-	                $(failListItem).append("<div>Message - " + result.objectActionResult.message + "</div>");
+	            var groupListItem = $("<li>");
+	            // check if group was successfully saves
+	            var groupObjResult = result.objectActionResult;
+	            if (groupObjResult.isSuccess) {
+	                $(groupListItem).append("<div>" + groupObjResult.objectName + " was saved successfully </div>");
+	            } else {
+	                $(groupListItem).append("<div>" + groupObjResult.objectName + " was not saved successfully </div>");
 	            }
-	            
+
 	            var failToCreate = result.failToCreateAssociations;
 	            if (failToCreate !== null && failToCreate.length > 0) {
-	                $(failListItem).append("<div>Failed to create these associations: </div>");
-	                var failToCreateList = $("<ul>");
-	                _.each(failToCreate, function (fail) {
-	                    var fcListItem = $("<li>");
-	                    $(fcListItem).append("<div>Student - " + fail.data + "</div>");
-	                    $(fcListItem).append("<div>Status - " + fail.status + "</div>");
-	                    $(fcListItem).append("<div>Message - " + fail.message + "</div>");
-	                    $(failToCreateList).append(fcListItem);
+	                $(groupListItem).append("<div>Failed to add these students: </div>");
+	                var failToCreateList = $("<div>");
+	                _.each(failToCreate, function (fail) {	                    
+	                    $(failToCreateList).append(fail.objectName + ", ");
 	                });
-	                $(failListItem).append(failToCreateList);
+	                $(groupListItem).append(failToCreateList);
 	            }
 
 	            var failToDelete = result.failToDeleteAssociations;
 	            if (failToDelete !== null && failToDelete.length > 0) {
-	                $(failListItem).append("<div>Failed to delete these associations: </div>");
-	                var failToDeleteList = $("<ul>");
+	                $(groupListItem).append("<div>Failed to remove these students: </div>");
+	                var failToDeleteList = $("<div>");
 	                _.each(failToCreate, function (fail) {
-	                    var fcListItem = $("<li>");
-	                    $(fcListItem).append("<div>Student - " + fail.data + "</div>");
-	                    $(fcListItem).append("<div>Status - " + fail.status + "</div>");
-	                    $(fcListItem).append("<div>Message - " + fail.message + "</div>");
-	                    $(failToDeleteList).append(fcListItem);
+	                    $(failToDeleteList).append(fail.objectName + ", ");
 	                });
-	                $(failListItem).append(failToDeleteList);
-	            }*/
-	            $(failDiv).append(failListItem);
+	                $(groupListItem).append(failToDeleteList);
+	            }
+
+	            $(failDiv).append(groupListItem);	            
 	        }
-	        groupToSave.processing = false;
 	    }
 
 	    var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);
