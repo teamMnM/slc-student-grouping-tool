@@ -110,8 +110,14 @@ namespace SlcClient.Entities
         ///// </summary>
         //public Student student { get; set; }
 
+        /// <summary>
+        /// Reference to the student associated with the assessment.
+        /// </summary>
         public string studentId { get; set; }
 
+        /// <summary>
+        /// Reference to the assessment taken by the student.
+        /// </summary>
         public string assessmentId { get; set; }
     }
 }

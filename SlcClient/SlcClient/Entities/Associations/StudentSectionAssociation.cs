@@ -9,7 +9,12 @@ namespace SlcClient.Entities
     public class StudentSectionAssociation
     {
         public string id { get; set; }
+
+        /// <summary>
+        /// The section the student is enrolled in.
+        /// </summary>
         public string sectionId { get; set; }
+
         public string cohortId { get; set; }
 
         /// <summary>

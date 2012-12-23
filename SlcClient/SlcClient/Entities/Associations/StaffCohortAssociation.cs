@@ -11,7 +11,15 @@ namespace SlcClient.Entities
     public class StaffCohortAssociation
     {
         public string id { get; set; }
+
+        /// <summary>
+        /// The staff associated with the cohort of students.
+        /// </summary>
         public string staffId { get; set; }
+
+        /// <summary>
+        /// Reference to the cohort associated with the staff.
+        /// </summary>
         public string cohortId { get; set; }
 
         /// <summary>
@@ -29,6 +37,23 @@ namespace SlcClient.Entities
         /// </summary>
         public bool studentRecordAccess { get; set; }
 
+        /// <summary>
+        /// Only serialize id if it's not null
+        /// </summary>
+        /// <returns>Whether id should be serialized</returns>
+        public bool ShouldSerializeid()
+        {
+            return (id != null);
+        }
+
+        /// <summary>
+        /// Only serialize endDate if it's not null
+        /// </summary>
+        /// <returns>Whether endDate should be serialized</returns>
+        public bool ShouldSerializeendDate()
+        {
+            return (endDate != null);
+        }
         ///// <summary>
         ///// Reference to the cohort associated with the staff.
         ///// </summary>
