@@ -181,6 +181,10 @@
     <Content Include="Content\js\groupSelection\topbar.js" />
     <Content Include="Content\js\groupsList.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\models\groupModel.js" />
+    <Content Include="Content\js\models\studentFiltersModel.js" />
+    <Content Include="Content\js\models\studentModel.js" />
+    <Content Include="Content\js\multipleGroupEditMain.js" />
     <Content Include="Content\js\popovers.js" />
     <Content Include="Content\js\student.js" />
     <Content Include="Content\js\studentsList.js" />
@@ -188,6 +192,13 @@
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
     <Content Include="Content\js\utils\print.js" />
+    <Content Include="Content\js\widgets\groupListWidget.js" />
+    <Content Include="Content\js\widgets\groupWidget.js" />
+    <Content Include="Content\js\widgets\multipleGroupEditTopbarWidget.js" />
+    <Content Include="Content\js\widgets\studentFilterWidget.js" />
+    <Content Include="Content\js\widgets\studentInGroupWidget.js" />
+    <Content Include="Content\js\widgets\studentListItemWidget.js" />
+    <Content Include="Content\js\widgets\studentListWidget.js" />
     <Content Include="Content\vendor\antiscroll\css\antiscroll.css" />
     <Content Include="Content\vendor\antiscroll\js\antiscroll.js" />
     <Content Include="Content\vendor\antiscroll\js\jquery-mousewheel.js" />
