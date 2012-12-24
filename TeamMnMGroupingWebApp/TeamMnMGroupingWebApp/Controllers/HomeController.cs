@@ -26,7 +26,7 @@ namespace TeamMnMGroupingWebApp.Controllers
     {
         const string MAIN = "/Home/GroupSelection";
         const string SLC_USER_SESSION = "slc_user";
-        const string SLC_USER_DEBUG_SESSION = "slc_user_id";
+        const string SLC_USER_ID = "slc_user_id";
 
         public void Index()
         {
@@ -442,7 +442,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     if (removeStudents != null) CohortActionHelper.DetermineFailedToDeleteFor(cohortResult, removeStudents.Result);
 
                     //determine whether custom was created successfully
-                    CohortActionHelper.ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.NoContent);
+                    CohortActionHelper.ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.NoContent, obj.custom, cs);
 
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(obj.cohort.id);
@@ -481,7 +481,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //if cohort was created successfully then continue to create associations
                     if (cohortResult.completedSuccessfully)
                     {
-                        var staffId = ((DebugResult)Session[SLC_USER_DEBUG_SESSION]).authentication.principal.entity.entityId;
+                        var staffId = Session[SLC_USER_ID].ToString();
                         await ProcessASuccessfulCohortCreate(obj, cs, cohortResult, staffId);
                     }
 
@@ -503,14 +503,12 @@ namespace TeamMnMGroupingWebApp.Controllers
         private static async Task ProcessASuccessfulCohortCreate(CohortActionObject obj, CohortService cs, Result cohortResult, string staffId)
         {
             obj.cohort.id = cohortResult.objectActionResult.objectId;
+            obj.custom.cohortId = obj.cohort.id;
             //1) start creating staff/student cohort association
             var newStudentsAssociations = CohortActionHelper.GetNewStudentCohortAssociations(obj, cs);
             var newStaffAssociation = CohortActionHelper.CreateOneStaffCohortAssociation(cs, obj.cohort.id, staffId);
-            //2) initial populate of the cohort custom entity
-            var custom = obj.custom;
-            if (custom == null) custom = new CohortCustom { lastModifiedDate = DateTime.UtcNow };
-            else custom.lastModifiedDate = DateTime.UtcNow;
-            var cohortCustom = cs.CreateCohortCustom(cohortResult.objectActionResult.objectId, JsonConvert.SerializeObject(custom));
+            //2) initial populate of the cohort custom entity        
+            var cohortCustom = CohortActionHelper.CreateCustom(obj.custom, cs);
 
             //contruct a list of tasks we're waiting for
             var tasksToWaitFor = new List<Task>();
@@ -724,17 +722,17 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //Get the current user session info
                     var ss = new SessionService(access_token);
                     var userSession = ss.Get().Result;
-                    var debugSession = ss.Debug().Result;                    
+                    var staffId = ss.GetCurrentUserId().Result;
 
                     //Get edOrg through staff service because SLC user session service call always comes back with a null edOrg
                     var staffService = new StaffService(access_token);
-                    var staffOrg = staffService.GetStaffEducationOrganizationAssociations(((DebugResult)debugSession).authentication.principal.entity.entityId).Result;
+                    var staffOrg = staffService.GetStaffEducationOrganizationAssociations(staffId).Result;
                     
                     if(staffOrg.FirstOrDefault() != null)
                         userSession.edOrgId = staffOrg.FirstOrDefault().educationOrganizationReference;
 
                     Session.Add(SLC_USER_SESSION, userSession);
-                    Session.Add(SLC_USER_DEBUG_SESSION, debugSession);
+                    Session.Add(SLC_USER_ID, staffId);
 
                     // Redirect to app main page.
                     Response.Redirect(redirectUrl);

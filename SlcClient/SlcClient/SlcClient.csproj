@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Constants\Cohort.cs" />
     <Compile Include="Constants\Section.cs" />
+    <Compile Include="Constants\Session.cs" />
     <Compile Include="Constants\Staff.cs" />
     <Compile Include="Constants\Student.cs" />
     <Compile Include="Entities\AcademicHonor.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Entities\LearningStandard.cs" />
     <Compile Include="Entities\LearningStandardId.cs" />
     <Compile Include="Entities\LearningStyles.cs" />
+    <Compile Include="Entities\Authentication\Link.cs" />
     <Compile Include="Entities\LogOutResult.cs" />
     <Compile Include="Entities\Name.cs" />
     <Compile Include="Entities\ObjectiveAssessment.cs" />
@@ -179,6 +181,11 @@
     <Compile Include="Enum\TermType.cs" />
     <Compile Include="Enum\TitleIPartASchoolDesignationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Services\CohortService.cs" />
     <Compile Include="Services\SectionService.cs" />
     <Compile Include="Services\ISlcService.cs" />
@@ -188,7 +195,12 @@
     <Compile Include="Services\StudentService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

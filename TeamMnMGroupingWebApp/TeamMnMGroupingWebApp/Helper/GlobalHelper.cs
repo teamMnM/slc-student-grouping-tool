@@ -116,7 +116,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 objectId = objId,
                 objectName = objName,
                 status = m.StatusCode,
-                message = m.Content.ReadAsStringAsync().Result,
+                message = m.Content == null ? "" : m.Content.ReadAsStringAsync().Result,
                 isSuccess = m.StatusCode == successStatus
             };
         }

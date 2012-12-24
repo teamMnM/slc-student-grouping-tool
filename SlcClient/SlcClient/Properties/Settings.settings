@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SlcClient.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SlcApiSandboxUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.sandbox.slcedu.org/api/rest/v1/</Value>
+    </Setting>
+    <Setting Name="SlcApiSandboxSessionUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.sandbox.slcedu.org/api/rest/system/session/</Value>
+    </Setting>
+    <Setting Name="SlcSandboxUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.sandbox.slcedu.org/</Value>
+    </Setting>
+    <Setting Name="SlcApiRestV1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">api/rest/v1/</Value>
+    </Setting>
+    <Setting Name="SlcApiRestSession" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">api/rest/system/session/</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

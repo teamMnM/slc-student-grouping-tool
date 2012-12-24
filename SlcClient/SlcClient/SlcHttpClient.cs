@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Configuration;
 
 namespace SlcClient
 {
@@ -27,7 +28,7 @@ namespace SlcClient
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", token);
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.BaseAddress = new Uri(System.Configuration.ConfigurationManager.AppSettings[apiEndPoint == "" ? SLC_API_SANDBOX_URL : apiEndPoint]);
+            _httpClient.BaseAddress = new Uri(apiEndPoint == "" ? Properties.Settings.Default.SlcApiSandboxUrl : apiEndPoint); //ConfigurationManager.AppSettings[apiEndPoint == "" ? SLC_API_SANDBOX_URL : apiEndPoint]
             _token = token;
         }
 

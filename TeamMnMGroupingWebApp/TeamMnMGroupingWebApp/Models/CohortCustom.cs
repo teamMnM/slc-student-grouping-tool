@@ -11,12 +11,17 @@ namespace TeamMnMGroupingWebApp.Models
     public class CohortCustom
     {
         /// <summary>
-        /// the list of data elements to display for students
+        /// The ID of the Cohort this custom is associated to
+        /// </summary>
+        public string cohortId { get; set; }
+
+        /// <summary>
+        /// The list of data elements to display for students
         /// </summary>
         public IEnumerable<DataElement> dataElements { get; set; }
 
         /// <summary>
-        /// lesson plan object
+        /// Lesson plan object
         /// </summary>
         public LessonPlan lessonPlan { get; set; }
 

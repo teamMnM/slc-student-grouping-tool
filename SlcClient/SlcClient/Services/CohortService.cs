@@ -222,12 +222,13 @@ namespace SlcClient.Services
 
         private async Task<HttpResponseMessage> SubmitCohortCustomData(string id, string param, HttpMethod method)
         {
-            //using SlcHttpClient throw an Internal Server Error from SLC so we're constructing a new HttpClient for a clean HttpRequestMessage for custom only
+            //using SlcHttpClient throw an Internal Server Error from SLC so we're constructing a new HttpClient 
+            //for a clean HttpRequestMessage for custom only
             var _httpClient = new HttpClient();
             var strEndPoint = Constants.Cohort.COHORT_CUSTOM.Replace("{cohortId}", id);
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["SlcApiSandboxUrl"] + strEndPoint),
+                RequestUri = new Uri(Properties.Settings.Default.SlcApiSandboxUrl + strEndPoint),
                 Method = method,
             };
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", _client.token);
