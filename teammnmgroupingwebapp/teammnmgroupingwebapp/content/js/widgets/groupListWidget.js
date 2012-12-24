@@ -127,6 +127,7 @@ student_grouping.groupListWidget = function () {
         var groupInWorkspace = me.groupInWorkspace();
 
         if (!groupInWorkspace) {
+            groupModel.init();
             var groupWidget = new student_grouping.groupWidget(groupModel);
             var color = me.colorList[me.currentColorIndex++];
             $(me.groupsAreaClass).append(groupWidget.generateTemplate(color));

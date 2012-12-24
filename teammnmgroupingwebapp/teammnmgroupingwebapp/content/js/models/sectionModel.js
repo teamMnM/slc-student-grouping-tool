@@ -8,7 +8,7 @@ student_grouping.sectionModel = function (id, title, date) {
     var me = this;
     this.pubSub = PubSub;
 
-    this.id;
+    this.id = id;
     this.title = title;
     this.date = date;
 
@@ -21,7 +21,7 @@ student_grouping.sectionModel = function (id, title, date) {
      * Returns the cohort id
      */
     this.getId = function () {
-        return me.date;
+        return me.id;
     }
 
     /**************************

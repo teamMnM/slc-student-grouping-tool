@@ -120,9 +120,9 @@ student_grouping.studentListItemWidget = function (studentModel) {
         /** 
          * Listen to when this student is removed from a group
          */
-        this.pubSub.subscribe('remove-group-indicator', function (studentId, groupId) {
-            if (me.studentData.id === studentId) {
-                me.removeGroupIndicator(groupId);
+        this.pubSub.subscribe('student-removed-from-group', function (studentId, groupModel) {
+            if (me.studentModel.getId() === studentId) {
+                me.removeGroupIndicator(groupModel.getId());
             }
         });
     }

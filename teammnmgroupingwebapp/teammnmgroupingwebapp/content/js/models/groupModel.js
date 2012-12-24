@@ -10,7 +10,7 @@ student_grouping.groupModel = function (groupData) {
     this.pubSub = PubSub;
 
     this.serverGroup = groupData;
-    this.groupData = groupData.cohort;
+    this.groupData = null;
     this.students = [];
     this.selectedAttributes = [];
     this.attachedFile = null;
@@ -60,6 +60,7 @@ student_grouping.groupModel = function (groupData) {
      * Return the lastModified timestamp date object
      */
     this.getLastModTime = function () {
+        var custom = me.getCustom();
         var lastModifiedDate = new Date(parseInt(custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
         return lastModifiedDate;
     }
@@ -71,6 +72,13 @@ student_grouping.groupModel = function (groupData) {
      * 
      */
     this.init = function () {
+
+        // reset student list
+        me.students = [];
+
+        // copy over group data
+        me.groupData = $.extend(true, {}, me.serverGroup.cohort);
+
         // load the selected attributes
         var custom = me.getCustom();
         if (custom !== null && custom !== undefined) {
@@ -233,7 +241,8 @@ student_grouping.groupModel = function (groupData) {
      * students minus new students
      */
     this.getStudentsToDelete = function () {
-        var studentsToDelete = _.filter(me.originalStudents, function (origStudentId) {
+        var originalStudents = me.serverGroup.students;
+        var studentsToDelete = _.filter(originalStudents, function (origStudentId) {
             var matchingStudent = _.find(me.students, function (student) {
                 return origStudentId === student;
             });
@@ -257,20 +266,26 @@ student_grouping.groupModel = function (groupData) {
         if (result.objectActionResult.isSuccess) {
             me.setId(result.objectActionResult.objectId);
             me.serverGroup.cohort.cohortIdentifier = me.groupData.cohortIdentifier;
-            me.serverGroup.cohort.cohortDescription = me.groupData.cohortDescription;
+            me.serverGroup.cohort.cohortDescription = me.groupData.cohortDescription;           
             me.pubSub.publish('group-changed', originalId, me);
         }
         me.updateStudentList();
         
         if (result.customActionResult.isSuccess) {
-            var attachedFile = null;
-            $.extend(true, attachedFile, me.attachedFile);
-            me.serverGroup.custom.lessonPlan = attachedFile;
+            if (me.attachedFile !== null) {
+                var attachedFile = $.extend(true, {}, me.attachedFile);
+                me.serverGroup.custom.lessonPlan = attachedFile;
+            } else {
+                me.serverGroup.custom.lessonPlan = null;
+            }
 
             me.serverGroup.custom.dataElements = [];
             _.each(me.selectedAttributes, function (attr) {
                 me.serverGroup.custom.dataElements.push(attr);
             });
+
+            var currTimestamp = new Date();
+            me.serverGroup.custom.lastModifiedDate = currTimestamp.getTime().toString();
         }
     }
 

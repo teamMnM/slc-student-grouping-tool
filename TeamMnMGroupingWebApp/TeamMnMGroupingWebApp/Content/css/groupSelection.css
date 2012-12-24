@@ -77,7 +77,7 @@
     margin-top: 0.35em;
 }
 
-.num-groups-create-txt {
+.topbar-txt {
     margin: 0 0.4em 0 0.3em !important;
 }
 
@@ -168,7 +168,7 @@
 /**********************
  * STUDENT
  *********************/
-.student-container {
+.dropped-elem {
 	box-shadow: 0.3em 0.5em 1em #6B6B6B;
 	padding: 0.5em 0.5em 0.3em 0.5em;
 	background-color: #FFFFFF;
@@ -194,7 +194,7 @@
 }
 
 
-.student-container .student-full-profile {
+.dropped-elem .student-full-profile {
 	float:right;   
     font-size:0.8em;
     position: absolute;
@@ -203,11 +203,11 @@
 	display:none;
 }
 
-.student-container:hover .student-full-profile {
+.dropped-elem:hover .student-full-profile {
 	display:block;
 }
 
-.student-container .del-button{
+.dropped-elem .del-button{
 	margin-top:-1.0em;
 	margin-left: -0.5em;
 	width:1.5em;
@@ -216,7 +216,7 @@
     position: absolute;
 }
 
-.student-container:hover .del-button {
+.dropped-elem:hover .del-button {
     display: inline;
     cursor:pointer;
 }

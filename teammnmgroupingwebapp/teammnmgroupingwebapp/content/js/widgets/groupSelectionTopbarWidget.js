@@ -27,8 +27,10 @@ student_grouping.groupSelectionTopbarWidget = function () {
      */
     this.setupEventHandlers = function () {
 
-        $(me.groupSearchBtnClass).click(function (event) {
-            me.filterGroupsByName();
+        // add event handler for filter student list using search box
+        $(me.groupSearchTxtElem).keyup(function () {
+            var filterVal = $(this).val();
+            me.filterGroupsByName(filterVal);
         });
 
         $(me.groupSearchClearBtnClass).click(function (event) {
@@ -60,13 +62,12 @@ student_grouping.groupSelectionTopbarWidget = function () {
     /**
      * 
      */
-    this.filterGroupsByName = function () {
-        var groupName = $(me.groupSearchTxtElem).select2('data').text;
+    this.filterGroupsByName = function (groupName) {
         me.pubSub.publish('filter-group', groupName);
     }
 
     this.clearGroupSearch = function () {
-        $(me.groupSearchTxtElem).select2('val', '');
+        $(me.groupSearchTxtElem).val('');
         me.pubSub.publish('filter-group', '');
     }
 

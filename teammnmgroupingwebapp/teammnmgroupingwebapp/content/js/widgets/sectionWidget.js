@@ -39,7 +39,7 @@ student_grouping.sectionWidget = function (sectionModel) {
 
         me.pubSub.subscribe('filter-group', me.filterGroup);
 
-        me.pubSub.subscribe('reorder-group', me.moveGroupToTop);
+        me.pubSub.subscribe('group-saved', me.moveGroupToTop);
     }
 
     /**************************
@@ -58,17 +58,17 @@ student_grouping.sectionWidget = function (sectionModel) {
 
         // check if the new group was modified at a later date than the first group in the list,
         // then insert at the beginning of the list
-        if (firstGroup !== undefined) {
+        if (firstGroupModel !== undefined) {
             var firstGroupDate = firstGroupModel.getLastModTime();
             var groupDate = groupModel.getLastModTime();
 
             if (groupDate.isAfter(firstGroupDate)) {
-                $(me.sectionContainerId).find(me.groupListClass).prepend(groupWidgetTemplate);
+                $(me.containerId).find(me.groupListClass).prepend(groupWidgetTemplate);
             } else {
-                $(me.sectionContainerId).find(me.groupListClass).append(groupWidgetTemplate);
+                $(me.containerId).find(me.groupListClass).append(groupWidgetTemplate);
             }
         } else {
-            $(me.sectionContainerId).find(me.groupListClass).append(groupWidgetTemplate);
+            $(me.containerId).find(me.groupListClass).append(groupWidgetTemplate);
         }
 
         groupWidget.init();
@@ -80,6 +80,13 @@ student_grouping.sectionWidget = function (sectionModel) {
      */
     this.removeGroup = function (groupId) {
         me.sectionModel.removeGroup(groupId);
+        delete me.groupWidgets[groupId];
+
+        // remove this section if there are no groups left
+        if (me.sectionModel.groupModels.length === 0) {
+            $(me.containerId).remove();
+            me.pubSub.publish('remove-section', me.sectionModel.getId());
+        }
     }
 
     /**
@@ -97,20 +104,19 @@ student_grouping.sectionWidget = function (sectionModel) {
      * Filter the list of groups by name
      */
     this.filterGroup = function (groupName) {
-        var groupModels = me.groupModels;
-        var containsGroup = false;
-        _.each(groupModels, function (groupModel) {
-            if (groupModel.groupData.cohortIdentifier
-                .toLowerCase()
-                .indexOf(groupName.toLowerCase()) !== -1) {
-                containsGroup = true;
-                group.toggleVisible(true);
+        var containsGroups = false;
+        var groupWidgets = me.groupWidgets;
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
+            if (groupWidget.groupNameContains(groupName)) {
+                groupWidget.toggleVisible(true);
+                containsGroups = true;
             } else {
-                group.toggleVisible(false);
+                groupWidget.toggleVisible(false);
             }
-        });
+        }
 
-        if (!containsGroup) {
+        if (!containsGroups) {
             me.toggleVisible(false);
         } else {
             me.toggleVisible(true);
@@ -146,13 +152,14 @@ student_grouping.sectionWidget = function (sectionModel) {
     /**
      *
      */
-    this.moveGroupToTop = function (groupId) {
-
+    this.moveGroupToTop = function (groupModel) {
+        var groupId = groupModel.getId();
         if (me.sectionModel.hasGroup(groupId)) {
             var groupModel = me.sectionModel.getGroupById(groupId);
             // determine if group should be in this section or move to a new one
-            var sectionDate = me.sectionModel.date();
+            var sectionDate = me.sectionModel.date;
             var groupDate = groupModel.getLastModTime();
+            var groupWidget = me.groupWidgets[groupId];
 
             if (sectionDate.getDate() !== groupDate.getDate()) {
                 me.sectionModel.removeGroup(groupId);
@@ -163,12 +170,14 @@ student_grouping.sectionWidget = function (sectionModel) {
 
             } else {
                 // get the list item html
-                var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + groupId);
+                var groupLi = $(me.containerId).find(me.groupListClass).find("#" + groupId);
 
                 // move to the top of the list in this section as this would be the most recently update group
-                $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
+                $(me.containerId).find(me.groupListClass).prepend(groupLi);
+
+                groupWidget.applySelectedStyle();
             }
-            matchingGroup.applySelectedStyle();
+            
             me.pubSub.publish('move-arrow');
         }
     }

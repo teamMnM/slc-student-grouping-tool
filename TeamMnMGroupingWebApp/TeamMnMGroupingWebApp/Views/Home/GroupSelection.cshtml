@@ -16,11 +16,8 @@
 							<div class="span4">								
 								<button id="edit-multiple-groups-btn" class="btn btn-info">edit multiple groups</button>
 							</div>
-							<div class="span8">
-								<select id="group-search-txt" data-placeholder="search for a group">
-									<option></option>
-								</select>
-								<button class="btn btn-success group-search-btn">search</button>
+							<div class="span8">								
+                                <input type="text" id="group-search-txt" class="topbar-txt" placeholder="search for a group" />
                                 <button class="btn group-search-clear-btn">clear</button>
 							</div>
 						</div>		 
@@ -31,7 +28,7 @@
 					<div id="create-groups-ctrls" class="span4">
 						<img class="add-group-btn" src="~/Content/img/add-icon.png"/>
 						<span>create groups</span>
-						<input type="text" class="num-groups-create-txt" placeholder="# of groups to create"/>
+						<input type="text" class="num-groups-create-txt topbar-txt" placeholder="# of groups to create"/>
 						<button id="create-groups-btn" class="btn btn-success">create</button>
 					</div>
                      <div class="span1">
@@ -153,11 +150,19 @@
 		
        <!-- Load custom scripts -->
        <script src="~/Content/js/utils.js"> </script>
-       <script src="~/Content/js/groupSelection/student.js"> </script>
-       <script src="~/Content/js/groupSelection/group.js"> </script>
-       <script src="~/Content/js/groupSelection/groupDetails.js"> </script>
-       <script src="~/Content/js/groupSelection/section.js"> </script>
-       <script src="~/Content/js/groupSelection/sectionList.js"> </script>
-       <script src="~/Content/js/groupSelection/topbar.js"> </script>
-       <script src="~/Content/js/groupSelection/main.js"> </script>
+       
+             <!-- Models -->
+        <script src="~/Content/js/models/studentModel.js"> </script>
+        <script src="~/Content/js/models/groupModel.js"> </script>
+        <script src="~/Content/js/models/sectionModel.js"> </script>
+
+            <!-- Widgets -->        
+        <script src="~/Content/js/widgets/studentInGroupWidget.js"> </script>
+        <script src="~/Content/js/widgets/groupListItemWidget.js"> </script>
+        <script src="~/Content/js/widgets/groupDetailsWidget.js"> </script>
+        <script src="~/Content/js/widgets/sectionWidget.js"> </script>
+        <script src="~/Content/js/widgets/sectionListWidget.js"> </script>
+        <script src="~/Content/js/widgets/groupSelectionTopbarWidget.js"> </script>
+
+        <script src="~/Content/js/groupSelectionMain.js"> </script>
 	</body>

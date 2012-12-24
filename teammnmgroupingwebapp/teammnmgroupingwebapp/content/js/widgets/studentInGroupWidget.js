@@ -37,8 +37,9 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
      * @param groupId - id of group this student belongs to
      * @param collapsed
      * @param selectedAttributes
+     * @param draggable
      */
-    this.init = function (collapsed, selectedAttributes) {
+    this.init = function (collapsed, selectedAttributes, draggable) {
         me.containerId = "#gr-" + me.groupId + "-dr-" + me.studentModel.getId();
         var attributesDiv = $(me.containerId).find(me.studentAttributesClass);
 
@@ -51,18 +52,20 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
             $(elemDiv).find(me.studentAttributesClass).hide();
         }
 
-        // make it draggable to another group
-        $(me.containerId).draggable({
-            drag: function (event, ui) {
+        if (draggable) {
+            // make it draggable to another group
+            $(me.containerId).draggable({
+                drag: function (event, ui) {
 
-                // TODO fix after creating groupListWidget
-                // TODO refactor shortcut to groupList component
-                student_grouping.groupListWidgetComponent.currGrp = null;
-            },
-            revert: "invalid",
-            "helper": "clone",
-            "opacity": 0.7
-        });
+                    // TODO fix after creating groupListWidget
+                    // TODO refactor shortcut to groupList component
+                    student_grouping.groupListWidgetComponent.currGrp = null;
+                },
+                revert: "invalid",
+                "helper": "clone",
+                "opacity": 0.7
+            });
+        }
 
         me.setupEventHandlers();
     }

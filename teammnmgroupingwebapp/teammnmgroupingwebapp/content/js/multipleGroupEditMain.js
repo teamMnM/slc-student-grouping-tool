@@ -50,7 +50,9 @@ student_grouping.multipleGroupEditMain = function () {
                 // set up the groups list
                 var groups = data.cohorts;
                 var groupModels = _.map(groups, function (group) {
-                    return new student_grouping.groupModel(group);
+                    var groupModel = new student_grouping.groupModel(group);
+                    groupModel.init();
+                    return groupModel;
                 });
                 student_grouping.groupListWidgetComponent.init(groupModels, data.colors, data.dataElements);
 

@@ -41,11 +41,10 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * SETUP METHODS
      **************************/
     this.init = function () {
-        me.groupContainerId = "#" + me.groupModel.getId();
+        me.containerId = "#" + me.groupModel.getId();
         
         me.setupEventHandlers();
         me.setupSubscriptions();
-        me.groupModel.init();
         me.showFileAttachment();
     }
 
@@ -53,22 +52,22 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Sets up the event handlers for user interaction with the widget
      */
     this.setupEventHandlers = function () {
-        $(me.groupContainerId).click(function (event) {
-            var processing = group_selection.groupDetailsComponent.processing;
+        $(me.containerId).click(function (event) {
+            var processing = student_grouping.groupDetailsWidgetComponent.processing;
             if (!processing) {
                 me.groupSelected();
             }
         });
 
-        $(me.groupContainerId).find(me.groupDeleteIconClass).click(function (event) {
+        $(me.containerId).find(me.groupDeleteIconClass).click(function (event) {
             me.deleteGroup();
         });
 
-        $(me.groupContainerId).find(me.groupAttachmentPrintClass).click(function (event) {
+        $(me.containerId).find(me.groupAttachmentPrintClass).click(function (event) {
             me.printGroup();
         });
 
-        $(me.groupContainerId).find(me.groupDownloadLinkClass).click(function (event) {
+        $(me.containerId).find(me.groupDownloadLinkClass).click(function (event) {
             me.downloadGroup();
         });
     }
@@ -77,6 +76,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Sets up listeners for pubsub events
      */
     this.setupSubscriptions = function () {
+        me.pubSub.subscribe('group-saved', me.handleGroupSaved);
         me.pubSub.subscribe('remove-student', function (studentId) {
             me.removeStudent(studentId);
         });
@@ -95,8 +95,10 @@ student_grouping.groupListItemWidget = function (groupModel) {
         $(template).attr('id', groupData.id);
         $(template).find(me.groupTitleClass).html(groupData.cohortIdentifier);
 
-        var lastModifiedDateStr = me.groupModel.getLastModTimeString();
-        $(template).find(me.groupModifiedTimestampClass).html('Last modified: ' + lastModifiedDateStr);
+        if (me.groupModel.getCustom() !== null) {
+            var lastModifiedDateStr = me.groupModel.getLastModTimeString();
+            $(template).find(me.groupModifiedTimestampClass).html('Last modified: ' + lastModifiedDateStr);
+        }
         $(template).find(me.groupDescriptionClass).html(groupData.cohortDescription);
 
         return template;
@@ -110,12 +112,12 @@ student_grouping.groupListItemWidget = function (groupModel) {
     this.showFileAttachment = function () {
         var file = me.groupModel.attachedFile;
         if (file !== null && file !== undefined) {
-            $(me.groupContainerId).find(me.groupAttachmentLinkClass).attr('href', file.type + "," + file.content);
-            $(me.groupContainerId).find(me.groupAttachmentLinkClass).attr('download', file.name);
+            $(me.containerId).find(me.groupAttachmentLinkClass).attr('href', file.type + "," + file.content);
+            $(me.containerId).find(me.groupAttachmentLinkClass).attr('download', file.name);
 
-            $(me.groupContainerId).find(me.groupAttachmentLinkClass).show();
+            $(me.containerId).find(me.groupAttachmentLinkClass).show();
         } else {
-            $(me.groupContainerId).find(me.groupAttachmentLinkClass).hide();
+            $(me.containerId).find(me.groupAttachmentLinkClass).hide();
         }
     }
 
@@ -130,7 +132,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
             if (me.groupModel.isNewGroup()) {
                 me.deleteGroupSuccessHandler(null);
             } else {
-                me.groupModel.delete(me.deleteGroupSucessHandler, me.deleteGroupErrorHandler);                
+                me.groupModel.delete(me.deleteGroupSuccessHandler, me.deleteGroupErrorHandler);                
             }
             me.toggleGroupContainerProcessingState(true);
         }
@@ -145,7 +147,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
 
         // Let user know the delete was successful
         utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupDeleteIconClass),
+            $(me.containerId).find(me.groupDeleteIconClass),
             'Group has been successfully deleted.',
             'top',
             'manual',
@@ -159,7 +161,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Removes this group's DOM element
      */
     this.remove = function () {
-        $(me.groupContainerId).remove();
+        $(me.containerId).remove();
     }
 
     /**
@@ -168,7 +170,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
     this.deleteGroupErrorHandler = function () {
         // Let user know the delete was not successful
         utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupDeleteIconClass),
+            $(me.containerId).find(me.groupDeleteIconClass),
             'Group could not be deleted. Please try again later or contact your system administrator.',
             'top',
             'manual',
@@ -181,11 +183,11 @@ student_grouping.groupListItemWidget = function (groupModel) {
      */
     this.toggleGroupContainerProcessingState = function (processing) {
         if (processing) {
-            $(me.groupContainerId).css('opacity', 0.5);
-            $(me.groupContainerId).spin();
+            $(me.containerId).css('opacity', 0.5);
+            $(me.containerId).spin();
         } else {
-            $(me.groupContainerId).css('opacity', 1);
-            $(me.groupContainerId).spin(false);
+            $(me.containerId).css('opacity', 1);
+            $(me.containerId).spin(false);
         }
         me.processing = processing;
     }
@@ -195,9 +197,9 @@ student_grouping.groupListItemWidget = function (groupModel) {
      */
     this.toggleVisible = function (visible) {
         if (visible) {
-            $(me.groupContainerId).show();
+            $(me.containerId).show();
         } else {
-            $(me.groupContainerId).hide();
+            $(me.containerId).hide();
         }
     }
 
@@ -205,7 +207,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Returns true if the group is selected
      */
     this.isSelected = function () {
-        var checkbox = $(me.groupContainerId).find('input.group-checkbox');
+        var checkbox = $(me.containerId).find('input.group-checkbox');
         return $(checkbox).is(':checked');
     }
 
@@ -213,23 +215,21 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Update the group's name
      */
     this.setName = function (newName) {
-        me.groupData.cohortIdentifier = newName;
-        $(me.groupContainerId).find(me.groupTitleClass).html(newName);
+        $(me.containerId).find(me.groupTitleClass).html(newName);
     }
 
     /**
      * Update the group's description
      */
     this.setDescription = function (newGroupDescription) {
-        me.groupData.cohortDescription = newGroupDescription;
-        $(me.groupContainerId).find(me.groupDescriptionClass).html(newGroupDescription);
+        $(me.containerId).find(me.groupDescriptionClass).html(newGroupDescription);
     }
 
     /**
      * Handle this group's selected event
      */
     this.groupSelected = function () {
-        me.pubSub.publish('show-group-details', me);
+        me.pubSub.publish('show-group-details', me.groupModel);
 
         // apply selected styling
         me.applySelectedStyle();
@@ -240,14 +240,14 @@ student_grouping.groupListItemWidget = function (groupModel) {
      */
     this.applySelectedStyle = function () {
         $(me.groupContainerClass).css('background-color', 'white');
-        $(me.groupContainerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
+        $(me.containerId).find(me.groupContainerClass).css('background-color', '#F2F2F2');
     }
 
     /**
      * Get the group widget's absolute top position
      */
     this.getOffsetTop = function () {
-        var offset = $(me.groupContainerId).offset();
+        var offset = $(me.containerId).offset();
         return offset.top;
     }
 
@@ -271,8 +271,8 @@ student_grouping.groupListItemWidget = function (groupModel) {
      */
     this.generatePrintableHtml = function () {
         var div = $("<div>");
-        $(div).append("<h2>" + me.groupData.cohortIdentifier + "</h2>");
-        $(div).append("<p><i>" + me.groupData.cohortDescription + "</i></p>");
+        $(div).append("<h2>" + me.groupModel.groupData.cohortIdentifier + "</h2>");
+        $(div).append("<p><i>" + me.groupModel.groupData.cohortDescription + "</i></p>");
 
         var students = me.students;
         if (students.length > 0) {
@@ -289,5 +289,33 @@ student_grouping.groupListItemWidget = function (groupModel) {
             $(div).append("<div><i>[no students]</i></div>");
         }
         return div;
+    }
+
+    /**
+     * Update changes
+     */
+    me.handleGroupSaved = function (groupModel, result) {
+        if (me.groupModel.getId() === groupModel.getId()) {
+            if (result.customActionResult.isSuccess) {
+                me.showFileAttachment();
+                $(me.containerId).find(me.groupModifiedTimestampClass).html("Last modified: " + groupModel.getLastModTimeString());
+            }
+
+            if (result.objectActionResult.isSuccess) {
+                me.setName(groupModel.groupData.cohortIdentifier);
+                me.setDescription(groupModel.groupData.cohortDescription);
+                $(me.containerId).find(me.groupModifiedTimestampClass).html("Last modified: " + groupModel.getLastModTimeString());
+            }
+        }
+    }
+
+    /**
+     * Returns true if this group's name contains the given characters
+     * @param groupName
+     */
+    me.groupNameContains = function (groupName) {
+        return me.groupModel.groupData.cohortIdentifier
+                .toLowerCase()
+                .indexOf(groupName.toLowerCase()) !== -1;
     }
 }

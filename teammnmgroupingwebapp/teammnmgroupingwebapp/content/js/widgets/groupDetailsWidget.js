@@ -48,8 +48,8 @@ student_grouping.groupDetailsWidget = function () {
         me.allStudents = allStudents;
 
         // setup the dropdown containing all the selectable students
-        _.each(allStudents, function (s) {
-            $(me.studentSearchElem).append('<option value="' + s.id + '">' + s.name + '</option>');
+        _.each(allStudents, function (studentModel) {
+            $(me.studentSearchElem).append('<option value="' + studentModel.getId() + '">' + studentModel.getName() + '</option>');
         });
         $(me.studentSearchElem).select2({ width: 'element' });
         
@@ -119,7 +119,7 @@ student_grouping.groupDetailsWidget = function () {
      */
     this.setupSubscriptions = function () {
         me.pubSub.subscribe('show-group-details', me.viewGroupDetails);
-        me.pubSub.subscribe('remove-student', me.removeStudent);
+        me.pubSub.subscribe('remove-student-from-group', me.removeStudent);
         me.pubSub.subscribe('group-deleted', me.hideContent);
         me.pubSub.subscribe('group-list-scrolled', me.moveArrow);
         me.pubSub.subscribe('move-arrow', me.moveArrow);
@@ -149,10 +149,10 @@ student_grouping.groupDetailsWidget = function () {
                 // reset to original values
                 me.groupModel.init();
             }
-        } else {
-            groupModel.init();
         }
 
+        groupModel.students = []; // reset the list of students
+        groupModel.init();
         me.groupModel = groupModel;
         me.moveArrow();
 
@@ -199,15 +199,12 @@ student_grouping.groupDetailsWidget = function () {
             return false;
         }
 
-        var studentModel = _.find(me.allStudents, function (s) {
-            return s.id === studentId;
+        var studentModel = _.find(me.allStudents, function (studentModel) {
+            return studentModel.getId() === studentId;
         });
         var groupId = me.groupModel.getId();
-        var studentWidget = new student_grouping.studentInGroupWidget(groupId, studentModel);
-
-        var studentObj = new group_selection.student(matchingStudent);
+        var studentWidget = new student_grouping.studentInGroupWidget(groupId, studentModel, false);
         $(me.memberListClass).append(studentWidget.generateTemplate());
-
         studentWidget.init();
 
         var selectedStudentAttributes = me.groupModel.selectedAttributes;
@@ -293,7 +290,9 @@ student_grouping.groupDetailsWidget = function () {
                     me.toggleDirty(true);
 
                     // pass in the lesson plan
-                    callback(lessonPlan);
+                    if (callback !== undefined && callback !== null) {
+                        callback(lessonPlan);
+                    }
                 };
             })(file);
 
@@ -377,7 +376,7 @@ student_grouping.groupDetailsWidget = function () {
                     me.groupModel.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
                 });
             } else {
-                me.currGroup.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
+                me.groupModel.saveGroupChanges(me.saveGroupChangesSuccessHandler, me.saveGroupChangesErrorHandler);
             }
 
         }, 100);
@@ -388,6 +387,11 @@ student_grouping.groupDetailsWidget = function () {
      */
     this.saveGroupChangesSuccessHandler = function (result) {
 
+        // let others know this group has finished saving
+        if (result.completedSuccessfully || result.objectActionResult.isSuccess || result.customActionResult.isSuccess) {
+            me.pubSub.publish('group-saved', me.groupModel, result);
+        }
+        
         if (result.completedSuccessfully) {
             // Let user know the save was successful
             utils.uiUtils.showTooltip(
@@ -551,10 +555,13 @@ student_grouping.groupDetailsWidget = function () {
         $('.group-indicator-arrow').css('top', 0); // this will hide the arrow
     }
 
+    /**
+     *
+     */
     this.moveArrow = function () {
-        if (me.currGroup !== undefined || me.currGroup !== null) {
-            var currGroupTop = me.currGroup.getOffsetTop();
-            $('.group-indicator-arrow').css('top', currGroupTop);
+        if (me.groupModel !== undefined || me.groupModel !== null) {
+            var selectedGroupTop = $("#" + me.groupModel.getId()).offset().top;
+            $('.group-indicator-arrow').css('top', selectedGroupTop);
         }
     }
 }

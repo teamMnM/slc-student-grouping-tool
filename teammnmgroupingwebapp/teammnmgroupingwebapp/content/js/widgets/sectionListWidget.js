@@ -24,10 +24,8 @@ student_grouping.sectionListWidget = function () {
         // sort the list of groups by lastModified timestamp
         var groups = _.sortBy(groupModels, function (groupModel) {
             var date = groupModel.getLastModTime();
-            return parseInt(date.getDate());
+            return parseInt(date.getTime());
         });
-
-        // sort descending
         groups.reverse();
 
         _.each(groups, function (groupModel) {
@@ -50,6 +48,8 @@ student_grouping.sectionListWidget = function () {
         me.pubSub.subscribe('edit-multiple-groups', me.editMultipleGroups);
 
         me.pubSub.subscribe('add-new-group', me.addGroup);
+
+        me.pubSub.subscribe('remove-section', me.removeSection);
     }
 
     /**************************
@@ -62,24 +62,22 @@ student_grouping.sectionListWidget = function () {
         var lastModifiedDate = groupModel.getLastModTime();
         var key = lastModifiedDate.toFormat('DDDD, MMM DD, YYYY');
         var sectionModel = me.sectionModels[key];
-        if (sectionModel === undefined || section === null) {
+        if (sectionModel === undefined || sectionModel === null) {
             
             sectionModel = new student_grouping.sectionModel(
                 me.newSectionId++,
                 "Last modified " + key,
                 lastModifiedDate
             );
-            me.sectionModels[key] = section;
+            me.sectionModels[key] = sectionModel;
 
             var sectionWidget = new student_grouping.sectionWidget(sectionModel);
-            section = new group_selection.groupSection(sectionInfo);
-            section.init();
             $(me.groupSectionList).append(sectionWidget.generateTemplate());
-            
+            sectionWidget.init();
+
             me.sectionWidgets[key] = sectionWidget;
         }
-
-        sectionModel.addGroup(groupModel);        
+   
         var sectionWidget = me.sectionWidgets[key];
         sectionWidget.addGroup(groupModel);
     }
@@ -111,5 +109,13 @@ student_grouping.sectionListWidget = function () {
 
         var selGroupIdsStr = selGroupIds.join(",");
         window.location = 'MultipleGroupsEdit?selGroups=' + selGroupIdsStr;
+    }
+
+    /**
+     * Remove the given section
+     */
+    this.removeSection = function (sectionId) {
+        delete me.sectionModels[sectionId];
+        delete me.sectionWidgets[sectionId];
     }
 }

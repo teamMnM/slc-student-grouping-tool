@@ -140,7 +140,6 @@ student_grouping.groupWidget = function(groupModel){
      **************************/
     this.init = function (dataElements) {
         me.groupContainerId = $("#gc" + me.groupModel.getId());
-        me.groupModel.init();
 
         // add the pre-defined data elements to the popover
         _.each(dataElements, function (dataElement) {
@@ -249,7 +248,7 @@ student_grouping.groupWidget = function(groupModel){
         });
 
         $(groupContainer).find(me.saveGroupBtnClass).click(function (event) {
-            if (!me.processing && (me.dirty || me.groupData.id < 0)) {
+            if (!me.processing && (me.dirty || me.groupModel.isNewGroup())) {
                 me.saveGroupChanges();
             } else if (!me.dirty) {
                 // Let user know the created was successful
@@ -297,7 +296,7 @@ student_grouping.groupWidget = function(groupModel){
         if (!studentIsInGroup) {
             var studentWidget = new student_grouping.studentInGroupWidget(groupId, studentModel);            
             $("#" + groupId).append(studentWidget.generateTemplate());
-            studentWidget.init(me.collapsed, me.groupModel.selectedAttributes);
+            studentWidget.init(me.collapsed, me.groupModel.selectedAttributes, true);
 
             // add to dict to keep track of widget
             me.studentWidgets[studentId] = studentWidget;
@@ -340,7 +339,7 @@ student_grouping.groupWidget = function(groupModel){
             me.updateNumStudentsBadge();
 
             // tell student it has been removed from this group
-            me.pubSub.publish('student-removed-from-group', studentId, me);
+            me.pubSub.publish('student-removed-from-group', studentId, me.groupModel);
             // TODO add event handler on studentWidget
         }          
     }
@@ -530,7 +529,9 @@ student_grouping.groupWidget = function(groupModel){
                 $(popover).css('display', '');
 
                 $(me.groupContainerId).find(me.groupAttachmentPopoverDoneBtnElem).unbind('click');
-                $(me.groupContainerId).find(me.groupAttachmentPopoverDoneBtnElem).click(me.attachFile);
+                $(me.groupContainerId).find(me.groupAttachmentPopoverDoneBtnElem).click(function(event){
+                    me.attachFile(null);
+                });
 
                 $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).val('');
                 $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt).val('');
@@ -540,6 +541,7 @@ student_grouping.groupWidget = function(groupModel){
                     var file = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files')[0];
                     $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt)
                         .val(file.name);
+                    me.markDirty(true);
                 });
 
                 // attach event handler to hide this if user clicks outside of it
@@ -553,8 +555,9 @@ student_grouping.groupWidget = function(groupModel){
 
     /**
 	 * Attach the user specified file to this group  
+     * @param callback
 	 */
-    this.attachFile = function (event) {
+    this.attachFile = function (callback) {
         var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
         var file = files[0];
         if (file !== undefined) {
@@ -579,6 +582,10 @@ student_grouping.groupWidget = function(groupModel){
 
                     // show the div with the attachment
                     me.showFileAttachment();
+
+                    if (callback !== undefined && callback !== null){
+                        callback(attachment);
+                    }
                 };
             })(file);
 
@@ -616,10 +623,6 @@ student_grouping.groupWidget = function(groupModel){
             $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('download', file.name);
 
             var fileName = file.name;
-            // cut off filename if its too long
-            if (fileName.length > 28) {
-                fileName = file.name.substring(0, 28) + "...";
-            }
             $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
             $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
 
@@ -825,8 +828,16 @@ student_grouping.groupWidget = function(groupModel){
             errorHandler = me.updateGroupErrorHandler;
         }
 
-        me.groupModel.saveGroupChanges(successHandler, errorHandler);
         me.toggleGroupContainerProcessingState(true);
+
+        var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
+        if (files.length > 0) {
+            me.attachFile(function (lessonPlan) {
+                me.groupModel.saveGroupChanges(successHandler, errorHandler);
+            });
+        } else {
+            me.groupModel.saveGroupChanges(successHandler, errorHandler);
+        }
     }
 
     /**
@@ -1011,8 +1022,8 @@ student_grouping.groupWidget = function(groupModel){
      * Update this group's id
      */
     this.updateId = function (id) {
-        var originalId = me.groupModel.getId();
-        var origGroupContainerId = $("#gc" + originalId);
+        var originalId = $(origGroupContainerId).find(me.groupClass).attr('id');
+        var origGroupContainerId = $(me.groupContainerId);
         me.groupContainerId = "#gc" + id;
         $(origGroupContainerId).find(me.groupClass).attr('id', id);
         $(origGroupContainerId).attr('id', "gc" + id);

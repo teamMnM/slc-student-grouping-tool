@@ -37,7 +37,9 @@ student_grouping.groupSelectionMain = function () {
                 // setup the groups list
                 var groups = data.cohorts;
                 var groupModels = _.map(groups, function (group) {
-                    return new student_grouping.groupModel(group);
+                    var groupModel = new student_grouping.groupModel(group);
+                    groupModel.init();
+                    return groupModel;
                 });
                 student_grouping.sectionListWidgetComponent.init(groupModels);
 
@@ -49,12 +51,12 @@ student_grouping.groupSelectionMain = function () {
                 student_grouping.groupDetailsWidgetComponent.init(studentModels, data.dataElements);
 
                 student_grouping.groupSelectionTopbarWidgetComponent.init();
-                $(group_selection.mainContent).spin(false);
-                $(group_selection.mainContent).css('opacity', 1);
+                $(me.mainContent).spin(false);
+                $(me.mainContent).css('opacity', 1);
             },
             error: function (errorMsg) {
-                $(group_selection.mainContent).spin(false);
-                $(group_selection.mainContent).css('opacity', 1);
+                $(me.mainContent).spin(false);
+                $(me.mainContent).css('opacity', 1);
                 window.location = 'Error';
             }
         });
