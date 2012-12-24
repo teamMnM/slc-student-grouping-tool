@@ -181,6 +181,7 @@
     <Content Include="Content\js\groupSelection\topbar.js" />
     <Content Include="Content\js\groupsList.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\models\groupListModel.js" />
     <Content Include="Content\js\models\groupModel.js" />
     <Content Include="Content\js\models\studentFiltersModel.js" />
     <Content Include="Content\js\models\studentModel.js" />
@@ -192,6 +193,7 @@
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
     <Content Include="Content\js\utils\print.js" />
+    <Content Include="Content\js\widgets\groupListItemWidget.js" />
     <Content Include="Content\js\widgets\groupListWidget.js" />
     <Content Include="Content\js\widgets\groupWidget.js" />
     <Content Include="Content\js\widgets\multipleGroupEditTopbarWidget.js" />

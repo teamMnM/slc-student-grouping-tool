@@ -139,11 +139,13 @@ student_grouping.studentListWidget = function () {
 	 * Select all students in the list 
 	 */
     this.selectAllStudents = function () {
-        _.each(me.studentWidgets, function (studentListItemWidget) {
+        var studentWidgets = me.studentWidgets;
+        for (var studentId in studentWidgets) {
+            var studentListItemWidget = studentWidgets[studentId];
             if (studentListItemWidget.visible) {
                 studentListItemWidget.toggleStudentSelection(!me.allSelected);
             }
-        });
+        }
 
         me.allSelected = !me.allSelected;
 

@@ -1,9 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
-student_grouping.studentInGroupWidget = function (studentModel) {
+student_grouping.studentInGroupWidget = function (groupId, studentModel) {
     var me = this;
     this.pubSub = PubSub;
 
+    this.groupId = groupId;
     this.containerId = '';
     this.studentModel = studentModel;
 
@@ -33,11 +34,12 @@ student_grouping.studentInGroupWidget = function (studentModel) {
      **************************/
     /**
      * Initialize this widget
+     * @param groupId - id of group this student belongs to
      * @param collapsed
      * @param selectedAttributes
      */
     this.init = function (collapsed, selectedAttributes) {
-        me.containerId = "#dr-" + me.studentModel.getId();
+        me.containerId = "#gr-" + me.groupId + "-dr-" + me.studentModel.getId();
         var attributesDiv = $(me.containerId).find(me.studentAttributesClass);
 
         var state = collapsed ? me.collapsedClass : me.expandedClass;
@@ -71,6 +73,7 @@ student_grouping.studentInGroupWidget = function (studentModel) {
     this.setupEventHandlers = function () {
         var closeBtn = $(me.containerId).find(me.delBtnClass);
         $(closeBtn).click(function (event) {
+            me.pubSub.publish('remove-student-from-group', me.studentModel.getId());
             me.remove();
         });
 
@@ -88,7 +91,7 @@ student_grouping.studentInGroupWidget = function (studentModel) {
 	 */
     this.generateTemplate = function () {
         var elemDiv = $(me.droppedElemTemplate);
-        $(elemDiv).attr('id', 'dr-' + me.studentModel.getId());
+        $(elemDiv).attr('id', 'gr-' + me.groupId + '-dr-' + me.studentModel.getId());
         $(elemDiv).attr('data-studentId', me.studentModel.getId());
         $(elemDiv).find('.student-name').html(me.studentModel.getName());
        
@@ -155,8 +158,6 @@ student_grouping.studentInGroupWidget = function (studentModel) {
      * Removes this widget from the screen
      */
     this.remove = function () {
-        me.pubSub.publish('remove-student-from-group', me.studentModel.getId());
-
         // remove this widget from screen
         $(me.containerId).remove();
     }

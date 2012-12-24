@@ -50,7 +50,7 @@ student_grouping.studentFiltersModel = function (filters) {
     this.applyFilters = function (listOfStudentModels) {
         var filteredList = listOfStudentModels;
 
-        var selectedFilters = me.studentFiltersModel.selectedFilters;
+        var selectedFilters = me.selectedFilters;
         for (var filterId in selectedFilters) {
             var filter = selectedFilters[filterId];
             var attribute = filter.attributeId;

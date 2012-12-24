@@ -71,6 +71,13 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     			append("<option value='" + groupModel.getId() + "'>" + groupModel.groupData.cohortIdentifier + "</option>");
             me.groupModels[groupModel.getId()] = groupModel;
         });
+
+        // update name of group if it changed
+        me.pubSub.subscribe('group-changed', function (originalId, groupModel) {
+            var optionElem = $(me.findGroupDropdownElem).find("option[value='" + originalId + "']");
+            $(optionElem).attr('value', originalId);
+            $(optionElem).html(groupModel.groupData.cohortIdentifier);
+        });
     }
 
     /**************************

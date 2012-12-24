@@ -4,7 +4,8 @@ student_grouping.groupListWidget = function () {
     var me = this;
     this.pubSub = PubSub;
 
-    this.allGroups = []; // groupModels
+    // keep track of ALL the group models, regardless of whether they are in the current workspace or not
+    this.groupListModel = null;
 
     // keep track of the current group we are dragging to
     this.currGrp = null;
@@ -42,10 +43,8 @@ student_grouping.groupListWidget = function () {
             me.colorList.push(color);
         });
 
-        _.each(groupModels, function (groupModel) {
-            var groupId = groupModel.getId();
-            me.allGroups[groupId] = groupModel;
-        });
+        me.groupListModel = new student_grouping.groupListModel();
+        me.groupListModel.addGroups(groupModels);
 
         // // create number of groups specified from previous screen
         var urlParams = utils.uiUtils.getUrlParams();
@@ -60,10 +59,8 @@ student_grouping.groupListWidget = function () {
         var selGroups = urlParams.selGroups;
         if (selGroups !== undefined && selGroups !== null) {
             var selGroupsArr = selGroups.split(',');
-            _.each(selGroupsArr, function (selGroupId) {
-                var selGroup = _.find(me.allGroups, function (groupModel) {
-                    return groupModel.getId() === selGroupId;
-                });
+            _.each(selGroupsArr, function (selGroupId) {                
+                var selGroup = me.findGroupModel(selGroupId);
                 if (selGroup !== undefined) {
                     me.addGroup(selGroup);
                 }
@@ -79,7 +76,7 @@ student_grouping.groupListWidget = function () {
         });
 
         this.pubSub.subscribe('add-to-existing-groups', function (groupModel) {
-            me.allGroups[groupModel.getId()] = groupModel;
+            me.groupListModel.addGroup(groupModel);
         });
 
         this.pubSub.subscribe('group-removed', function (groupId) {
@@ -113,7 +110,7 @@ student_grouping.groupListWidget = function () {
      * @param groupId
      */
     this.addGroupById = function (groupId) {
-        var groupModel = me.allGroups[groupId];
+        var groupModel = me.groupListModel.getGroupById(groupId);
         if (groupModel !== undefined && groupModel !== null) {
             me.addGroup(groupModel);
         }
@@ -202,15 +199,15 @@ student_grouping.groupListWidget = function () {
                     // check if target group is indeed a different group
                     if (originalGroupId !== groupId) {
                         // find the group object
-                        var originalGroup = me.groupWidgets[originalGroupId];                        
+                        var originalGroupWidget = me.groupWidgets[originalGroupId];                        
 
                         // check that target group doesnt aleady have the student					
                         var studentId = $(elem).attr('data-studentId');
                         var groupHasStudent = groupWidget.hasStudent(studentId);
 
                         if (!groupHasStudent) {
-                            originalGroup.removeStudent(studentId);
-                            originalGroup.markDirty();
+                            originalGroupWidget.removeStudent(studentId);
+                            originalGroupWidget.markDirty();
                         }
                     }
                 }
@@ -231,29 +228,28 @@ student_grouping.groupListWidget = function () {
         var numGroups = groupWidgets.length;
 
         // remove students from all groups
-        _.each(groupWidgets, function (groupWidget) {
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
             groupWidget.removeAllStudents();
-        });
+        }
 
         // keep track of the next group that is not FULL
-        var indexOfNextAvailableGroup = 0;
+        var nextAvailableGroup = null;
         _.each(studentModels, function (studentModel) {
             var studentId = studentModel.getId();
 
             // keep track of whether student has been assigned to the existing groups
             var addedToGroup = false;
-            for (var i = indexOfNextAvailableGroup; i < numGroups; i++) {
-                var groupWidget = groupWidgets[i];
+            for (var groupId in groupWidgets) {
+                var groupWidget = groupWidgets[groupId];
                 var numStudents = groupWidget.getNumberOfStudents();
                 if (numStudents < numInGroup) {
                     groupWidget.assignStudentToGroup(studentModel);
 
                     addedToGroup = true;
                     break;
-                } else if (numStudents === numInGroup) {
-                    indexOfNextAvailableGroup++;
                 }
-            }
+            }           
 
             // should create a new group if student was not added to any existing group
             if (!addedToGroup) {
@@ -284,7 +280,8 @@ student_grouping.groupListWidget = function () {
 
         var groupsToSave = [];
         var originalGroupsToSave = []; // keep track of the actual group objects so we can later update with created ID
-        _.each(groupWidgets, function (groupWidget) {
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
             // find dirty and new groups
             var groupModel = groupWidget.groupModel;
             if (groupWidget.dirty || groupModel.isNewGroup()) {
@@ -292,7 +289,7 @@ student_grouping.groupListWidget = function () {
                 groupsToSave.push(cohortActionObject);
                 originalGroupsToSave.push(groupWidget);
             }
-        });
+        }
 
         // make sure there are dirty groups to save
         if (groupsToSave.length === 0) {
@@ -328,16 +325,15 @@ student_grouping.groupListWidget = function () {
         var failDiv = $("<ul>");
         for (var i = 0; i < numResults; i++) {
             var result = results[i];
-            var groupToSave = groupsToSave[i];
+            var groupWidget = groupsToSave[i];
 
             // assign id to newly created groups
             if (result.objectActionResult.objectId !== null && result.objectActionResult.objectId !== undefined) {
-                var groupWidget = groupsToSave[i];
                 groupWidget.updateId(result.objectActionResult.objectId);
             }
 
-            // update the group's list of students with added/deleted students
-            groupWidget.updateStudentList(result.failToCreateAssociations, result.failToDeleteAssociations);
+            // sync group original data with new changes
+            groupWidget.groupModel.saveResultHandler(result);
 
             if (result.completedSuccessfully) {
                 numSuccessfulSaves++;
@@ -376,8 +372,6 @@ student_grouping.groupListWidget = function () {
 
                 $(failDiv).append(groupListItem);
             }
-
-            // 
         }
 
         var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);
@@ -434,12 +428,17 @@ student_grouping.groupListWidget = function () {
      * Returns true if there are dirty groups
      */
     this.hasDirtyGroups = function () {
+        var dirty = false;
+        var groupWidgets = me.groupWidgets;
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
+            if (groupWidget.dirty) {
+                dirty = true;
+                break;
+            }
+        }
 
-        var dirtyGroup = _.find(me.groupWidgets, function (groupWidget) {
-            return groupWidget.dirty;
-        });
-
-        return dirtyGroup !== undefined;
+        return dirty;
     }
 
     /**
@@ -449,10 +448,11 @@ student_grouping.groupListWidget = function () {
         var div = $("<div>");
 
         var groupWidgets = me.groupWidgets;
-        _.each(groupWidgets, function (groupWidget) {
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
             var groupDiv = groupWidget.generatePrintableHtml();
             $(div).append(groupDiv);
-        });
+        }
 
         utils.printUtils.print($(div).html());
     }
@@ -461,9 +461,21 @@ student_grouping.groupListWidget = function () {
      * Returns true if the group has already been added to the workspace
      */
     this.groupInWorkspace = function (groupId) {
-        var groupExists = _.find(me.groupWidgets, function (groupWidget) {
-            return groupWidget.groupModel.getId() === groupId;
-        }) !== undefined;
-        return groupExists;
+        return me.groupWidgets[groupId] !== undefined;
+    }
+
+    /**
+     * Returns the group model with the given id
+     */
+    this.findGroupModel = function (groupId) {
+        return me.groupListModel.getGroupById(groupId);
+    }
+
+    /**
+     * Returns true if the given group name already exists
+     */
+    this.groupNameExists = function (groupName) {
+        var group = me.groupListModel.getGroupByName(groupName);
+        return group !== undefined;
     }
 }

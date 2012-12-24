@@ -92,7 +92,7 @@ student_grouping.studentListItemWidget = function (studentModel) {
             }
 
             $(me.studentLiContainerClass).removeClass(me.studentLiSelectedClass);
-            $(me).addClass(me.studentLiSelectedClass);
+            $(me.containerId).addClass(me.studentLiSelectedClass);
         });
     }
 
@@ -112,6 +112,11 @@ student_grouping.studentListItemWidget = function (studentModel) {
             me.updateGroupIndicatorId(originalGroupId, newGroupId);
         });
 
+        this.pubSub.subscribe('student-added-to-group', function (studentId, groupWidget) {
+            if (me.studentModel.getId() === studentId) {
+                me.addGroupIndicator(groupWidget.groupModel.getId(), groupWidget.color.background);
+            }
+        });
         /** 
          * Listen to when this student is removed from a group
          */

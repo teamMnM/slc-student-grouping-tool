@@ -140,6 +140,7 @@ student_grouping.groupWidget = function(groupModel){
      **************************/
     this.init = function (dataElements) {
         me.groupContainerId = $("#gc" + me.groupModel.getId());
+        me.groupModel.init();
 
         // add the pre-defined data elements to the popover
         _.each(dataElements, function (dataElement) {
@@ -149,16 +150,7 @@ student_grouping.groupWidget = function(groupModel){
                 + "</li>");
             $(me.groupContainerId).find(".student-data-popover .student-elements-list")
                 .append(dataElem);
-        });
-
-        // load the selected attributes
-        var custom = me.groupModel.getCustom();
-        if (custom !== null && custom !== undefined) {
-            var selectedAttributes = custom.dataElements;
-            _.each(selectedAttributes, function (selectedAttribute) {
-                me.groupModel.selectedAttributes.push(selectedAttribute);
-            });
-        }
+        });        
 
         // render students assigned to this group
         var studentIds = me.groupModel.getOriginalStudents();
@@ -170,12 +162,6 @@ student_grouping.groupWidget = function(groupModel){
                 me.assignStudentToGroup(studentModel);
             }
         });
-
-        // load attached lesson plan
-        if (custom !== null && custom.lessonPlan !== null) {
-            this.attachedFile = custom.lessonPlan;
-            this.showFileAttachment();
-        }
 
         // only use antiscroll if its chrome
         if ($.browser.webkit) {
@@ -191,7 +177,8 @@ student_grouping.groupWidget = function(groupModel){
             var elem = $(me.groupContainerId).find(e);
             utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
         });
-
+        
+        me.showFileAttachment();
         me.setupEventHandlers();
         me.setupSubscriptions();
         me.updateNumStudentsBadge();
@@ -308,7 +295,7 @@ student_grouping.groupWidget = function(groupModel){
         // check if student is in group already
         var studentIsInGroup = me.hasStudent(studentId);
         if (!studentIsInGroup) {
-            var studentWidget = new student_grouping.studentInGroupWidget(studentModel);            
+            var studentWidget = new student_grouping.studentInGroupWidget(groupId, studentModel);            
             $("#" + groupId).append(studentWidget.generateTemplate());
             studentWidget.init(me.collapsed, me.groupModel.selectedAttributes);
 
@@ -327,6 +314,9 @@ student_grouping.groupWidget = function(groupModel){
 
             // update student count label
             me.updateNumStudentsBadge();
+
+            // refresh antiscroll to show scrollbar
+            $(me.groupContainerId).find('.group-wrap').antiscroll('refresh');
         }
     }
 
@@ -341,7 +331,9 @@ student_grouping.groupWidget = function(groupModel){
             // remove from model
             me.groupModel.removeStudent(studentId);
 
-            // remove widget from memory 
+            // remove widget from memory and screen
+            var studentWidget = me.studentWidgets[studentId];
+            studentWidget.remove();
             delete me.studentWidgets[studentId]; // delete works with associative arrays (dictionaries) only
 
             me.markDirty();
@@ -669,6 +661,7 @@ student_grouping.groupWidget = function(groupModel){
             $(me.groupUnsavedChangesModalElem).modal('show');
         } else {
             $(me.groupContainerId).remove();
+            me.groupModel.close();
             me.pubSub.publish('group-removed', me.groupModel.getId());
             // TODO Need to tell groupList to remove the widget from memory
         }
@@ -704,7 +697,23 @@ student_grouping.groupWidget = function(groupModel){
         var newGroupName = $(me.groupContainerId).find(me.groupNameTxtClass).val();
         newGroupName = utils.stringUtils.trim(newGroupName);
 
+        $(me.groupContainerId).find(me.groupNameLblClass).show();
+        $(me.groupContainerId).find(me.groupNameTxtClass).hide();
+
         if (currGroupName !== newGroupName) {
+
+            // check if group name already exists
+            var groupNameExists = student_grouping.groupListWidgetComponent.groupNameExists(newGroupName);
+            if (groupNameExists) {
+                // Let user know the name already exists
+                utils.uiUtils.showTooltip(
+                    $(me.groupContainerId).find(me.groupNameLblClass),
+                    'Group name "' + newGroupName + '" already exists. Please use a different name.',
+                    'top',
+                    'manual',
+                    3000);
+                return;
+            }
 
             // if no input, then set default name
             if (!/\S/.test(newGroupName)) {
@@ -712,8 +721,6 @@ student_grouping.groupWidget = function(groupModel){
             }
             me.groupModel.groupData.cohortIdentifier = newGroupName;
             $(me.groupContainerId).find(me.groupNameLblClass).html(newGroupName);
-            $(me.groupContainerId).find(me.groupNameLblClass).show();
-            $(me.groupContainerId).find(me.groupNameTxtClass).hide();
 
             me.markDirty();
         }
@@ -818,7 +825,7 @@ student_grouping.groupWidget = function(groupModel){
             errorHandler = me.updateGroupErrorHandler;
         }
 
-        me.groupModel.saveGroupChanges();
+        me.groupModel.saveGroupChanges(successHandler, errorHandler);
         me.toggleGroupContainerProcessingState(true);
     }
 
@@ -892,7 +899,11 @@ student_grouping.groupWidget = function(groupModel){
         var msg = 'Group could not be updated. Please try again later or contact your system administrator.';
 
         var groupUpdatedSuccessfully = result.objectActionResult.isSuccess;
-        if (groupUpdatedSuccessfully && (result.failToCreateAssociations.length > 0 || result.failToDeleteAssociations.length > 0)) {
+        var failToCreateAssociations = result.failToCreateAssociations;
+        var failToDeleteAssociations = result.failToDeleteAssociations;
+        if (groupUpdatedSuccessfully && (
+            (failToCreateAssociations !== null && failToCreateAssociations.length > 0) ||
+            (failToDeleteAssociations !== null && failToDeleteAssociations.length > 0) )) {
             msg = "Group was updated successfully. However some students could not be assigned to or deleted from the group.";
         }
 
@@ -909,31 +920,15 @@ student_grouping.groupWidget = function(groupModel){
      * Delete this group permanently
      */
     this.deleteGroup = function () {
-
-        var confirmation = confirm('Are you sure you want to delete the group: ' + me.groupModel.groupData.cohortIdentifier);
+        var groupName = me.groupModel.groupData.cohortIdentifier;
+        var confirmation = confirm('Are you sure you want to delete the group: ' + groupName);
         if (confirmation) {
             // make sure we are not deleting newly created, unsaved groups
             if (me.groupModel.isNewGroup()) {
                 // just delete the group locally since it was not saved to the server
                 me.deleteGroupSuccessHandler(null);
             } else {
-                var groupId = me.groupModel.getId();
-                $.ajax({
-                    type: 'POST',
-                    url: 'DeleteGroup?id=' + groupId,
-                    contentType: 'application/json',
-                    success: function (result) {
-                        if (result.completedSuccessfully) {
-                            me.deleteGroupSuccessHandler(result);
-                        } else {
-                            me.deleteGroupErrorHandler(result);
-                        }
-                    },
-                    error: function (result) {
-                        // TODO if there is id then set it
-                        me.deleteGroupErrorHandler(result);
-                    }
-                });
+                me.groupModel.delete(me.deleteGroupSuccessHandler, me.deleteGroupErrorHandler);               
             }
 
             me.toggleGroupContainerProcessingState(true);
@@ -1017,8 +1012,7 @@ student_grouping.groupWidget = function(groupModel){
      */
     this.updateId = function (id) {
         var originalId = me.groupModel.getId();
-        var origGroupContainerId = $("#gc" + me.groupData.id);
-        me.groupModel.setId(id);
+        var origGroupContainerId = $("#gc" + originalId);
         me.groupContainerId = "#gc" + id;
         $(origGroupContainerId).find(me.groupClass).attr('id', id);
         $(origGroupContainerId).attr('id', "gc" + id);
@@ -1081,6 +1075,6 @@ student_grouping.groupWidget = function(groupModel){
      * Return the number of students in this group
      */
     this.getNumberOfStudents = function () {
-        return me.studentWidgets.length;
+        return Object.keys(me.studentWidgets).length;
     }
 }

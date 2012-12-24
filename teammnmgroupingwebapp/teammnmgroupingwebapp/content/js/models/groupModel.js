@@ -30,6 +30,7 @@ student_grouping.groupModel = function (groupData) {
      */
     this.setId = function (id) {
         me.groupData.id = id;
+        me.serverGroup.cohort.id = id;
     }
 
     /**
@@ -46,9 +47,46 @@ student_grouping.groupModel = function (groupData) {
         return me.serverGroup.students;
     }
 
+    /** 
+     * Returns the lastModified timestamp in MM/DD/YYYY HH:MI PP formate
+     */ 
+    this.getLastModTimeString = function () {
+        var lastModifiedDate = me.getLastModTime();
+        var lastModifiedDateStr = lastModifiedDate.toFormat('MM/DD/YYYY HH:MI PP');
+        return lastModifiedDateStr;
+    }
+
+    /**
+     * Return the lastModified timestamp date object
+     */
+    this.getLastModTime = function () {
+        var lastModifiedDate = new Date(parseInt(custom.lastModifiedDate.replace('/Date(', '').replace(')/', '')));
+        return lastModifiedDate;
+    }
+
     /**************************
      * METHODS
      **************************/
+    /**
+     * 
+     */
+    this.init = function () {
+        // load the selected attributes
+        var custom = me.getCustom();
+        if (custom !== null && custom !== undefined) {
+            var selectedAttributes = custom.dataElements;
+            me.selectedAttributes = [];
+            _.each(selectedAttributes, function (selectedAttribute) {
+                me.selectedAttributes.push(selectedAttribute);
+            });
+        }
+
+        // load attached lesson plan
+        if (custom !== null && custom.lessonPlan !== null) {
+            me.attachFile(custom.lessonPlan);
+        }
+    }
+
     /**
      * Returns true if student is already part of group
      */
@@ -128,19 +166,19 @@ student_grouping.groupModel = function (groupData) {
             data: JSON.stringify(cohortActionObject),
             success: function (result) {
 
-                me.updateStudentList();
-                
+                // sync new data with old data
+                me.saveResultHandler(result);
+
                 if (result.completedSuccessfully) {
                     successHandler(result);
                 } else if (!result.partialCreateSuccess || !result.partialDeleteSuccess || !result.customActionResult.isSuccess) {
                     errorHandler(result);
-                }
+                }                
             },
             error: function (result) {
                 // should implement exception handling
             }
         });
-        me.toggleGroupContainerProcessingState(true);
     }
 
     /**
@@ -211,20 +249,46 @@ student_grouping.groupModel = function (groupData) {
     }
 
     /**
-     * TODO add description
-     * @param failedCreates - failed to create new student associations
-     * @param failedDeletes - failed to delete student associations
+     * Sync this group's server side data with newly saved changes
+     * @param result - result from server side
      */
-    this.updateStudentList = function (failedCreates, failedDeletes) {
+    this.saveResultHandler = function (result) {        
+        var originalId = me.groupData.id;
+        if (result.objectActionResult.isSuccess) {
+            me.setId(result.objectActionResult.objectId);
+            me.serverGroup.cohort.cohortIdentifier = me.groupData.cohortIdentifier;
+            me.serverGroup.cohort.cohortDescription = me.groupData.cohortDescription;
+            me.pubSub.publish('group-changed', originalId, me);
+        }
+        me.updateStudentList();
+        
+        if (result.customActionResult.isSuccess) {
+            var attachedFile = null;
+            $.extend(true, attachedFile, me.attachedFile);
+            me.serverGroup.custom.lessonPlan = attachedFile;
+
+            me.serverGroup.custom.dataElements = [];
+            _.each(me.selectedAttributes, function (attr) {
+                me.serverGroup.custom.dataElements.push(attr);
+            });
+        }
+    }
+
+    /**
+     * TODO add description
+     * @param failToCreateAssociations - failed to create new student associations
+     * @param failToDeleAssociations - failed to delete student associations
+     */
+    this.updateStudentList = function (failToCreateAssociations, failToDeleteAssociations) {
         var failedCreates = [];
-        if (result.failToCreateAssociations !== null) {
-            failedCreates = _.pluck(result.failToCreateAssociations, 'objectId');
+        if (failToCreateAssociations !== null) {
+            failedCreates = _.pluck(failToCreateAssociations, 'objectId');
         }
         me.updateListWithNewStudents(failedCreates);
 
         var failedDeletes = [];
-        if (result.failToDeleAssociations !== null) {
-            _.pluck(result.failToDeleteAssociations, 'objectId');
+        if (failToDeleteAssociations !== null) {
+            _.pluck(failToDeleteAssociations, 'objectId');
         }
         me.updateListWithDeletedStudents(failedDeletes);
 
@@ -267,6 +331,41 @@ student_grouping.groupModel = function (groupData) {
                 me.serverGroup.students = _.filter(me.serverGroup.students, function (originalStudent) {
                     return originalStudent !== studentToDel;
                 });
+            }
+        });
+    }
+
+    /**
+     * Reset group state to original state
+     */
+    this.close = function () {
+        me.students = [];
+    }
+
+    /**
+     * Delete this group permanently from backend
+     * @param successHandler
+     * @param errorHandler
+     */
+    this.delete = function (successHandler, errorHandler) {
+        var successHandler = successHandler;
+        var errorHandler = errorHandler;
+
+        var groupId = me.getId();
+        $.ajax({
+            type: 'POST',
+            url: 'DeleteGroup?id=' + groupId,
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.completedSuccessfully) {
+                    successHandler(result);
+                } else {
+                    errorHandler(result);
+                }
+            },
+            error: function (result) {
+                // TODO if there is id then set it
+                errorHandler(result);
             }
         });
     }

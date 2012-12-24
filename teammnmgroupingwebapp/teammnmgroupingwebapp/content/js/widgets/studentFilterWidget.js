@@ -15,7 +15,6 @@ student_grouping.studentFilterWidget = function () {
     this.studentFiltersModel = null;
 
     this.selectedFiltersElem = '#selected-filters';
-    this.selectedFilters = [];
     this.selectedFilterCloseBtn = ".select2-search-choice-close";
 
     /**************************
@@ -36,6 +35,7 @@ student_grouping.studentFilterWidget = function () {
         // set up the filters
         _.each(filters, function (filter) {
             me.studentFiltersModel.addFilter(filter);
+            $(me.filterAttributeElem).append(me.createOption(filter.attributeId, filter.attributeName));
         });
 
         $(me.filterAttributeElem).select2({ width: 'element' });
@@ -71,10 +71,10 @@ student_grouping.studentFilterWidget = function () {
         me.pubSub.subscribe('add-manual-filter', function (filter) {
 
             // reset filter, if already applied
-            me.removeFilterByAttribute(filter.attributeId);
+            me.removeSelectedFilter(filter.attributeId);
 
             // add to list
-            me.selectedFilters.push(filter);
+            me.studentFiltersModel.addSelectedFilter(filter);
             me.pubSub.publish('filter-student-list');
         });
     }
@@ -105,7 +105,7 @@ student_grouping.studentFilterWidget = function () {
      *  
      */
     this.attributeOperatorSelected = function (event) {
-        var attributeIf = $(me.filterAttributeElem).val();
+        var attributeId = $(me.filterAttributeElem).val();
         var filter = me.studentFiltersModel.getFilter(attributeId);
 
         var operator = $(me.filterOperatorElem).val();
@@ -220,7 +220,7 @@ student_grouping.studentFilterWidget = function () {
      * @param attributeId
      */
     this.removeSelectedFilter = function (attributeId) {
-        $("li[data-selectedFilter='" + attributeId + "']");
+        $("li[data-selectedFilter='" + attributeId + "']").remove();
         me.studentFiltersModel.removeSelectedFilter(attributeId);
 
         // notify others to filter after removing

@@ -1,0 +1,175 @@
+﻿var student_grouping = student_grouping || {};
+
+student_grouping.sectionWidget = function (sectionModel) {
+    var me = this;
+    this.pubSub = PubSub;
+
+    this.sectionModel = sectionModel;
+    this.groupWidgets = [];
+    this.groupSectionClass = '.group-section';
+
+    this.containerId = '';
+
+    this.groupListClass = '.group-list';
+    this.groupSectionTitleClass = '.group-section-title';
+    this.groupSectionTemplate = '<div class="group-section">' +
+									'<div class="group-section-title"></div>' +
+									'<div class="group-list"> </div>' +
+								'</div>';
+    this.groupListClass = ".group-list";
+    this.groupListItemClass = ".group-list-item";
+
+    /**************************
+     * SETUP METHODS
+     **************************/
+    /**
+     * Initialize this widget
+     */
+    this.init = function () {
+        me.containerId = "#" + me.sectionModel.getId();
+        me.setupSubscriptions();
+    }
+
+    /**
+     * Sets up listeners for pubsub events
+     */
+    this.setupSubscriptions = function () {
+
+        me.pubSub.subscribe('group-deleted', me.removeGroup);
+
+        me.pubSub.subscribe('filter-group', me.filterGroup);
+
+        me.pubSub.subscribe('reorder-group', me.moveGroupToTop);
+    }
+
+    /**************************
+     * METHODS
+     **************************/
+    /**
+     * Add the given group to this seciton 
+     * @param 
+     */
+    this.addGroup = function (groupModel) {
+        var firstGroupModel = me.sectionModel.getGroupByIndex[0];
+        me.sectionModel.addGroup(groupModel);
+
+        var groupWidget = new student_grouping.groupListItemWidget(groupModel);
+        var groupWidgetTemplate = groupWidget.generateTemplate();
+
+        // check if the new group was modified at a later date than the first group in the list,
+        // then insert at the beginning of the list
+        if (firstGroup !== undefined) {
+            var firstGroupDate = firstGroupModel.getLastModTime();
+            var groupDate = groupModel.getLastModTime();
+
+            if (groupDate.isAfter(firstGroupDate)) {
+                $(me.sectionContainerId).find(me.groupListClass).prepend(groupWidgetTemplate);
+            } else {
+                $(me.sectionContainerId).find(me.groupListClass).append(groupWidgetTemplate);
+            }
+        } else {
+            $(me.sectionContainerId).find(me.groupListClass).append(groupWidgetTemplate);
+        }
+
+        groupWidget.init();
+        me.groupWidgets[groupModel.getId()] = groupWidget;
+    }
+
+    /**
+     * Remove the given group from the list
+     */
+    this.removeGroup = function (groupId) {
+        me.sectionModel.removeGroup(groupId);
+    }
+
+    /**
+     * Return the HTML content for this object 
+     */
+    this.generateTemplate = function () {
+        var template = $(me.groupSectionTemplate);
+        $(template).attr('id', me.sectionModel.getId());
+
+        $(template).find(me.groupSectionTitleClass).html(me.sectionModel.title);
+        return template;
+    }
+
+    /**
+     * Filter the list of groups by name
+     */
+    this.filterGroup = function (groupName) {
+        var groupModels = me.groupModels;
+        var containsGroup = false;
+        _.each(groupModels, function (groupModel) {
+            if (groupModel.groupData.cohortIdentifier
+                .toLowerCase()
+                .indexOf(groupName.toLowerCase()) !== -1) {
+                containsGroup = true;
+                group.toggleVisible(true);
+            } else {
+                group.toggleVisible(false);
+            }
+        });
+
+        if (!containsGroup) {
+            me.toggleVisible(false);
+        } else {
+            me.toggleVisible(true);
+        }
+    }
+
+    /**
+     * Hide/show section
+     */
+    this.toggleVisible = function (visible) {
+        if (visible) {
+            $(me.sectionContainerId).show();
+        } else {
+            $(me.sectionContainerId).hide();
+        }
+    }
+
+    /**
+     * Return the ids of the selected groups
+     */
+    this.getSelectedGroups = function () {
+        var selGroups = [];
+        var groupWidgets = me.groupWidgets;
+        for (var groupId in groupWidgets) {
+            var groupWidget = groupWidgets[groupId];
+            if (groupWidget.isSelected()) {
+                selGroups.push(groupWidget);
+            }
+        }
+        return selGroups;
+    }
+
+    /**
+     *
+     */
+    this.moveGroupToTop = function (groupId) {
+
+        if (me.sectionModel.hasGroup(groupId)) {
+            var groupModel = me.sectionModel.getGroupById(groupId);
+            // determine if group should be in this section or move to a new one
+            var sectionDate = me.sectionModel.date();
+            var groupDate = groupModel.getLastModTime();
+
+            if (sectionDate.getDate() !== groupDate.getDate()) {
+                me.sectionModel.removeGroup(groupId);
+                
+                var groupWidget = me.groupWidgets[groupId];
+                groupWidget.remove();
+                me.pubSub.publish('add-new-group', groupModel);
+
+            } else {
+                // get the list item html
+                var groupLi = $(me.sectionContainerId).find(me.groupListClass).find("#" + groupId);
+
+                // move to the top of the list in this section as this would be the most recently update group
+                $(me.sectionContainerId).find(me.groupListClass).prepend(groupLi);
+            }
+            matchingGroup.applySelectedStyle();
+            me.pubSub.publish('move-arrow');
+        }
+    }
+}
