@@ -103,6 +103,10 @@ student_grouping.groupListWidget = function () {
             var hasDirtyGroups = me.hasDirtyGroups();
             callback(hasDirtyGroups);
         });
+
+        this.pubSub.subscribe('update-group-id', function (originalGroupId, newGroupId) {
+            me.updateGroupId(originalGroupId, newGroupId);
+        });
     }
 
     /** 
@@ -311,6 +315,14 @@ student_grouping.groupListWidget = function () {
             contentType: 'application/json',
             data: JSON.stringify(groupsToSave),
             success: function (results) {
+
+                // check if the session has expired
+                if (results.objectActionResult.status === 407) {
+                    alert('Your session has expired. Please log out and log back in to use the Student Grouping Tool');
+                    me.saveAllComplete();
+                    return;
+                }
+
                 me.saveAllGroupsSuccessHandler(results, originalGroupsToSave);
             },
             error: me.saveAllGroupsErrorHandler
@@ -329,9 +341,10 @@ student_grouping.groupListWidget = function () {
             var result = results[i];
             var groupWidget = groupsToSave[i];
 
-            // assign id to newly created groups
-            if (result.objectActionResult.objectId !== null && result.objectActionResult.objectId !== undefined) {
+            // assign id to newly created groups and notify others to add this new group
+            if (groupWidget.groupModel.isNewGroup()) {
                 groupWidget.updateId(result.objectActionResult.objectId);
+                me.pubSub.publish('add-to-existing-groups', groupWidget.groupModel);
             }
 
             // sync group original data with new changes
@@ -341,7 +354,7 @@ student_grouping.groupListWidget = function () {
                 numSuccessfulSaves++;
                 groupWidget.dirty = false;
 
-                $(successDiv).append("<li>Group Name - " + result.objectActionResult.objectName + "</li>");
+                $(successDiv).append("<li>" + result.objectActionResult.objectName + "</li>");
             } else {
                 var groupListItem = $("<li>");
                 // check if group was successfully saved
@@ -376,7 +389,7 @@ student_grouping.groupListWidget = function () {
             }
         }
 
-        var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);
+        var successDiv = $("<div class='well label-success save-all-msg'><div>The following groups were saved successfully: </div>").append(successDiv);
 
         if ((numResults - numSuccessfulSaves) > 0) {
             var failDiv = $("<div class='well label-important save-all-msg'><div>Failed to save the following groups, please try again later:</div>").append(failDiv);
@@ -482,5 +495,15 @@ student_grouping.groupListWidget = function () {
     this.groupNameExists = function (groupName) {
         var group = me.groupListModel.getGroupByName(groupName);
         return group !== undefined;
+    }
+
+    /**
+     * Update the key value for the given groupWidget
+     */
+    this.updateGroupId = function (originalGroupId, newGroupId) {
+        var groupWidget = me.groupWidgets[originalGroupId];
+        delete me.groupWidgets[originalGroupId];
+
+        me.groupWidgets[newGroupId] = groupWidget;
     }
 }

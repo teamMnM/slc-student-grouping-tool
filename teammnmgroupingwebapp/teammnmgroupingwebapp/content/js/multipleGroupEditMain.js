@@ -36,7 +36,7 @@ student_grouping.multipleGroupEditMain = function () {
                 }
 
                 // store lookups
-                me.sections = data.sections;
+                student_grouping.sections = data.sections;
 
                 // set up the students list --> this goes before the groupsList 
                 // because groupsList depends on the full list of students

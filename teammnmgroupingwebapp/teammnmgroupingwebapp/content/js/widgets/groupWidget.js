@@ -1,5 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * GroupWidget
+ * This widget contains information about the cohort's name, description, students 
+ * assigned to this group, attached lesson plan, and associated student elements
+ */
 student_grouping.groupWidget = function(groupModel){
     var me = this;
     this.pubSub = PubSub;
@@ -8,7 +13,7 @@ student_grouping.groupWidget = function(groupModel){
      * Widget properties
      */
     this.dirty = false;
-    this.processing = false;
+    this.processing = false;    
     this.groupModel = groupModel;
     this.color = null;
     this.studentWidgets = []; // studentInGroupWidget

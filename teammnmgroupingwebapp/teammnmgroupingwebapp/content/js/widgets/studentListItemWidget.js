@@ -288,6 +288,13 @@ student_grouping.studentListItemWidget = function (studentModel) {
     }
 
     /**
+     * Draws a table with the student assessment data
+     */
+    this.drawAssessmentTable = function () {
+
+    }
+
+    /**
 	 * TODO add description and refactor lookups to make generic
 	 */
     this.populateAttributeDiv = function (attribute) {

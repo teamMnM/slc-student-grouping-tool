@@ -2,6 +2,7 @@
 
 student_grouping.groupSelectionTopbarWidget = function () {
     var me = this;
+    this.pubSub = PubSub;
 
     this.containerId = ".top-bar-controls";
     this.editMultipleGroupsBtn = "#edit-multiple-groups-btn";

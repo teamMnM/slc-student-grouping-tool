@@ -277,7 +277,8 @@ student_grouping.groupDetailsWidget = function () {
      * @param callback - callback for this async operation
      */
     this.attachFile = function (callback) {
-        /*me.data.submit()
+        /*me.data.formData = { id: me.groupModel.getId() }
+        me.data.submit()
             .success(function (result, textStatus, jqXHR) {
                 alert(textStatus);
             });*/
