@@ -317,7 +317,7 @@ student_grouping.groupListWidget = function () {
             success: function (results) {
 
                 // check if the session has expired
-                if (results.objectActionResult.status === 407) {
+                if (results[0].objectActionResult.status === 407) {
                     alert('Your session has expired. Please log out and log back in to use the Student Grouping Tool');
                     me.saveAllComplete();
                     return;
