@@ -168,6 +168,11 @@ student_grouping.sectionWidget = function (sectionModel) {
                 groupWidget.remove();
                 me.pubSub.publish('add-new-group', groupModel);
 
+                // remove this section if there are no more groups
+                if (me.sectionModel.groupModels.length === 0) {
+                    me.pubSub.publish('remove-section', me.sectionModel.getId());
+                    $(me.containerId).remove();
+                }
             } else {
                 // get the list item html
                 var groupLi = $(me.containerId).find(me.groupListClass).find("#" + groupId);
