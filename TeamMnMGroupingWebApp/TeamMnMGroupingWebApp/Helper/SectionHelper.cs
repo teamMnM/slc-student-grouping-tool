@@ -38,19 +38,19 @@ namespace TeamMnMGroupingWebApp.Helper
                 }
             }
                                       
-            var sdo = MapSectionToSectionDisplayObject(courseCache);
+            var sdo = MapSectionToSectionDisplayObject(courseCache, section.id);
 
             HttpContext.Current.Cache.Insert(section.id, sdo);
             return sdo;
         }
 
-        private static SectionDisplayObject MapSectionToSectionDisplayObject(Course c)
+        private static SectionDisplayObject MapSectionToSectionDisplayObject(Course c, string sectionId)
         {
 
             var newSection = new SectionDisplayObject();
             if (c != null)
             {
-                newSection.id = c.id;
+                newSection.id = sectionId;
                 newSection.courseTitle = c.courseTitle;
                 newSection.courseDescription = c.courseDescription;
                 newSection.courseLevel = c.courseLevel;
