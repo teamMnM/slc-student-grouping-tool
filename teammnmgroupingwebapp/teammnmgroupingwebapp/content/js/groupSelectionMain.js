@@ -12,6 +12,7 @@ student_grouping.groupSelectionMain = function () {
      * Initialize the app
      */
     this.init = function () {
+       
         student_grouping.sectionListWidgetComponent = new student_grouping.sectionListWidget();
         student_grouping.groupDetailsWidgetComponent = new student_grouping.groupDetailsWidget();
         student_grouping.groupSelectionTopbarWidgetComponent = new student_grouping.groupSelectionTopbarWidget();

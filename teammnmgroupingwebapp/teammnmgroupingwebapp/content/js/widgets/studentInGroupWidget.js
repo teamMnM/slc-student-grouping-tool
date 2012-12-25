@@ -46,10 +46,10 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
         var state = collapsed ? me.collapsedClass : me.expandedClass;
         $(me.containerId).addClass(state);
 
-        if (!me.collapsed) {
-            me.toggleAttributeVisibility(selectedAttributes);
-        } else {
-            $(elemDiv).find(me.studentAttributesClass).hide();
+        me.toggleAttributeVisibility(selectedAttributes);
+
+        if (collapsed) {
+            $(attributesDiv).hide();
         }
 
         if (draggable) {

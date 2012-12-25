@@ -544,8 +544,6 @@ student_grouping.groupWidget = function(groupModel){
                     me.markDirty(true);
                 });
 
-                // attach event handler to hide this if user clicks outside of it
-                me.handleOutsideClick(me.groupAttachmentImgClass, me.groupAttachmentPopoverElem);
             } else {
                 // close it
                 $(popover).css('display', 'none');
@@ -829,9 +827,8 @@ student_grouping.groupWidget = function(groupModel){
         }
 
         me.toggleGroupContainerProcessingState(true);
-
-        var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
-        if (files.length > 0) {
+        
+        if (me.hasUnattachedFile()) {
             me.attachFile(function (lessonPlan) {
                 me.groupModel.saveGroupChanges(successHandler, errorHandler);
             });
@@ -1022,8 +1019,8 @@ student_grouping.groupWidget = function(groupModel){
      * Update this group's id
      */
     this.updateId = function (id) {
-        var originalId = $(origGroupContainerId).find(me.groupClass).attr('id');
         var origGroupContainerId = $(me.groupContainerId);
+        var originalId = $(origGroupContainerId).find(me.groupClass).attr('id');
         me.groupContainerId = "#gc" + id;
         $(origGroupContainerId).find(me.groupClass).attr('id', id);
         $(origGroupContainerId).attr('id', "gc" + id);
@@ -1087,5 +1084,13 @@ student_grouping.groupWidget = function(groupModel){
      */
     this.getNumberOfStudents = function () {
         return Object.keys(me.studentWidgets).length;
+    }
+
+    /**
+     * Returns true if the user has attached a file but has not clicked on the done button
+     */
+    this.hasUnattachedFile = function () {
+        var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
+        return files.length > 0;
     }
 }

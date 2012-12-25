@@ -272,8 +272,7 @@ student_grouping.groupListWidget = function () {
         return existingGroup !== undefined;
     }
 
-    /**
-     * TODO server side will handle all this with one call
+    /**     
      * Saving changes to all groups
      */
     this.saveAllGroups = function () {
@@ -302,6 +301,8 @@ student_grouping.groupListWidget = function () {
         // disable the groups area screen TODO externalize this code
         $(me.groupsAreaClass).spin();
         $(me.groupsAreaClass).css('opacity', 0.2);
+
+        // TODO attach files that haven't been attached
 
         // call server to add all new groups
         $.ajax({
@@ -376,7 +377,10 @@ student_grouping.groupListWidget = function () {
         }
 
         var successDiv = $("<div class='well label-success save-all-msg'><div>Number of successful saves: " + numSuccessfulSaves + "</div>").append(successDiv);
-        var failDiv = $("<div class='well label-important save-all-msg'><div>Number of unsuccessful saves: " + (numResults - numSuccessfulSaves) + "</div>").append(failDiv);
+
+        if ((numResults - numSuccessfulSaves) > 0) {
+            var failDiv = $("<div class='well label-important save-all-msg'><div>Failed to save the following groups, please try again later:</div>").append(failDiv);
+        }
 
         $(me.saveAllGroupsContentElem).empty();
         $(me.saveAllGroupsContentElem).append(successDiv).append(failDiv);

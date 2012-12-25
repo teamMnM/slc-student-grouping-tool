@@ -2,8 +2,8 @@
 
 student_grouping.groupSelectionTopbarWidget = function () {
     var me = this;
-    this.pubSub = PubSub;
 
+    this.containerId = ".top-bar-controls";
     this.editMultipleGroupsBtn = "#edit-multiple-groups-btn";
     this.groupSearchTxtElem = "#group-search-txt";
     this.groupSearchBtnClass = ".group-search-btn";
@@ -46,7 +46,7 @@ student_grouping.groupSelectionTopbarWidget = function () {
         });
 
         $(me.logoutBtnClass).click(function (event) {
-            if (group_selection.groupDetailsComponent.dirty) {
+            if (student_grouping.groupDetailsWidgetComponent.dirty) {
                 var confirmDirtyLogout = confirm("You have unsaved changes. Would you still like to log out?");
                 if (!confirmDirtyLogout) {
                     return;
@@ -80,9 +80,20 @@ student_grouping.groupSelectionTopbarWidget = function () {
     }
 
     /**
-     * 
+     * Handle editMultipleGroups btn click event
      */
     this.editMultipleGroups = function () {
         me.pubSub.publish('edit-multiple-groups');
+    }
+    
+    /**
+     * Show/hide the toolbar
+     */
+    this.toggleVisible = function (visible) {
+        if (visible) {
+            $(me.containerId).show();
+        } else {
+            $(me.containerId).hide();
+        }
     }
 }

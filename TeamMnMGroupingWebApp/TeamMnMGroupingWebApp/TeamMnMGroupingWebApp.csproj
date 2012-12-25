@@ -141,6 +141,7 @@
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\SectionDisplayObject.cs" />
     <Compile Include="Models\StudentDisplayObject.cs" />
+    <Compile Include="Models\ViewDataUploadFilesResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +221,11 @@
     <Content Include="Content\vendor\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\vendor\dateutils\js\dateUtils.min.js" />
     <Content Include="Content\vendor\filesaver\js\filesaver.min.js" />
+    <Content Include="Content\vendor\fileupload\css\jquery.fileupload-ui.css" />
+    <Content Include="Content\vendor\fileupload\js\jquery.fileupload-fp.js" />
+    <Content Include="Content\vendor\fileupload\js\jquery.fileupload-ui.js" />
+    <Content Include="Content\vendor\fileupload\js\jquery.fileupload.js" />
+    <Content Include="Content\vendor\fileupload\js\jquery.iframe-transport.js" />
     <Content Include="Content\vendor\highcharts\js\highcharts.js" />
     <Content Include="Content\vendor\idletimer\js\idletimer.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />

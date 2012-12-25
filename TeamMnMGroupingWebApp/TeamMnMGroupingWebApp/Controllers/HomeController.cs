@@ -15,6 +15,7 @@ using TeamMnMGroupingWebApp.Helper;
 using System.Net.Http;
 using System.Web.Caching;
 using System.Text;
+using System.IO;
 
 namespace TeamMnMGroupingWebApp.Controllers
 {
@@ -39,6 +40,31 @@ namespace TeamMnMGroupingWebApp.Controllers
                 // We have an access token in session, let's redirect to app main page.
                 Response.Redirect(MAIN);
             }
+        }
+
+        [HttpPost]
+        public ContentResult UploadFiles()
+        {
+            var results = new List<ViewDataUploadFilesResult>();
+
+            foreach (string file in Request.Files)
+            {
+                HttpPostedFileBase hpf = Request.Files[file] as HttpPostedFileBase;
+                if (hpf.ContentLength == 0)
+                    continue;
+
+                //string savedFileName = Path.Combine(Server.MapPath("~/App_Data"), Path.GetFileName(hpf.FileName));
+                //hpf.SaveAs(savedFileName); // Save the file
+
+                results.Add(new ViewDataUploadFilesResult()
+                {
+                    Name = hpf.FileName,
+                    Length = hpf.ContentLength,
+                    Type = hpf.ContentType
+                });
+            }
+            // Returns json
+            return Content("{\"name\":\"" + results[0].Name + "\",\"type\":\"" + results[0].Type + "\",\"size\":\"" + string.Format("{0} bytes", results[0].Length) + "\"}", "text/plain");
         }
 
         /// <summary>

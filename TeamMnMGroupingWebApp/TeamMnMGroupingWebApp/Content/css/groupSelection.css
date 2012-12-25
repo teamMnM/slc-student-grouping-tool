@@ -58,6 +58,14 @@
     box-shadow: -0.05em 0.15em 0.4em #6B6B6B;
 }
 
+#search-student-icon {
+    width: 1.5em;
+    position: absolute;
+    margin-left: -2.5em;
+    margin-top: 0.3em;
+    cursor: pointer;
+}
+
 .group-search-btn {
     margin-left: 0.3em;
     margin-right:0.4em;

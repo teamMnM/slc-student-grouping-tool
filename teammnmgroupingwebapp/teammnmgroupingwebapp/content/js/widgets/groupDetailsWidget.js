@@ -4,7 +4,7 @@ student_grouping.groupDetailsWidget = function () {
     var me = this;
     this.pubSub = PubSub;
 
-    this.allStudents = []; // 
+    this.allStudents = []; // studentModels 
     this.attributes = [];
     this.groupModel = null;
     this.studentWidgets = [];
@@ -64,6 +64,20 @@ student_grouping.groupDetailsWidget = function () {
        
         me.setupEventHandlers();
         me.setupSubscriptions();
+
+        /*$('.progressbar').progressbar({ value: 0 });
+
+        $('#file_upload').fileupload({
+            dataType:'text',
+            url: 'UploadFiles',
+            add: function (e, data) {
+                me.data = data;
+                $(me.lessonPlanFileName).html(data.files[0].name);
+                $(me.lessonPlanAttachmentDiv).show();
+                $(me.lessonPlanUploadDiv).hide();                
+            }            
+        });*/
+
     }
 
     /**
@@ -263,6 +277,10 @@ student_grouping.groupDetailsWidget = function () {
      * @param callback - callback for this async operation
      */
     this.attachFile = function (callback) {
+        /*me.data.submit()
+            .success(function (result, textStatus, jqXHR) {
+                alert(textStatus);
+            });*/
         var files = $(me.attachmentFileInput).prop('files');
         var file = files[0];
         if (file !== undefined) {

@@ -79,7 +79,7 @@ student_grouping.groupModel = function (groupData) {
         // copy over group data
         me.groupData = $.extend(true, {}, me.serverGroup.cohort);
 
-        // load the selected attributes
+        // load the custom attributes
         var custom = me.getCustom();
         if (custom !== null && custom !== undefined) {
             var selectedAttributes = custom.dataElements;
@@ -87,10 +87,7 @@ student_grouping.groupModel = function (groupData) {
             _.each(selectedAttributes, function (selectedAttribute) {
                 me.selectedAttributes.push(selectedAttribute);
             });
-        }
 
-        // load attached lesson plan
-        if (custom !== null && custom.lessonPlan !== null) {
             me.attachFile(custom.lessonPlan);
         }
     }

@@ -263,11 +263,11 @@ student_grouping.groupListItemWidget = function (groupModel) {
      * Download the contents of this group to a text file
      */
     this.downloadGroup = function () {
-        window.open('DownloadGroup?id=' + me.groupData.id);
+        window.open('DownloadGroup?id=' + me.groupModel.getId());
     }
 
     /**
-     *
+     * Generate HTML content to print out
      */
     this.generatePrintableHtml = function () {
         var div = $("<div>");
@@ -277,12 +277,12 @@ student_grouping.groupListItemWidget = function (groupModel) {
         var students = me.students;
         if (students.length > 0) {
             var studentList = $("<ul style='list-style:none'>");
-            var allStudents = group_selection.groupDetailsComponent.allStudents;
+            var allStudents = student_grouping.groupDetailsWidgetComponent.allStudents;
             _.each(students, function (studentId) {
-                var student = _.find(allStudents, function (s) {
-                    return s.id === studentId;
+                var student = _.find(allStudents, function (studentModel) {
+                    return studentModel.getId() === studentId;
                 });
-                $(studentList).append("<li>" + student.name + "</li>");
+                $(studentList).append("<li>" + studentModel.getName() + "</li>");
             });
             $(div).append(studentList);
         } else {
