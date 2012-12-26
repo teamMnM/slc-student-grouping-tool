@@ -50,36 +50,40 @@ namespace TeamMnMGroupingWebApp.Helper
         static IEnumerable<FilterValue> limitedEnglishProficiencyTypes = from LimitedEnglishProficiencyType s in Enum.GetValues(typeof(LimitedEnglishProficiencyType))
                                                                          select GetEnumFilterValues(s);
 
-        public static IEnumerable<Filter> InitializeFilters()
+        public static IEnumerable<Filter> InitializeFilters(IEnumerable<SectionDisplayObject> sdos)
         {
             var filters = new List<Filter>();
 
             //enum filters
-            var disabilities = new Filter { attributeId = "disabilities", attributeName = "Disabilities", operators = containsOperator, values = disabilityTypes };
-            var gradeLevels = new Filter { attributeId = "gradeLevel", attributeName = "Grade Level", operators = containsOperator, values = gradeLevelTypes };
-            var homeLanguageItems = new Filter { attributeId = "homeLanguages", attributeName = "Home Languages", operators = containsOperator, values = languageItemTypes };
-            var languageItems = new Filter { attributeId = "languages", attributeName = "Languages", operators = containsOperator, values = languageItemTypes };
-            var oldEthnicities = new Filter { attributeId = "oldEthnicity", attributeName = "Old Ethnicity", operators = containsOperator, values = oldEthnicityTypes };
-            var raceItems = new Filter { attributeId = "race", attributeName = "Race", operators = containsOperator, values = raceItemTypes };
-            var schoolFoodServicesEligibilities = new Filter { attributeId = "schoolFoodServicesEligiblity", attributeName = "School Food Services Eligibility", operators = containsOperator, values = schoolFoodServicesEligibilityTypes };
-            var section504DisabilityItems = new Filter { attributeId = "section504Disablities", attributeName = "Section 504 Disabilities", operators = containsOperator, values = section504DisabilityItemTypes };
-            var sex = new Filter { attributeId = "sex", attributeName = "Gender", operators = containsOperator, values = sexTypes };
-            var studentCharacteristics = new Filter { attributeId = "studentCharacteristics", attributeName = "Student Characteristics", operators = containsOperator, values = studentCharacteristicTypes };
-            var limitedEnglishProficiency = new Filter { attributeId = "limitedEnglishProficiency", attributeName = "Limited English Proficiency", operators = containsOperator, values = limitedEnglishProficiencyTypes };
+            var disabilities = new Filter("disabilities", "Disabilities", containsOperator, disabilityTypes);
+            var gradeLevels = new Filter("gradeLevel", "Grade Level", containsOperator, gradeLevelTypes);
+            var homeLanguageItems = new Filter("homeLanguages", "Home Languages", containsOperator, languageItemTypes);
+            var languageItems = new Filter("languages", "Languages", containsOperator, languageItemTypes);
+            var oldEthnicities = new Filter("oldEthnicity", "Old Ethnicity", containsOperator, oldEthnicityTypes);
+            var raceItems = new Filter("race", "Race", containsOperator, raceItemTypes);
+            var schoolFoodServicesEligibilities = new Filter("schoolFoodServicesEligiblity", "School Food Services Eligibility", containsOperator, schoolFoodServicesEligibilityTypes);
+            var section504DisabilityItems = new Filter("section504Disablities", "Section 504 Disabilities", containsOperator, section504DisabilityItemTypes);
+            var sex = new Filter("sex", "Gender", containsOperator, sexTypes);
+            var studentCharacteristics = new Filter("studentCharacteristics", "Student Characteristics", containsOperator, studentCharacteristicTypes);
+            var limitedEnglishProficiency = new Filter("limitedEnglishProficiency", "Limited English Proficiency", containsOperator, limitedEnglishProficiencyTypes);
 
             //student attribute filters
-            var birthDate = new Filter { attributeId = "birthDate", attributeName = "Birth Date", operators = logicalOperators };
-            var economicDisadvantaged = new Filter { attributeId = "economicDisadvantaged", attributeName = "Economic Disadvantaged", operators = equalOperator, values = trueFalse };
-            var hispanicLatinoEthnicity = new Filter { attributeId = "hispanicLatinoEthnicity", attributeName = "Hispanic Latino Ethnicity", operators = equalOperator, values = trueFalse };
-            var auditoryLearning = new Filter { attributeId = "auditoryLearning", attributeName = "Auditory Learning", operators = logicalOperators };
-            var tactileLearning = new Filter { attributeId = "tactileLearning", attributeName = "Tactile Learning", operators = logicalOperators };
-            var visualLearning = new Filter { attributeId = "visualLearning", attributeName = "Visual Learning", operators = logicalOperators };            
-            var gpa = new Filter { attributeId = "cumulativeGradePointAverage", attributeName = "GPA", operators = logicalOperators };
+            var birthDate = new Filter("birthDate", "Birth Date", logicalOperators);
+            var economicDisadvantaged = new Filter("economicDisadvantaged", "Economic Disadvantaged", equalOperator, trueFalse);
+            var hispanicLatinoEthnicity = new Filter("hispanicLatinoEthnicity", "Hispanic Latino Ethnicity", equalOperator, trueFalse);
+            var auditoryLearning = new Filter("auditoryLearning", "Auditory Learning", logicalOperators);
+            var tactileLearning = new Filter("tactileLearning", "Tactile Learning", logicalOperators);
+            var visualLearning = new Filter("visualLearning", "Visual Learning", logicalOperators);            
+            var gpa = new Filter("cumulativeGradePointAverage","GPA", logicalOperators);
+
+            //section filter
+            var sectionValues = GetSectionsFilter(sdos);
+            var section = new Filter("sections", "Section", containsOperator, sectionValues);
 
             return new List<Filter>() { disabilities, gradeLevels, languageItems, homeLanguageItems, 
                 oldEthnicities, raceItems, schoolFoodServicesEligibilities, section504DisabilityItems, sex,
                 studentCharacteristics, birthDate, economicDisadvantaged, hispanicLatinoEthnicity, 
-                auditoryLearning, tactileLearning, visualLearning, limitedEnglishProficiency, gpa
+                auditoryLearning, tactileLearning, visualLearning, limitedEnglishProficiency, gpa, section
             };
         }
 
@@ -110,6 +114,17 @@ namespace TeamMnMGroupingWebApp.Helper
                 return attributes[0].Description;
             else
                 return value.ToString();
+        }
+
+        /// <summary>
+        /// Contruct a filter for all sections
+        /// </summary>
+        /// <param name="sdos"></param>
+        /// <returns></returns>
+        public static IEnumerable<FilterValue> GetSectionsFilter(IEnumerable<SectionDisplayObject> sdos){
+            var list = new List<FilterValue>();
+            list.AddRange(from sdo in sdos select new FilterValue { id = sdo.id, title = sdo.courseTitle });
+            return list;
         }
     }
 }

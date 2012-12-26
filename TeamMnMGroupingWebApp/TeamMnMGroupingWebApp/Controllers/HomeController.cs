@@ -632,8 +632,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 //Get the available data elements and colors
                 var dataElements = GlobalHelper.InitializeDataElements();
-                var colors = GlobalHelper.InitializeColors();
-                var filters = FilterHelper.InitializeFilters(); //contruct filter values to filter students in the app
+                var colors = GlobalHelper.InitializeColors();                
 
                 await Task.WhenAll(co, st, se);
 
@@ -642,6 +641,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                 var sections = Task.WhenAll(from s in se.Result select SectionHelper.GetSectionDisplayObject(ses, s));
 
                 await Task.WhenAll(cohorts, students, se);
+
+                var filters = FilterHelper.InitializeFilters(sections.Result); //contruct filter values to filter students in the app
                 await Task.WhenAll(dataElements, colors);
 
                 var data = GetGroupingDisplayObject(dataElements, colors, filters, cohorts, students, sections);

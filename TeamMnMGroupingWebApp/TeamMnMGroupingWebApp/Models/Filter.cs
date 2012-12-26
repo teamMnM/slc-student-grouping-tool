@@ -33,5 +33,35 @@ namespace TeamMnMGroupingWebApp.Models
         /// list of values for this object property
         /// </summary>
         public IEnumerable<FilterValue> values { get; set; }
+
+        public Filter() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">attributeId</param>
+        /// <param name="name">attributeName</param>
+        /// <param name="ops">operators</param>
+        public Filter(string id, string name, string[] ops)
+        {
+            attributeId = id;
+            attributeName = name;
+            operators = ops;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">attributeId</param>
+        /// <param name="name">attributeName</param>
+        /// <param name="ops">operators</param>
+        /// <param name="vals">values</param>
+        public Filter(string id, string name, string[] ops, IEnumerable<FilterValue> vals)
+        {
+            attributeId = id;
+            attributeName = name;
+            operators = ops;
+            values = vals;
+        }
     }
 }
