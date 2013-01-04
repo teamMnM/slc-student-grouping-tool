@@ -252,28 +252,19 @@ student_grouping.groupModel = function (groupData) {
             // submit() POSTS the file to the server
             attachmentData.submit()
                 .success(function (result, textStatus, jqXHR) {
-                    me.attachmentData = null;
-
-                    // attached the uploaded file to this model
-                    var jsonResult = JSON.parse(result);
-                    var res = jsonResult[0];
-                    var lessonPlan = {
-                        name: res.Name,
-                        type: res.Type
-                    }
-                    me.attachFile(lessonPlan);
-                    successCallback(result);
+                    var jsonResult = me.syncUploadAttachmentResult(result);
+                    successCallback(jsonResult);
                 })
                 .error(function (jqXHR, textStatus, errorThrown){
-                    errorCallback(result);
+                    errorCallback(errorThrown);
                 });
         }
     }
 
     /**
-     * 
+     * Parses the 
      */
-    this.parseUploadAttachmentResult = function (result) {
+    this.syncUploadAttachmentResult = function (result) {
         me.attachmentData = null;
 
         // attached the uploaded file to this model
@@ -284,6 +275,7 @@ student_grouping.groupModel = function (groupData) {
             type: res.Type
         }
         me.attachFile(lessonPlan);
+        return jsonResult;
     }
 
     /**

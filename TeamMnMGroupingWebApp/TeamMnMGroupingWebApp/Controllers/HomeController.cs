@@ -62,7 +62,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         /// <summary>
-        /// Update one cohort
+        /// Update one cohort custom
         /// </summary>
         /// <param name="obj">data object to update cohort</param>
         /// <returns>result of the action</returns>
@@ -79,8 +79,11 @@ namespace TeamMnMGroupingWebApp.Controllers
                     // update cohort custom entity
                     var cohortCustom = CohortActionHelper.UpdateCustom(obj, cs);
 
-                    await cohortCustom;
+                    var tasksToWaitFor = new List<Task>();                    
+                    tasksToWaitFor.Add(cohortCustom);                    
 
+                    await Task.WhenAll(tasksToWaitFor);
+                 
                     //determine whether custom was created successfully
                     CohortActionHelper.ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.NoContent, obj.custom, cs);
 
@@ -103,7 +106,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFiles()
+        public async Task<ActionResult> UploadFiles()
         {
             try
             {
@@ -144,7 +147,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                                 type = hpf.ContentType
                             };
 
-                            var result = ProcessOneCohortFileUpload(cohortActionObj).Result;
+                            var result = await ProcessOneCohortUpdate(cohortActionObj);
+
                             isSuccess = result.customActionResult.isSuccess;
                         }
                         catch (Exception ex)

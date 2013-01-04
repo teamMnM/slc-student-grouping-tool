@@ -789,32 +789,13 @@ student_grouping.groupWidget = function(groupModel){
         if (me.groupModel.isNewGroup()) {
             successHandler = me.createGroupSuccessHandler;
             errorHandler = me.createGroupErrorHandler;
-            me.groupModel.saveGroupChanges(successHandler, errorHandler);
         } else {
-
             successHandler = me.updateGroupSuccessHandler;
             errorHandler = me.updateGroupErrorHandler;
-
-            // upload unsaved attachment to the server
-            var hasUnsavedAttachment = me.groupModel.hasUnsavedAttachment();
-            if (hasUnsavedAttachment) {
-                me.groupModel.uploadAttachment(
-                    function () {
-                        me.attachmentFailed = false;
-                        me.groupModel.saveGroupChanges(successHandler, errorHandler);
-                    },
-                    function () {
-                        me.attachmentFailed = true;
-                        me.groupModel.saveGroupChanges(successHandler, errorHandler);
-                    });
-            } else {
-                me.groupModel.saveGroupChanges(successHandler, errorHandler);
-            }
         }
 
-        me.toggleGroupContainerProcessingState(true);
-        
-        
+        me.groupModel.saveGroupChanges(successHandler, errorHandler);
+        me.toggleGroupContainerProcessingState(true);               
     }
 
     /**
@@ -829,7 +810,6 @@ student_grouping.groupWidget = function(groupModel){
         if (me.groupModel.hasUnsavedAttachment()) {
             me.saveAttachment(msg);
         } else {
-
             // Let user know the created was successful
             utils.uiUtils.showTooltip(
                 $(me.groupContainerId).find(me.groupNameLblClass),
@@ -839,33 +819,35 @@ student_grouping.groupWidget = function(groupModel){
                 3000);
 
             me.toggleGroupContainerProcessingState(false);
-            me.dirty = false;
-
-            // request to be added to list of existing groups
-            me.pubSub.publish('add-to-existing-groups', me.groupModel);
         }
+
+        me.dirty = false;
+        // request to be added to list of existing groups
+        me.pubSub.publish('add-to-existing-groups', me.groupModel);
     }
 
     /**
      * Handle error with saving a group
      */
     this.createGroupErrorHandler = function (result) {
-        me.toggleGroupContainerProcessingState(false);
-
         var msg = "Group could not be created. Please try again later or contact your system administrator.";
 
         var groupCreatedSuccessfully = result.objectActionResult.isSuccess;
-        if (groupCreatedSuccessfully && (result.failToCreateAssociations.length > 0)) {
+        if (groupCreatedSuccessfully) {
             me.updateId(result.objectActionResult.objectId);
+            msg = "Group was created successfully.";
+            if (result.failToCreateAssociations.length > 0){
+                msg += " However some students could not be assigned to the group.";
+            }
 
             // upload unsaved lesson plan if there is one
             if (me.groupModel.hasUnsavedAttachment()) {
-                me.saveAttachment("Group was created successfully");
+                me.saveAttachment(msg);
                 return;
-            } else {
-                msg = "Group was created successfully. However some students could not be assigned to the group.";
-            }            
+            }
         }
+
+        me.toggleGroupContainerProcessingState(false);
 
         // Let user know the create was not successful
         utils.uiUtils.showTooltip(
@@ -884,14 +866,18 @@ student_grouping.groupWidget = function(groupModel){
         me.groupModel.uploadAttachment(
             // success
             function () {
-                me.attachmentFailed = false;
+                // Let user know the lesson plan was attached
+                utils.uiUtils.showTooltip(
+                    $(me.groupContainerId).find(me.groupNameLblClass),
+                    msg,
+                    'top',
+                    'manual',
+                    3000);
 
-                // save the cohort again (this saves the attachment name to the SLI datastore via custom)
-                me.saveGroupChanges();
+                me.toggleGroupContainerProcessingState(false);
             },
             // error
             function () {
-                me.attachmentFailed = true;
                 msg += ' However the lesson plan could not be attached.';
 
                 // Let user know the lesson plan was not attached
@@ -902,9 +888,10 @@ student_grouping.groupWidget = function(groupModel){
                     'manual',
                     3000);
 
+                // mark dirty again if lesson plan could not be uploaded
+                me.markDirty();
                 me.toggleGroupContainerProcessingState(false);
             });
-
     }
 
 
@@ -912,20 +899,21 @@ student_grouping.groupWidget = function(groupModel){
      *
      */
     this.updateGroupSuccessHandler = function (result) {
-        me.toggleGroupContainerProcessingState(false);
 
         var msg = 'Group has been successfully saved.';
-        if (me.attachmentFailed) {
-            msg += ' However the lesson plan could not be attached.';
-        }
+        if (me.groupModel.hasUnsavedAttachment()) {
+            me.saveAttachment(msg);
+        } else {
+            // Let user know the save was successful
+            utils.uiUtils.showTooltip(
+                $(me.groupContainerId).find(me.groupNameLblClass),
+                msg,
+                'top',
+                'manual',
+                3000);
 
-        // Let user know the save was successful
-        utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupNameLblClass),
-            msg,
-            'top',
-            'manual',
-            3000);
+            me.toggleGroupContainerProcessingState(false);
+        }
 
         me.dirty = false;
     }
@@ -934,18 +922,25 @@ student_grouping.groupWidget = function(groupModel){
      *
      */
     this.updateGroupErrorHandler = function (result) {
-        me.toggleGroupContainerProcessingState(false);
-
         var msg = 'Group could not be updated. Please try again later or contact your system administrator.';
 
         var groupUpdatedSuccessfully = result.objectActionResult.isSuccess;
         var failToCreateAssociations = result.failToCreateAssociations;
         var failToDeleteAssociations = result.failToDeleteAssociations;
-        if (groupUpdatedSuccessfully && (
-            (failToCreateAssociations !== null && failToCreateAssociations.length > 0) ||
-            (failToDeleteAssociations !== null && failToDeleteAssociations.length > 0) )) {
-            msg = "Group was updated successfully. However some students could not be assigned to or deleted from the group.";
+        if (groupUpdatedSuccessfully) {
+            msg = "Group was updated successfully.";
+            if ((failToCreateAssociations !== null && failToCreateAssociations.length > 0) ||
+            (failToDeleteAssociations !== null && failToDeleteAssociations.length > 0)) {
+                msg += " However some students could not be assigned to or deleted from the group.";
+            } 
+
+            if (me.groupModel.hasUnsavedAttachment()){
+                me.saveAttachment(msg);
+                return;
+            }
         }
+        
+        me.toggleGroupContainerProcessingState(false);
 
         // Let user know the update was not successful
         utils.uiUtils.showTooltip(
