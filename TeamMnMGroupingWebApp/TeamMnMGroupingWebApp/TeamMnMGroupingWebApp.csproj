@@ -124,6 +124,7 @@
     <Compile Include="Helper\CohortActionHelper.cs" />
     <Compile Include="Helper\CohortHelper.cs" />
     <Compile Include="Helper\ExceptionHelper.cs" />
+    <Compile Include="Helper\FTPHelper.cs" />
     <Compile Include="Helper\GlobalHelper.cs" />
     <Compile Include="Helper\FilterHelper.cs" />
     <Compile Include="Helper\SectionHelper.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Models\DataElement.cs" />
     <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\FilterValue.cs" />
+    <Compile Include="Models\FtpFile.cs" />
     <Compile Include="Models\GroupingDisplayObject.cs" />
     <Compile Include="Models\LessonPlan.cs" />
     <Compile Include="Models\Result.cs" />
@@ -195,7 +197,6 @@
     <Content Include="Content\js\tooltipText.js" />
     <Content Include="Content\js\topBarControls.js" />
     <Content Include="Content\js\utils.js" />
-    <Content Include="Content\js\utils\print.js" />
     <Content Include="Content\js\widgets\groupDetailsWidget.js" />
     <Content Include="Content\js\widgets\groupListItemWidget.js" />
     <Content Include="Content\js\widgets\groupListWidget.js" />
@@ -220,7 +221,6 @@
     <Content Include="Content\vendor\bootstrap\js\bootstrap.js" />
     <Content Include="Content\vendor\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\vendor\dateutils\js\dateUtils.min.js" />
-    <Content Include="Content\vendor\filesaver\js\filesaver.min.js" />
     <Content Include="Content\vendor\fileupload\css\jquery.fileupload-ui.css" />
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload-fp.js" />
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload-ui.js" />
@@ -234,8 +234,6 @@
     <Content Include="Content\vendor\jqplot\js\jquery.jqplot.min.js" />
     <Content Include="Content\vendor\jqueryui\js\jquery-ui.min.js" />
     <Content Include="Content\vendor\jquery\js\jquery.min.js" />
-    <Content Include="Content\vendor\jscrollpane\css\jscrollpane.css" />
-    <Content Include="Content\vendor\jscrollpane\js\jscrollpane.js" />
     <Content Include="Content\vendor\multidraggable\js\jquery.ui.multidraggable.js" />
     <Content Include="Content\vendor\pubsub\js\pubsub.js" />
     <Content Include="Content\vendor\select2\css\select2.css" />
@@ -262,6 +260,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\js\utils\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

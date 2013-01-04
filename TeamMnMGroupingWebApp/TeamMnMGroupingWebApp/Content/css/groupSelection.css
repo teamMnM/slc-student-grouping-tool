@@ -411,6 +411,10 @@
     position:relative;
 }
 
+#file_upload {
+    margin-top: 0.5em;
+}
+
 .add-attachment-btn {
 	margin-top: -0.5em;
 }

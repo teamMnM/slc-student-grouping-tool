@@ -487,6 +487,7 @@
 	opacity: 0.7;
 	border-radius: 0.8em;	
 	overflow-y:auto;
+    overflow-x:hidden;
     z-index: 2; /*1 more than the groups-area*/
 }
 

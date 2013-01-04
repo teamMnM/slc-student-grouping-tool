@@ -42,29 +42,171 @@ namespace TeamMnMGroupingWebApp.Controllers
             }
         }
 
-        [HttpPost]
-        public ContentResult UploadFiles()
+        /// <summary>
+        /// AJAX to this method to append the lesson plan info to the group (not the lesson plan itself)
+        /// </summary>
+        /// <param name="obj">data object to update cohort</param>
+        /// <returns></returns>
+        public ActionResult AttachFile(CohortActionObject obj)
         {
-            var results = new List<ViewDataUploadFilesResult>();
-
-            foreach (string file in Request.Files)
+            try
             {
-                HttpPostedFileBase hpf = Request.Files[file] as HttpPostedFileBase;
-                if (hpf.ContentLength == 0)
-                    continue;
-
-                //string savedFileName = Path.Combine(Server.MapPath("~/App_Data"), Path.GetFileName(hpf.FileName));
-                //hpf.SaveAs(savedFileName); // Save the file
-
-                results.Add(new ViewDataUploadFilesResult()
-                {
-                    Name = hpf.FileName,
-                    Length = hpf.ContentLength,
-                    Type = hpf.ContentType
-                });
+                var cohortResult = ProcessOneCohortFileUpload(obj);
+                return Json(cohortResult, JsonRequestBehavior.AllowGet);
             }
-            // Returns json
-            return Content("{\"name\":\"" + results[0].Name + "\",\"type\":\"" + results[0].Type + "\",\"size\":\"" + string.Format("{0} bytes", results[0].Length) + "\"}", "text/plain");
+            catch (Exception e)
+            {
+                //handle
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Update one cohort
+        /// </summary>
+        /// <param name="obj">data object to update cohort</param>
+        /// <returns>result of the action</returns>
+        public async Task<Result> ProcessOneCohortFileUpload(CohortActionObject obj)
+        {
+            try
+            {
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cohortResult = new Result();
+
+                    var cs = new CohortService(accessToken.ToString());
+                    // update cohort custom entity
+                    var cohortCustom = CohortActionHelper.UpdateCustom(obj, cs);
+
+                    await cohortCustom;
+
+                    //determine whether custom was created successfully
+                    CohortActionHelper.ProcessCustomResult(cohortResult, cohortCustom, HttpStatusCode.NoContent, obj.custom, cs);
+
+                    //remove cohort from cache after an update
+                    HttpContext.Cache.Remove(obj.cohort.id);
+
+                    return cohortResult;
+                }
+                else
+                {
+                    //session expired
+                    return GlobalHelper.GetSessionExpiredResult(obj.cohort.id);
+                }
+            }
+            catch (Exception e)
+            {
+                return GlobalHelper.GetExceptionResult(obj.cohort.id, e);
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult UploadFiles()
+        {
+            try
+            {
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var results = new List<ViewDataUploadFilesResult>();
+                    var groupIds = Request["groupId"].Split(',');
+                    var files = Request.Files;
+
+                    for (int i = 0; i < groupIds.Length; i++)
+                    {
+                        string groupId = groupIds[i];
+                        HttpPostedFileBase hpf = files[i];
+                        bool isSuccess = false;
+                        try
+                        {
+                            // IE passes in the entire path, so we got to make sure we only grab the file name
+                            int startIdx = hpf.FileName.LastIndexOf("\\");
+                            string fileName = startIdx < 0 ? hpf.FileName : hpf.FileName.Substring(startIdx + 2);
+                            string filePath = string.Format("/{0}", fileName);
+                            FTPHelper.uploadFileFromStream(groupId, filePath, hpf.InputStream);
+                            isSuccess = true;
+
+                            // update the cohort custom 
+                            var cs = new CohortService(accessToken.ToString());
+                            var cohort = CohortHelper.GetGroupById(accessToken.ToString(), groupId);
+                            var group = CohortHelper.GetCohortDisplayObject(cs, cohort).Result;
+                            var cohortActionObj = new CohortActionObject()
+                            {
+                                cohort = cohort,
+                                custom = group.custom
+                            };
+                            // attach the lesson plan info
+                            cohortActionObj.custom.lessonPlan = new LessonPlan()
+                            {
+                                name = fileName,
+                                type = hpf.ContentType
+                            };
+
+                            var result = ProcessOneCohortFileUpload(cohortActionObj).Result;
+                            isSuccess = result.customActionResult.isSuccess;
+                        }
+                        catch (Exception ex)
+                        {
+                            isSuccess = false;
+                        }
+
+                        results.Add(new ViewDataUploadFilesResult()
+                        {
+                            CohortId = groupId,
+                            Name = hpf.FileName,
+                            Length = hpf.ContentLength,
+                            Type = hpf.ContentType,
+                            isSuccess = isSuccess
+                        });
+                    }
+
+                    // Returns json
+                    return Json(results);
+                    //Content("{\"name\":\"" + results[0].Name + "\",\"type\":\"" + results[0].Type + "\",\"size\":\"" + string.Format("{0} bytes", results[0].Length) + "\"}", "text/plain");
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            // add error message
+            return null;
+        }
+
+        /// <summary>
+        /// Synchronous method for downloading a group's information as a text file
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public ActionResult DownloadAttachment(string id)
+        {
+            try
+            {
+                var accessToken = Session["access_token"];
+                if (accessToken != null)
+                {
+                    var cs = new CohortService(accessToken.ToString());
+                    var cohort = CohortHelper.GetGroupById(accessToken.ToString(), id);
+                    var cohortDisplayObj = CohortHelper.GetCohortDisplayObject(cs, cohort).Result;
+                    string cohortId = cohort.id;
+                    string fileName = cohortDisplayObj.custom.lessonPlan.name;
+                    string contentType = cohortDisplayObj.custom.lessonPlan.type;
+
+                    Stream fileStream = FTPHelper.downloadFile("/" + cohortId + "/" + fileName);
+
+                    return File(fileStream,
+                         contentType,
+                         fileName);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -449,6 +591,12 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //3) update cohort custom entity
                     var cohortCustom = CohortActionHelper.UpdateCustom(obj, cs);
 
+                    // if there is no lesson plan, then delete the group's directory from the FTP server
+                    if (obj.custom.lessonPlan == null)
+                    {
+                        FTPHelper.removeDir(obj.cohort.id);
+                    }
+
                     //4) remove students from cohort
                     Task<IEnumerable<ActionResponseResult>> removeStudents;
                     if (obj.studentsToDelete != null && obj.studentsToDelete.Count() > 0)
@@ -568,6 +716,9 @@ namespace TeamMnMGroupingWebApp.Controllers
                     var cohortResult = await DeleteCohort(cs, id);
                     //remove cohort from cache after an update
                     HttpContext.Cache.Remove(id);
+
+                    // delete the group's directory from the FTP server
+                    FTPHelper.removeDir(id);
 
                     return cohortResult;
                 }

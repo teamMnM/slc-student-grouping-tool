@@ -10,7 +10,8 @@ namespace TeamMnMGroupingWebApp.Models
         /// <summary>
         /// the base64 string lesson plan to be stored in the custom entity
         /// </summary>
-        public string content { get; set; }
+        /// We have decided to use FTP instead
+        //public string content { get; set; }
 
         /// <summary>
         /// file type. e.g. application/pdf

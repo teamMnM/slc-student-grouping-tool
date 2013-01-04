@@ -79,3 +79,20 @@ utils.printUtils = {
         w.close();
     }
 }
+
+utils.fileUtils = {
+    
+    /**
+     * Initializes the jquery-file-upload plugin on the given element
+     * and calls the callback whenever a file(s) is selected
+     */
+    setupFileUpload: function (elem, callback) {
+        $(elem).fileupload({
+            dataType: 'text',
+            url: 'UploadFiles',
+            add: function (e, data) {
+                callback(data);
+            }
+        });
+    }
+}
