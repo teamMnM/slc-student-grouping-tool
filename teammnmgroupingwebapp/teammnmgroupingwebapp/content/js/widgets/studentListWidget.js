@@ -1,5 +1,11 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * StudentListWidget
+ *
+ * Contains a list of studentWidgets and logic for adding/removing the student
+ * widgets from the screen. 
+ */
 student_grouping.studentListWidget = function () {
     var me = this;
     this.pubSub = PubSub;

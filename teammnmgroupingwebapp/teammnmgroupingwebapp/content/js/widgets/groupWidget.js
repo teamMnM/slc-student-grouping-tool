@@ -3,7 +3,8 @@
 /**
  * GroupWidget
  * This widget contains information about the cohort's name, description, students 
- * assigned to this group, attached lesson plan, and associated student elements
+ * assigned to this group, attached lesson plan, and associated student elements.
+ * Allows the user to modify this information and drag/drop students into the group.
  */
 student_grouping.groupWidget = function(groupModel){
     var me = this;
@@ -17,6 +18,7 @@ student_grouping.groupWidget = function(groupModel){
     this.groupModel = groupModel;
     this.color = null;
     this.studentWidgets = []; // studentInGroupWidget
+    this.attachmentFailed = false;
 
     /**
      * DOM Element Selectors
@@ -52,6 +54,7 @@ student_grouping.groupWidget = function(groupModel){
     this.groupAttachmentImgClass = '.group-attachment-img';
     this.groupPrinterImgClass = '.group-printer-img';
     this.groupNumStudentsBadgeClass = '.group-num-students-badge';
+    this.groupFileUploadClass = '.file-upload';
     this.groupAttachmentPopoverElem = '.group-attachment-popover';
     this.groupAttachmentPopoverFileInput = '.real-upload-txt';
     this.groupAttachmentPopoverFileTxt = '.fake-upload-txt';
@@ -124,16 +127,15 @@ student_grouping.groupWidget = function(groupModel){
                                         '</div>' +
 		                             '</div>' +
                                      '<div class="group-attachment-popover" data-groupContainerId="-1" style="display: none">' +
-			                            '<div class="attachment-top-bar">' +
-				                            '<span>choose a file</span>	' +
-				                            '<button class="attachment-done-btn">done</button>' +
-			                            '</div>' +
 			                            '<div>' +
-				                            '<div class="fakeupload">' +
-					                            '<input type="text" class="fake-upload-txt"/>' +
-					                            '<img src="/Content/img/attachment-icon.png" class="attachment-img"/>' +
-					                            '<input type="file" class="real-upload-txt" class="realupload"/>' +
-				                            '</div>' +
+				                           '<form class="file-upload">' +
+	                                            '<div class="fileupload-buttonbar">' +
+		                                            '<div class="progressbar fileupload-progressbar"></div>' +
+		                                            '<span class="fileinput-button">' +
+                                                        '<input class="file-input-field" type="file" name="files[]">' +
+		                                            '</span>' +
+	                                            '</div>' +
+                                            '</form>' + 
 			                            '</div>' +
 		                            '</div>' +
 			                       '</div>';
@@ -181,7 +183,7 @@ student_grouping.groupWidget = function(groupModel){
             var elem = $(me.groupContainerId).find(e);
             utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
         });
-        
+
         me.showFileAttachment();
         me.setupEventHandlers();
         me.setupSubscriptions();
@@ -249,6 +251,12 @@ student_grouping.groupWidget = function(groupModel){
         $(groupContainer).find(me.groupNameLblClass).click(function (event) {
             if (!me.processing) {
                 me.makeGroupNameEditable();
+            }
+        });
+
+        $(groupContainer).find(me.groupAttachmentNameClass).click(function (event) {
+            if (me.groupModel.hasAttachedFile()) {
+                window.open('DownloadAttachment?id=' + me.groupModel.getId());
             }
         });
 
@@ -320,7 +328,9 @@ student_grouping.groupWidget = function(groupModel){
             me.updateNumStudentsBadge();
 
             // refresh antiscroll to show scrollbar
-            $(me.groupContainerId).find('.group-wrap').antiscroll('refresh');
+            if ($.browser.webkit) {
+                $(me.groupContainerId).find('.group-wrap').antiscroll('refresh');
+            }
         }
     }
 
@@ -515,7 +525,7 @@ student_grouping.groupWidget = function(groupModel){
      * Popup the attachment panel
 	 */
     this.showAttachmentPopover = function () {
-        if (!me.groupModel.hasAttachedFile()) {
+        if (!me.groupModel.hasAttachedFile() && !me.groupModel.hasUnsavedAttachment()) {
             var groupContainerId = "gc" + me.groupModel.getId();
             var groupContainer = $("#" + groupContainerId);
 
@@ -533,20 +543,9 @@ student_grouping.groupWidget = function(groupModel){
                 $(popover).attr('data-groupContainerId', groupContainerId);
                 $(popover).css('display', '');
 
-                $(me.groupContainerId).find(me.groupAttachmentPopoverDoneBtnElem).unbind('click');
-                $(me.groupContainerId).find(me.groupAttachmentPopoverDoneBtnElem).click(function(event){
-                    me.attachFile(null);
-                });
-
-                $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).val('');
-                $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt).val('');
-                $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).unbind('change');
-                $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).change(function () {
-                    // why am i doing this? $(document).unbind('mouseup');
-                    var file = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files')[0];
-                    $(me.groupContainerId).find(me.groupAttachmentPopoverFileTxt)
-                        .val(file.name);
-                    me.markDirty(true);
+                var fileUploadElem = me.groupFileUploadClass;
+                utils.fileUtils.setupFileUpload(fileUploadElem, function (data) {
+                    me.attachSelectedFile(data);
                 });
 
             } else {
@@ -557,52 +556,18 @@ student_grouping.groupWidget = function(groupModel){
     }
 
     /**
-	 * Attach the user specified file to this group  
-     * @param callback
-	 */
-    this.attachFile = function (callback) {
-        var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
-        var file = files[0];
-        if (file !== undefined) {
-
-            var reader = new FileReader();
-
-            // Closure to capture the file information.
-            reader.onload = (function (theFile) {
-                return function (e) {
-                    // Render thumbnail.
-                    var result = e.target.result;
-                    var contentStartIndex = result.indexOf(',');
-                    var type = result.substring(0, contentStartIndex);
-                    var content = result.substring(contentStartIndex + 1);
-                    var attachment = {
-                        name: file.name,
-                        type: type,
-                        content: content
-                    }
-
-                    me.groupModel.attachFile(attachment);
-
-                    // show the div with the attachment
-                    me.showFileAttachment();
-
-                    if (callback !== undefined && callback !== null){
-                        callback(attachment);
-                    }
-                };
-            })(file);
-
-            // Read in the image file as a data URL.
-            reader.readAsDataURL(file);
-
-            // hide the popover			
-            $(me.groupContainerId).find(me.groupAttachmentPopoverElem).hide();
-
-            me.markDirty();
-        } else {
-            me.groupModel.attachFile(null);
-        }
+     * Attach the selected file to the group
+     * @param data - arg passed by the fileupload plugin for async upload to server
+     */
+    this.attachSelectedFile = function (data) {
+        me.groupModel.attachmentData = data;
+        var fileName = data.files[0].name;
+        $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
+        $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
+        $(me.groupContainerId).find(me.groupAttachmentPopoverElem).hide();
+        me.markDirty();
     }
+
 
     /**
 	 * Remove the attachment from the group 
@@ -615,20 +580,16 @@ student_grouping.groupWidget = function(groupModel){
         me.markDirty();
     }
 
-    /**
-     * TODO implement better solution for cutting off long file names
+    /**     
 	 * Show the attached file
 	 */
     this.showFileAttachment = function () {
-        var file = me.groupModel.attachedFile;
-        if (file !== null && file !== undefined) {
-            $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('href', file.type + "," + file.content);
-            $(me.groupContainerId).find(me.groupAttachmentNameClass).attr('download', file.name);
-
-            var fileName = file.name;
+        if (me.groupModel.hasAttachedFile()) {
+            var fileName = me.groupModel.attachedFile.name;
             $(me.groupContainerId).find(me.groupAttachmentNameClass).html(fileName);
             $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
-
+        } else {
+            $(me.groupContainerId).find(me.groupAttachmentDivClass).hide();
         }
     }
 
@@ -823,23 +784,37 @@ student_grouping.groupWidget = function(groupModel){
         // determine the callback handlers based on whether its a new group or not
         var successHandler = null;
         var errorHandler = null;
+
+        // if group is new we save the group first, then the attachment
         if (me.groupModel.isNewGroup()) {
             successHandler = me.createGroupSuccessHandler;
             errorHandler = me.createGroupErrorHandler;
+            me.groupModel.saveGroupChanges(successHandler, errorHandler);
         } else {
+
             successHandler = me.updateGroupSuccessHandler;
             errorHandler = me.updateGroupErrorHandler;
+
+            // upload unsaved attachment to the server
+            var hasUnsavedAttachment = me.groupModel.hasUnsavedAttachment();
+            if (hasUnsavedAttachment) {
+                me.groupModel.uploadAttachment(
+                    function () {
+                        me.attachmentFailed = false;
+                        me.groupModel.saveGroupChanges(successHandler, errorHandler);
+                    },
+                    function () {
+                        me.attachmentFailed = true;
+                        me.groupModel.saveGroupChanges(successHandler, errorHandler);
+                    });
+            } else {
+                me.groupModel.saveGroupChanges(successHandler, errorHandler);
+            }
         }
 
         me.toggleGroupContainerProcessingState(true);
         
-        if (me.hasUnattachedFile()) {
-            me.attachFile(function (lessonPlan) {
-                me.groupModel.saveGroupChanges(successHandler, errorHandler);
-            });
-        } else {
-            me.groupModel.saveGroupChanges(successHandler, errorHandler);
-        }
+        
     }
 
     /**
@@ -848,19 +823,27 @@ student_grouping.groupWidget = function(groupModel){
     this.createGroupSuccessHandler = function (result) {
         me.updateId(result.objectActionResult.objectId);
 
-        // Let user know the created was successful
-        utils.uiUtils.showTooltip(
-            $(me.groupContainerId).find(me.groupNameLblClass),
-            'Group has been successfully created.',
-            'top',
-            'manual',
-            3000);
+        var msg = 'Group has been successfully created.';
 
-        me.toggleGroupContainerProcessingState(false);
-        me.dirty = false;
+        // upload unsaved lesson plan if there is one
+        if (me.groupModel.hasUnsavedAttachment()) {
+            me.saveAttachment(msg);
+        } else {
 
-        // request to be added to list of existing groups
-        me.pubSub.publish('add-to-existing-groups', me.groupModel);
+            // Let user know the created was successful
+            utils.uiUtils.showTooltip(
+                $(me.groupContainerId).find(me.groupNameLblClass),
+                msg,
+                'top',
+                'manual',
+                3000);
+
+            me.toggleGroupContainerProcessingState(false);
+            me.dirty = false;
+
+            // request to be added to list of existing groups
+            me.pubSub.publish('add-to-existing-groups', me.groupModel);
+        }
     }
 
     /**
@@ -874,7 +857,14 @@ student_grouping.groupWidget = function(groupModel){
         var groupCreatedSuccessfully = result.objectActionResult.isSuccess;
         if (groupCreatedSuccessfully && (result.failToCreateAssociations.length > 0)) {
             me.updateId(result.objectActionResult.objectId);
-            msg = "Group was created successfully. However some students could not be assigned to the group.";
+
+            // upload unsaved lesson plan if there is one
+            if (me.groupModel.hasUnsavedAttachment()) {
+                me.saveAttachment("Group was created successfully");
+                return;
+            } else {
+                msg = "Group was created successfully. However some students could not be assigned to the group.";
+            }            
         }
 
         // Let user know the create was not successful
@@ -885,6 +875,38 @@ student_grouping.groupWidget = function(groupModel){
             'manual',
             3000);
     }
+    
+    /**
+     * Handles saving the attached lesson plan back to the server
+     */
+    this.saveAttachment = function (msg) {
+        // upload the attachment after the group has been created and assigned an id
+        me.groupModel.uploadAttachment(
+            // success
+            function () {
+                me.attachmentFailed = false;
+
+                // save the cohort again (this saves the attachment name to the SLI datastore via custom)
+                me.saveGroupChanges();
+            },
+            // error
+            function () {
+                me.attachmentFailed = true;
+                msg += ' However the lesson plan could not be attached.';
+
+                // Let user know the lesson plan was not attached
+                utils.uiUtils.showTooltip(
+                    $(me.groupContainerId).find(me.groupNameLblClass),
+                    msg,
+                    'top',
+                    'manual',
+                    3000);
+
+                me.toggleGroupContainerProcessingState(false);
+            });
+
+    }
+
 
     /**
      *
@@ -892,10 +914,15 @@ student_grouping.groupWidget = function(groupModel){
     this.updateGroupSuccessHandler = function (result) {
         me.toggleGroupContainerProcessingState(false);
 
+        var msg = 'Group has been successfully saved.';
+        if (me.attachmentFailed) {
+            msg += ' However the lesson plan could not be attached.';
+        }
+
         // Let user know the save was successful
         utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
-            'Group has been successfully updated.',
+            msg,
             'top',
             'manual',
             3000);

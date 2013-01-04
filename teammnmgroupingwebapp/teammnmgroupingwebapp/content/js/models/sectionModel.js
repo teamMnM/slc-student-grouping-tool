@@ -1,8 +1,12 @@
 ﻿var student_grouping = student_grouping || {};
 
 /**
- * Client side group model
- * @param groupData - Server side group model
+ * SectionModel 
+ * @param id 
+ * @param title
+ * @param date
+ *
+ * Sections are groups of cohorts with the same last modified date.
  */
 student_grouping.sectionModel = function (id, title, date) {
     var me = this;

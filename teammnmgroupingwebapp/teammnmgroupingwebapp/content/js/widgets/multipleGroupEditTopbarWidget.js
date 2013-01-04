@@ -185,7 +185,7 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
      *
      */
     this.logout = function () {
-        var hasDirtyGroups = student_grouping.groupsListComponent.hasDirtyGroups();
+        var hasDirtyGroups = student_grouping.groupListWidgetComponent.hasDirtyGroups();
         if (hasDirtyGroups) {
             var confirmDirtyLogout = confirm("You have unsaved changes. Would you still like to log out?");
             if (!confirmDirtyLogout) {

@@ -1,5 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * GroupListItemWidget
+ *
+ * Represents an individual group inside the group list. 
+ */
 student_grouping.groupListItemWidget = function (groupModel) {
     var me = this;
     this.pubSub = PubSub;
@@ -59,6 +64,10 @@ student_grouping.groupListItemWidget = function (groupModel) {
             }
         });
 
+        $(me.containerId).find(me.groupAttachmentLinkClass).click(function (event) {
+            me.downloadAttachment();
+        });
+
         $(me.containerId).find(me.groupDeleteIconClass).click(function (event) {
             me.deleteGroup();
         });
@@ -110,11 +119,8 @@ student_grouping.groupListItemWidget = function (groupModel) {
 	 * Show the attached file
 	 */
     this.showFileAttachment = function () {
-        var file = me.groupModel.attachedFile;
-        if (file !== null && file !== undefined) {
-            $(me.containerId).find(me.groupAttachmentLinkClass).attr('href', file.type + "," + file.content);
-            $(me.containerId).find(me.groupAttachmentLinkClass).attr('download', file.name);
-
+        var hasLessonPlan = me.groupModel.hasAttachedFile();
+        if (hasLessonPlan) {
             $(me.containerId).find(me.groupAttachmentLinkClass).show();
         } else {
             $(me.containerId).find(me.groupAttachmentLinkClass).hide();
@@ -317,5 +323,14 @@ student_grouping.groupListItemWidget = function (groupModel) {
         return me.groupModel.groupData.cohortIdentifier
                 .toLowerCase()
                 .indexOf(groupName.toLowerCase()) !== -1;
+    }
+
+    /**
+     * Download the lesson plan attached to this group
+     */
+    me.downloadAttachment = function () {
+        if (me.groupModel.hasAttachedFile()) {
+            window.open('DownloadAttachment?id=' + me.groupModel.getId());
+        }
     }
 }

@@ -1,5 +1,11 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * StudentFilterWidget
+ *
+ * Allows the user to apply filters to the list of students in 
+ * order to narrow down their search for a student(s).
+ */
 student_grouping.studentFilterWidget = function () {
     var me = this;
     this.pubSub = PubSub;
@@ -151,6 +157,7 @@ student_grouping.studentFilterWidget = function () {
         var selectedAttrName = $(me.filterAttributeElem).find('option:selected').text();
         var selectedAttrId = $(me.filterAttributeElem).val();
         var selectedOperator = $(me.filterOperatorElem).val();
+        var selectedText = '';
 
         // get value from either textbox or dropdown
         var value = $(me.filterValueTxtElem).val();
@@ -167,12 +174,15 @@ student_grouping.studentFilterWidget = function () {
 
         if (value === '') {
             // check whether we are checking for a single value or multiple values
-            if ($(me.filterValuesSelElem).attr('multiple') === 'multiple') {
+            if ($(me.filterValueSelElem).attr('multiple') === 'multiple') {
                 _.each(dropdownVal, function (val) {
                     value += (val + ";");
+                    var selText = $(me.filterValueSelElem).find('option[value="' + val + '"]').html();
+                    selectedText += (selText + "; ");
                 });
             } else {
                 value = dropdownVal;
+                selectedText = dropdownVal;
             }
         }
 
@@ -195,7 +205,7 @@ student_grouping.studentFilterWidget = function () {
         // render the selected filter on screen
         var selectedFilterHtml = $(me.selectedFilterTemplate);
         $(selectedFilterHtml).find('.filter-text').html(filter.attributeName + ' '
-    		+ filter.operator + ' ' + '"' + filter.value + '"');
+    		+ filter.operator + ' ' + '"' + selectedText + '"');
         $(selectedFilterHtml).attr('data-selectedFilter', filter.attributeId);
 
         $(me.selectedFiltersElem).append(selectedFilterHtml);

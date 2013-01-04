@@ -5,6 +5,8 @@ student_grouping.multipleGroupEditMain = function () {
     this.pubSub = PubSub;  
 
     this.mainContentClass = '.main-content';
+    this.userInactivityModal = "#user-inactivity-modal";
+    this.userInactivityOkBtn = ".user-inactivity-ok";
 
     this.init = function () {
         // load main widgets onto app namespace
@@ -25,6 +27,8 @@ student_grouping.multipleGroupEditMain = function () {
                 window.location = '/';
             }
         }, 60000);
+
+        me.setupIdleTimer();
 
         $.ajax({
             type: 'GET',
@@ -100,6 +104,20 @@ student_grouping.multipleGroupEditMain = function () {
 
         me.pubSub.subscribe('logout', me.logout);
     },
+
+    /**
+     * Detect inactivity. If user has been idle for 20 minutes,
+     * warn the user and then perform a logout operation
+     */
+     this.setupIdleTimer = function () {
+         $.idleTimer(1200000);
+         $(document).bind('idle.idleTimer', function () {
+             setTimeout(function () {
+                 me.logout();
+             }, 10000);
+             $(me.userInactivityModal).modal('show');
+         });
+     },
 
     this.logout = function () {
         $.ajax({

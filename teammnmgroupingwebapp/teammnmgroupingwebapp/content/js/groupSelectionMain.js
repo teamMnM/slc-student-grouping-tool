@@ -69,6 +69,10 @@ student_grouping.groupSelectionMain = function () {
         me.pubSub.subscribe('logout', me.logout);
     }
 
+    /**
+     * Detect inactivity. If user has been idle for 20 minutes,
+     * warn the user and then perform a logout operation
+     */
     this.setupIdleTimer = function () {
         $.idleTimer(1200000);
         $(document).bind('idle.idleTimer', function () {

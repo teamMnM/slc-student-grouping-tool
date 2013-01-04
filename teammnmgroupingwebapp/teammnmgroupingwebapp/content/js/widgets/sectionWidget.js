@@ -1,5 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * SectionWidget
+ *
+ * Groups are grouped into Sections depending on their last modified data
+ */
 student_grouping.sectionWidget = function (sectionModel) {
     var me = this;
     this.pubSub = PubSub;

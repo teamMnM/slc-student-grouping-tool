@@ -1,5 +1,12 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * StudentFiltersModel
+ * @param filters
+ *
+ * Contains logic for filtering a list of studentModels and maintaining
+ * a list of available and selected student data filters.
+ */
 student_grouping.studentFiltersModel = function (filters) {
     var me = this;
 

@@ -1,5 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * GroupListWidget
+ *
+ * Contains a list of groupWidgets and logic for adding/removing groups from the screen.
+ */
 student_grouping.groupListWidget = function () {
     var me = this;
     this.pubSub = PubSub;
@@ -279,7 +284,7 @@ student_grouping.groupListWidget = function () {
     /**     
      * Saving changes to all groups
      */
-    this.saveAllGroups = function () {
+    this.saveAllGroups = function (prevResults) {
         var groupWidgets = me.groupWidgets;
 
         var groupsToSave = [];
@@ -323,7 +328,7 @@ student_grouping.groupListWidget = function () {
                     return;
                 }
 
-                me.saveAllGroupsSuccessHandler(results, originalGroupsToSave);
+                me.saveAllGroupsSuccessHandler(prevResults, results, originalGroupsToSave);
             },
             error: me.saveAllGroupsErrorHandler
         });
@@ -332,11 +337,54 @@ student_grouping.groupListWidget = function () {
     /**
      * TODO refactor assign ids to new groups
      */
-    this.saveAllGroupsSuccessHandler = function (results, groupsToSave) {
+    this.saveAllGroupsSuccessHandler = function (prevResults, results, groupsToSave) {
         var numSuccessfulSaves = 0;
         var numResults = results.length;
         var successDiv = $("<ul>");
         var failDiv = $("<ul>");
+
+        // loop through groups and determine whether they have unsaved attachments
+        var groupIdsWithUnsavedAttachments = [];
+        var files = [];
+        var groupsToSaveAgain = [];
+        var firstGroupModel = null;
+        for (var i = 0; i < numResults; i++) {
+            var groupWidget = groupsToSave[i];
+
+            // aggregate all the files and ids of the attachments 
+            var groupModel = groupWidget.groupModel;
+            if (groupModel.hasUnsavedAttachment()) {
+                firstGroupModel = groupModel;
+                groupIdsWithUnsavedAttachments.push(groupModel.getId());
+                
+                var file = groupModel.getUnsavedAttachmentFile();
+                files.push(file);
+                groupsToSaveAgain.push(groupModel);
+            }
+        }
+
+        // upload those attachments to the server
+        if (groupIdsWithUnsavedAttachments.length > 0) {
+            var attachmentData = firstGroupModel.attachmentData;
+            attachmentData.files = files;
+            var ids = "";
+            for (var i = 0; i < groupIdsWithUnsavedAttachments.length; i++) {
+                ids += groupIdsWithUnsavedAttachments[i];
+                if (i <= groupIdsWithUnsavedAttachments - 1) {
+                    ids += ",";
+                }
+            }
+
+            attachmentData.formData = { "groupId": ids }
+            attachmentData.submit()
+                .success(function (result, textStatus, jqXHR) {
+                    
+                })
+                .error(function (jqXHR, textStatus, errorThrown) {
+
+                });
+        }
+
         for (var i = 0; i < numResults; i++) {
             var result = results[i];
             var groupWidget = groupsToSave[i];
@@ -400,6 +448,16 @@ student_grouping.groupListWidget = function () {
         $(me.saveAllGroupsModalElem).modal('show');
 
         me.saveAllComplete();
+    }
+
+    /**
+     * Merge the results of the lesson plan uploads with the save results
+     */
+    this.mergeUploadResults = function (uploadResults, saveResults) {
+        var saveResultsLength = saveResults.length;
+        for (var i = 0; i < saveResultsLength; i++) {
+
+        }
     }
 
     /**

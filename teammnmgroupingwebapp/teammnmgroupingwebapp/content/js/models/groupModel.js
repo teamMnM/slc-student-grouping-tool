@@ -1,7 +1,8 @@
 ﻿var student_grouping = student_grouping || {};
 
 /**
- * Client side group model
+ * Client side group model. Contains the application logic for manipulating
+ * the group on the client side and saving these changes back to the server
  * @param groupData - Server side group model
  */
 student_grouping.groupModel = function (groupData) {
@@ -14,6 +15,7 @@ student_grouping.groupModel = function (groupData) {
     this.students = [];
     this.selectedAttributes = [];
     this.attachedFile = null;
+    this.attachmentData = null;
 
     /**************************
      * GETTER AND SETTERS
@@ -75,7 +77,7 @@ student_grouping.groupModel = function (groupData) {
 
         // reset student list
         me.students = [];
-
+        me.attachmentData = null;
         // copy over group data
         me.groupData = $.extend(true, {}, me.serverGroup.cohort);
 
@@ -119,24 +121,46 @@ student_grouping.groupModel = function (groupData) {
     }
 
     /**
-     * Returns true if there is no attached file
-     */
-    this.hasAttachedFile = function () {
-        return me.attachedFile !== null;
-    }
-
-    /**
-     * Attaches the given file to the group
+     * Attach the given file to the group
      */
     this.attachFile = function (file) {
         me.attachedFile = file;
     }
 
     /**
-     * Removes this group's file attachment
+     * Remove the attached lesson plan
      */
     this.removeAttachedFile = function () {
         me.attachedFile = null;
+
+        if (me.hasUnsavedAttachment()) {
+            me.attachmentData = null;
+        }
+    }
+
+    /**
+     * Returns true if the group has a lesson plan attached
+     */
+    this.hasAttachedFile = function () {
+        return me.attachedFile !== null;
+    }
+
+    /**
+     * Returns true if there is a unsaved attachment (not yet uploaded to server)
+     */
+    this.hasUnsavedAttachment = function () {
+        return me.attachmentData !== null;
+    }
+
+    /**
+     * Returns the file object from the attachment data
+     */
+    this.getUnsavedAttachmentFile = function () {
+        if (me.hasUnsavedAttachment()) {
+            return me.attachmentData.files[0]
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -211,6 +235,55 @@ student_grouping.groupModel = function (groupData) {
         }
 
         return cohortActionObject;
+    }
+
+    /**
+     * Uploads the unsaved attachment to the server
+     * @param callback - function to call after uploading to the server
+     */
+    this.uploadAttachment = function (successCallback, errorCallback) {
+        if (me.attachmentData !== null) {
+
+            var attachmentData = me.attachmentData;
+
+            // pass the group id
+            attachmentData.formData = { "groupId": me.getId() }
+
+            // submit() POSTS the file to the server
+            attachmentData.submit()
+                .success(function (result, textStatus, jqXHR) {
+                    me.attachmentData = null;
+
+                    // attached the uploaded file to this model
+                    var jsonResult = JSON.parse(result);
+                    var res = jsonResult[0];
+                    var lessonPlan = {
+                        name: res.Name,
+                        type: res.Type
+                    }
+                    me.attachFile(lessonPlan);
+                    successCallback(result);
+                })
+                .error(function (jqXHR, textStatus, errorThrown){
+                    errorCallback(result);
+                });
+        }
+    }
+
+    /**
+     * 
+     */
+    this.parseUploadAttachmentResult = function (result) {
+        me.attachmentData = null;
+
+        // attached the uploaded file to this model
+        var jsonResult = JSON.parse(result);
+        var res = jsonResult[0];
+        var lessonPlan = {
+            name: res.Name,
+            type: res.Type
+        }
+        me.attachFile(lessonPlan);
     }
 
     /**

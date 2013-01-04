@@ -1,5 +1,10 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * SectionListWidget
+ *
+ * Contains a list of section widgets.
+ */
 student_grouping.sectionListWidget = function () {
     var me = this;
     this.pubSub = PubSub;
@@ -71,6 +76,7 @@ student_grouping.sectionListWidget = function () {
             );
             me.sectionModels[key] = sectionModel;
 
+            // TODO check timestamp to prepend or append
             var sectionWidget = new student_grouping.sectionWidget(sectionModel);
             $(me.groupSectionList).append(sectionWidget.generateTemplate());
             sectionWidget.init();

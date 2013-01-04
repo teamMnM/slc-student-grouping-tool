@@ -1,5 +1,11 @@
 ﻿var student_grouping = student_grouping || {};
 
+/**
+ * StudentInGroupWidget
+ *
+ * Represents a student that has been assigned to a group. 
+ * Contains a list of attributes that can be toggled visible/not visible.
+ */
 student_grouping.studentInGroupWidget = function (groupId, studentModel) {
     var me = this;
     this.pubSub = PubSub;
