@@ -79,6 +79,11 @@ student_grouping.groupDetailsWidget = function () {
             $(me.lessonPlanAttachmentDiv).show();
             $(me.lessonPlanUploadDiv).hide();
             me.toggleDirty(true);
+
+            // hack needed for IE, otherwise the controls are frozen
+            if ($.browser.msie) {
+                $(".num-groups-create-txt").focus();
+            }
         });
     }
 
@@ -457,6 +462,13 @@ student_grouping.groupDetailsWidget = function () {
      * Go to multiple groups edit page to edit this group
      */
     this.editGroup = function () {
+        // warn user about unsaved changes, if any
+        if (me.dirty) {
+            var confirm = window.confirm("You have unsaved changes. If you continue these changes will be lost. Continue?");
+            if (!confirm) {
+                return;
+            }
+        }
         var groupId = me.groupModel.getId();
         window.location = 'MultipleGroupsEdit?selGroups=' + groupId;
     }

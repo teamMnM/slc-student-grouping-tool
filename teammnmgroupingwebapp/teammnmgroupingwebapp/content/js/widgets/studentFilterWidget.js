@@ -157,10 +157,10 @@ student_grouping.studentFilterWidget = function () {
         var selectedAttrName = $(me.filterAttributeElem).find('option:selected').text();
         var selectedAttrId = $(me.filterAttributeElem).val();
         var selectedOperator = $(me.filterOperatorElem).val();
-        var selectedText = '';
 
         // get value from either textbox or dropdown
         var value = $(me.filterValueTxtElem).val();
+        var selectedText = value;
         var dropdownVal = $(me.filterValueSelElem).val() !== null ? $(me.filterValueSelElem).val() : [];
 
         // make sure attribute, operator and value are selected before applying the filter

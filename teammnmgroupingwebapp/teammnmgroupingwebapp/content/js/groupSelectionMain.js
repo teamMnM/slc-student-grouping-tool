@@ -33,7 +33,7 @@ student_grouping.groupSelectionMain = function () {
                     window.location = "/Home";
                 }
 
-                me.sections = data.sections;
+                student_grouping.sections = data.sections;
 
                 // setup the groups list
                 var groups = data.cohorts;

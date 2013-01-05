@@ -13,8 +13,8 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     this.printBtnElem = '#img-print-btn';
     this.saveAllBtnElem = '#img-save-btn';
     this.logoutBtnElem = '#logout-btn';
-
-    this.savingAll = false;
+    
+    this.processing = false;
     this.groupModels = [];
 
     /**************************
@@ -55,14 +55,18 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     * Sets up listeners for pubsub events
     */ 
     this.setupSubscriptions = function () {
+
+        me.pubSub.subscribe('processing', function () {
+            me.processing = true;
+        });
+
+        me.pubSub.subscribe('processing-complete', function () {
+            me.processing = false;
+        });
+
         // remove group from dropdown if deleted
         me.pubSub.subscribe('group-deleted', function (id) {
             me.removeGroup(id);
-        });
-
-        // TODO add description
-        me.pubSub.subscribe('save-all-completed', function () {
-            me.savingAll = false;
         });
 
         // add newly created (saved to server) group to dropdown list
@@ -151,8 +155,8 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
      */
     this.saveAllGroups = function () {
 
-        if (!me.savingAll) {
-            me.savingAll = true; // prevent user from trigger save all while saving
+        if (!me.processing) {
+            me.processing = true; // prevent user from trigger save all while saving
             me.pubSub.publish('save-all-groups');
         }
     }
@@ -161,7 +165,7 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
      * Handle click of the print all groups button
      */
     this.printAllGroups = function () {
-        if (!me.savingAll) {
+        if (!me.processing) {
             me.pubSub.publish('print-all-groups');
         }
     }

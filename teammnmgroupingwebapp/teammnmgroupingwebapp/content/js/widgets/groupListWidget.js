@@ -311,8 +311,6 @@ student_grouping.groupListWidget = function () {
         $(me.groupsAreaClass).spin();
         $(me.groupsAreaClass).css('opacity', 0.2);
 
-        // TODO attach files that haven't been attached
-
         // call server to add all new groups
         $.ajax({
             type: 'POST',
@@ -332,6 +330,8 @@ student_grouping.groupListWidget = function () {
             },
             error: me.saveAllGroupsErrorHandler
         });
+
+        me.pubSub.publish('processing');
     }
 
     /**
@@ -510,7 +510,7 @@ student_grouping.groupListWidget = function () {
     this.saveAllComplete = function () {
 
         // notify others that save all has completed
-        me.pubSub.publish('save-all-completed');
+        me.pubSub.publish('processing-complete');
 
         // re-enable the groups area screen
         $(me.groupsAreaClass).spin(false);

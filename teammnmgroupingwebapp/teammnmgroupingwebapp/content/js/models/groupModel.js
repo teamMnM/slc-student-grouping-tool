@@ -274,6 +274,7 @@ student_grouping.groupModel = function (groupData) {
             name: res.Name,
             type: res.Type
         }
+        me.serverGroup.custom.lessonPlan = lessonPlan;
         me.attachFile(lessonPlan);
         return jsonResult;
     }
@@ -352,7 +353,7 @@ student_grouping.groupModel = function (groupData) {
     }
 
     /**
-     * TODO add description
+     * Sync the group's student list with changes from server
      * @param failToCreateAssociations - failed to create new student associations
      * @param failToDeleAssociations - failed to delete student associations
      */
@@ -441,7 +442,6 @@ student_grouping.groupModel = function (groupData) {
                 }
             },
             error: function (result) {
-                // TODO if there is id then set it
                 errorHandler(result);
             }
         });

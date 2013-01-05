@@ -96,7 +96,15 @@ student_grouping.groupWidget = function(groupModel){
                                         '</div>' +
 									    '<div style="text-align:center; position:relative;">' +
                                             '<img class="group-download-img" src="/Content/img/download-icon.png"/>' +
-										    '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
+                                            '<form class="file-upload">' +
+	                                            '<div class="fileupload-buttonbar">' +
+		                                            '<div class="progressbar fileupload-progressbar"></div>' +
+		                                            '<span class="fileinput-button">' +
+                                                        '<img class="group-attachment-img" src="/Content/img/attachment-icon.png"/>' +
+                                                        '<input class="file-input-field" type="file" name="files[]">' +
+		                                            '</span>' +
+	                                            '</div>' +
+                                            '</form>' +                                            
                                             '<img class="group-printer-img" src="/Content/img/printer-icon.png"/>' +
 										    '<span class="badge group-num-students-badge"></span>' +
 										    '<button class="add-data-button btn btn-link">add data</button>' +
@@ -126,18 +134,6 @@ student_grouping.groupWidget = function(groupModel){
                                             '</div>' +
                                         '</div>' +
 		                             '</div>' +
-                                     '<div class="group-attachment-popover" data-groupContainerId="-1" style="display: none">' +
-			                            '<div>' +
-				                           '<form class="file-upload">' +
-	                                            '<div class="fileupload-buttonbar">' +
-		                                            '<div class="progressbar fileupload-progressbar"></div>' +
-		                                            '<span class="fileinput-button">' +
-                                                        '<input class="file-input-field" type="file" name="files[]">' +
-		                                            '</span>' +
-	                                            '</div>' +
-                                            '</form>' + 
-			                            '</div>' +
-		                            '</div>' +
 			                       '</div>';
 
     
@@ -214,12 +210,6 @@ student_grouping.groupWidget = function(groupModel){
             }
         });
 
-        $(groupContainer).find(me.groupAttachmentImgClass).click(function (event) {
-            if (!me.processing) {
-                me.showAttachmentPopover();
-            }
-        });
-
         $(groupContainer).find(me.groupPrinterImgClass).click(function (event) {
             if (!me.processing) {
                 me.printGroup();
@@ -273,6 +263,11 @@ student_grouping.groupWidget = function(groupModel){
                     3000);
             }
         });
+
+        var fileUploadElem = $(me.groupFileUploadClass);
+        utils.fileUtils.setupFileUpload(fileUploadElem, function (data) {
+            me.attachSelectedFile(data);
+        });
     }
     
     /**
@@ -283,12 +278,12 @@ student_grouping.groupWidget = function(groupModel){
         me.pubSub.subscribe('remove-student-from-group', me.removeStudent);
 
         // disable all group actions while save all is going on
-        me.pubSub.subscribe('save-all-groups', function () {
+        me.pubSub.subscribe('processing', function () {
             me.processing = true;
         });
 
         // enable all group actions after save is completed
-        me.pubSub.subscribe('save-all-completed', function () {
+        me.pubSub.subscribe('processing-complete', function () {
             me.processing = false;
         });
     }
@@ -543,10 +538,7 @@ student_grouping.groupWidget = function(groupModel){
                 $(popover).attr('data-groupContainerId', groupContainerId);
                 $(popover).css('display', '');
 
-                var fileUploadElem = me.groupFileUploadClass;
-                utils.fileUtils.setupFileUpload(fileUploadElem, function (data) {
-                    me.attachSelectedFile(data);
-                });
+                
 
             } else {
                 // close it
@@ -566,6 +558,11 @@ student_grouping.groupWidget = function(groupModel){
         $(me.groupContainerId).find(me.groupAttachmentDivClass).show();
         $(me.groupContainerId).find(me.groupAttachmentPopoverElem).hide();
         me.markDirty();
+
+        if ($.browser.msie) {
+            // hack needed for IE
+            $("#filter-value").focus();
+        }
     }
 
 
@@ -795,7 +792,8 @@ student_grouping.groupWidget = function(groupModel){
         }
 
         me.groupModel.saveGroupChanges(successHandler, errorHandler);
-        me.toggleGroupContainerProcessingState(true);               
+        me.toggleGroupContainerProcessingState(true);
+        me.pubSub.publish('processing');
     }
 
     /**
@@ -817,8 +815,7 @@ student_grouping.groupWidget = function(groupModel){
                 'top',
                 'manual',
                 3000);
-
-            me.toggleGroupContainerProcessingState(false);
+            me.saveComplete();
         }
 
         me.dirty = false;
@@ -847,8 +844,7 @@ student_grouping.groupWidget = function(groupModel){
             }
         }
 
-        me.toggleGroupContainerProcessingState(false);
-
+        me.saveComplete();
         // Let user know the create was not successful
         utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
@@ -873,8 +869,7 @@ student_grouping.groupWidget = function(groupModel){
                     'top',
                     'manual',
                     3000);
-
-                me.toggleGroupContainerProcessingState(false);
+                me.saveComplete();
             },
             // error
             function () {
@@ -890,10 +885,9 @@ student_grouping.groupWidget = function(groupModel){
 
                 // mark dirty again if lesson plan could not be uploaded
                 me.markDirty();
-                me.toggleGroupContainerProcessingState(false);
+                me.saveComplete();
             });
     }
-
 
     /**
      *
@@ -912,7 +906,7 @@ student_grouping.groupWidget = function(groupModel){
                 'manual',
                 3000);
 
-            me.toggleGroupContainerProcessingState(false);
+            me.saveComplete();
         }
 
         me.dirty = false;
@@ -939,9 +933,8 @@ student_grouping.groupWidget = function(groupModel){
                 return;
             }
         }
-        
-        me.toggleGroupContainerProcessingState(false);
 
+        me.saveComplete();
         // Let user know the update was not successful
         utils.uiUtils.showTooltip(
             $(me.groupContainerId).find(me.groupNameLblClass),
@@ -949,6 +942,11 @@ student_grouping.groupWidget = function(groupModel){
             'top',
             'manual',
             3000);
+    }
+
+    this.saveComplete = function () {
+        me.pubSub.publish('processing-complete');
+        me.toggleGroupContainerProcessingState(false);
     }
 
     /**
@@ -1037,9 +1035,9 @@ student_grouping.groupWidget = function(groupModel){
             var studentWidget = studentWidgets[studentId];
             studentWidget.remove();
             studentWidget = null;
+            delete studentWidgets[studentId];
         }
-        // remove all pointers to these widgets
-        studentWidgets = null;
+        me.updateNumStudentsBadge();
     }
 
     /**

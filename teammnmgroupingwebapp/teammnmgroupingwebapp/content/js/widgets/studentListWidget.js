@@ -21,6 +21,7 @@ student_grouping.studentListWidget = function () {
 
     // keep track of whether user has selected all
     this.allSelected = false;
+    this.processing = false;
 
     /**************************
      * SETUP METHODS
@@ -80,7 +81,9 @@ student_grouping.studentListWidget = function () {
         });
 
         $(me.randomBtn).click(function (event) {
-            me.assignRandom();
+            if (!me.processing) {
+                me.assignRandom();
+            }
         });
     }
 
@@ -89,7 +92,14 @@ student_grouping.studentListWidget = function () {
       */
     this.setupSubscriptions = function () {
 
-        // TODO add description
+        me.pubSub.subscribe('processing', function () {
+            me.processing = true;
+        });
+
+        me.pubSub.subscribe('processing-complete', function () {
+            me.processing = false;
+        });
+
         me.pubSub.subscribe('filter-student-list', function () {
             me.filterStudentList();
         });

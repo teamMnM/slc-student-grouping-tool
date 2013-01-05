@@ -126,7 +126,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                         {
                             // IE passes in the entire path, so we got to make sure we only grab the file name
                             int startIdx = hpf.FileName.LastIndexOf("\\");
-                            string fileName = startIdx < 0 ? hpf.FileName : hpf.FileName.Substring(startIdx + 2);
+                            string fileName = startIdx < 0 ? hpf.FileName : hpf.FileName.Substring(startIdx + 1);
                             string filePath = string.Format("/{0}", fileName);
                             FTPHelper.uploadFileFromStream(groupId, filePath, hpf.InputStream);
                             isSuccess = true;
@@ -167,7 +167,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     }
 
                     // Returns json
-                    return Json(results);
+                    return Json(results, "text/html", System.Text.Encoding.UTF8);
                     //Content("{\"name\":\"" + results[0].Name + "\",\"type\":\"" + results[0].Type + "\",\"size\":\"" + string.Format("{0} bytes", results[0].Length) + "\"}", "text/plain");
                 }
             }
