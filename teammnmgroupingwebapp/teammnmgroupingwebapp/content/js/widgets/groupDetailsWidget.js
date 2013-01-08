@@ -574,6 +574,7 @@ student_grouping.groupDetailsWidget = function () {
         } else {
             $(me.groupSaveImgClass).hide();
         }
+        me.pubSub.publish('toggle-dirty', dirty);
     }
 
     /**

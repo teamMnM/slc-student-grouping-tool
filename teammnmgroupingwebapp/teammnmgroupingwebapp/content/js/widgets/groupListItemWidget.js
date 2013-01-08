@@ -280,7 +280,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
         $(div).append("<h2>" + me.groupModel.groupData.cohortIdentifier + "</h2>");
         $(div).append("<p><i>" + me.groupModel.groupData.cohortDescription + "</i></p>");
 
-        var students = me.students;
+        var students = me.groupModel.students;
         if (students.length > 0) {
             var studentList = $("<ul style='list-style:none'>");
             var allStudents = student_grouping.groupDetailsWidgetComponent.allStudents;
@@ -288,7 +288,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
                 var student = _.find(allStudents, function (studentModel) {
                     return studentModel.getId() === studentId;
                 });
-                $(studentList).append("<li>" + studentModel.getName() + "</li>");
+                $(studentList).append("<li>" + student.getName() + "</li>");
             });
             $(div).append(studentList);
         } else {

@@ -102,6 +102,11 @@ student_grouping.multipleGroupEditMain = function () {
         var studentListMargin = $("#studentListDiv").css('margin-top');
         $("#studentListDiv").height();
 
+        // notify others when window size has changed
+        $(window).resize(function () {
+            me.pubSub.publish('window-resized', innerWidth, innerHeight);
+        });
+
         me.pubSub.subscribe('logout', me.logout);
     },
 

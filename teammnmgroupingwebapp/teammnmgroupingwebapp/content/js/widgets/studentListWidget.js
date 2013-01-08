@@ -13,6 +13,8 @@ student_grouping.studentListWidget = function () {
     this.studentModels = [];
     this.studentWidgets = [];
 
+    this.studentListBox = '#studentListDiv .box';
+    this.studentListAntiscrollInner = '#studentListDiv .antiscroll-inner';
     this.studentListElem = '#studentList';
     this.selectAllBtn = '#select-all-btn';
     this.randomBtn = '#random-btn';
@@ -106,6 +108,10 @@ student_grouping.studentListWidget = function () {
 
         me.pubSub.subscribe('student-selection-changed', function (studentId) {
             // TODO add method
+        });
+
+        me.pubSub.subscribe('window-resized', function (width, height) {
+            me.handleWindowResize();
         });
     }
 
@@ -208,5 +214,21 @@ student_grouping.studentListWidget = function () {
             return studentModel.getId() === studentId;
         });
         return matchingStudent;
+    }
+
+    /**
+     * Resize the student list when the window resizes
+     */
+    this.handleWindowResize = function () {
+        // get the width of the box container
+        var width = $(me.studentListBox).width();
+
+        // Firefox and IE aren't entirely compatible with antiscroll 
+        // so we need to add some extra width to hide the scrollbar
+        if ($.browser.mozilla || $.browser.msie) {
+            width += 20;
+        }
+
+        $(me.studentListAntiscrollInner).width(width - 3);
     }
 }

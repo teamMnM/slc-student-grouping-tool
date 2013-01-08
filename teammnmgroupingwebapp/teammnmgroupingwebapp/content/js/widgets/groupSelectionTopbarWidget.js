@@ -2,6 +2,7 @@
 
 student_grouping.groupSelectionTopbarWidget = function () {
     var me = this;
+    this.dirty = false;
     this.pubSub = PubSub;
 
     this.containerId = ".top-bar-controls";
@@ -21,6 +22,7 @@ student_grouping.groupSelectionTopbarWidget = function () {
      */
     this.init = function () {
         me.setupEventHandlers();
+        me.setupSubscriptions();
     }
 
     /**
@@ -57,6 +59,13 @@ student_grouping.groupSelectionTopbarWidget = function () {
         });
     }
 
+    /**
+     * 
+     */
+    this.setupSubscriptions = function () {
+        me.pubSub.subscribe('toggle-dirty', me.toggleDirty);
+    }
+
     /**************************
      * METHODS
      **************************/
@@ -67,6 +76,9 @@ student_grouping.groupSelectionTopbarWidget = function () {
         me.pubSub.publish('filter-group', groupName);
     }
 
+    /**
+     * Resets the list of filtered groups
+     */
     this.clearGroupSearch = function () {
         $(me.groupSearchTxtElem).val('');
         me.pubSub.publish('filter-group', '');
@@ -76,6 +88,13 @@ student_grouping.groupSelectionTopbarWidget = function () {
      * Create the specified number of groups
      */
     this.createGroups = function () {
+        // warn user about unsaved changes, if any
+        if (me.dirty) {
+            var confirm = window.confirm("You have unsaved changes. If you continue these changes will be lost. Continue?");
+            if (!confirm) {
+                return;
+            }
+        }
         var numGroups = $(me.numGroupsCreateTxt).val();
         window.location = "MultipleGroupsEdit?create=" + numGroups;
     }
@@ -84,6 +103,13 @@ student_grouping.groupSelectionTopbarWidget = function () {
      * Handle editMultipleGroups btn click event
      */
     this.editMultipleGroups = function () {
+        // warn user about unsaved changes, if any
+        if (me.dirty) {
+            var confirm = window.confirm("You have unsaved changes. If you continue these changes will be lost. Continue?");
+            if (!confirm) {
+                return;
+            }
+        }
         me.pubSub.publish('edit-multiple-groups');
     }
     
@@ -96,5 +122,12 @@ student_grouping.groupSelectionTopbarWidget = function () {
         } else {
             $(me.containerId).hide();
         }
+    }
+
+    /**
+     * Toggle the dirty state
+     */
+    this.toggleDirty = function (dirty) {
+        me.dirty = dirty;
     }
 }

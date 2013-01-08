@@ -54,6 +54,22 @@
     padding-left: 0.5em;
 }
 
+#group-search-txt {
+    width: 70%;
+}
+
+.group-search-clear-btn {
+    width:20%;
+}
+
+.num-groups-create-txt {
+    width:40%;
+}
+
+#create-groups-btn {
+    width: 15%;
+}
+
 #edit-multiple-groups-btn, .group-search-btn, .group-search-clear-btn, #create-groups-btn {
     box-shadow: -0.05em 0.15em 0.4em #6B6B6B;
 }
@@ -92,6 +108,7 @@
 .logout-btn {
     cursor:pointer;
     color:white;
+    width:100%;
 }
 
 /**********************
@@ -139,6 +156,7 @@
  *********************/
 .group-section {
 	padding-bottom: 1.5em;
+    width: 100%;
 }
 
 .group-section-title {
@@ -147,6 +165,7 @@
     padding-bottom: 0.5em;
     margin: 0em 1.5em 0.8em 1.2em;
     border-bottom: 0.1em solid #B9B7B7;
+    width:100%;
 }
 
 .group-checkbox {
@@ -243,6 +262,11 @@
 .group-list-item {
 	cursor:pointer;	
     position:relative;
+    width: 100%;
+}
+
+.group-list {
+    width:100%;
 }
 
 .group-container {
@@ -251,6 +275,7 @@
 	margin: 0em 2em 1.3em 2.7em;
 	padding: 0.5em;
     padding-left: 2em;
+    width:85%;
 }
 
 .group-container .group-description {

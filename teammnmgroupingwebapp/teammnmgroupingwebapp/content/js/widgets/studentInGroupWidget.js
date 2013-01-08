@@ -82,7 +82,7 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
     this.setupEventHandlers = function () {
         var closeBtn = $(me.containerId).find(me.delBtnClass);
         $(closeBtn).click(function (event) {
-            me.pubSub.publish('remove-student-from-group', me.studentModel.getId());
+            me.pubSub.publish('remove-student-from-group', me.studentModel.getId(), me.groupId);
             me.remove();
         });
 

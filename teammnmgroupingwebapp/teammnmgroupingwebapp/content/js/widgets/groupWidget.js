@@ -332,11 +332,12 @@ student_grouping.groupWidget = function(groupModel){
     /**
 	 * Removes the selected student from its group  
 	 * @param {String} studentId
+     * @param {String} groupId 
 	 */
-    this.removeStudent = function (studentId) {
+    this.removeStudent = function (studentId, groupId) {
         // check if given student is in this group
         var studentIsInGroup = me.hasStudent(studentId);
-        if (studentIsInGroup) {
+        if (studentIsInGroup && me.groupModel.getId().toString() === groupId) {
             // remove from model
             me.groupModel.removeStudent(studentId);
 
@@ -778,6 +779,14 @@ student_grouping.groupWidget = function(groupModel){
      */
     this.saveGroupChanges = function () {
 
+        // Determine whether the model data is valid
+        var validation = me.groupModel.validateModel();
+        if (!validation.isValid) {
+            // let the user know 
+            me.showMessageAboveTitle(validation.message);
+            return;
+        }
+
         // determine the callback handlers based on whether its a new group or not
         var successHandler = null;
         var errorHandler = null;
@@ -1117,5 +1126,19 @@ student_grouping.groupWidget = function(groupModel){
     this.hasUnattachedFile = function () {
         var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
         return files.length > 0;
+    }
+
+    /**
+     * Displays the given message above the title
+     */
+    this.showMessageAboveTitle = function (msg) {
+            // let the user know 
+            utils.uiUtils.showTooltip(
+                $(me.groupContainerId).find(me.groupNameLblClass),
+                msg,
+                'top',
+                'manual',
+                3000);
+            return;
     }
 }

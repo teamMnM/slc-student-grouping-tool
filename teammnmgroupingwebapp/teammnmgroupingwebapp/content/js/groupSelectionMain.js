@@ -66,6 +66,11 @@ student_grouping.groupSelectionMain = function () {
             me.logout();
         });
 
+        // notify others when window size has changed
+        $(window).resize(function () {
+            me.pubSub.publish('window-resized', innerWidth, innerHeight);
+        });
+
         me.pubSub.subscribe('logout', me.logout);
     }
 

@@ -73,6 +73,13 @@ student_grouping.studentFiltersModel = function (filters) {
             // filter with selected operator and value		
             filteredList = _.filter(filteredList, function (studentModel) {
                 var studentAttributeVal = studentModel.getProp([attribute]);
+
+                // convert date to milliseconds
+                if (attribute === 'birthDate') {
+                    studentAttributeVal = new Date(studentAttributeVal).getTime();
+                    value = new Date(value).getTime();
+                }
+
                 switch (operator) {
                     case '=': return studentAttributeVal == parseFloat(value);
                     case '<': return studentAttributeVal < parseFloat(value);

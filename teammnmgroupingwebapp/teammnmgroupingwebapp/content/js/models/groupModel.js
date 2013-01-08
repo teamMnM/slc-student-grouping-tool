@@ -172,7 +172,27 @@ student_grouping.groupModel = function (groupData) {
     }
 
     /**
-     * Add new group or update a group
+     * Checks the model's data against business rules to make sure the data is valid
+     */
+    this.validateModel = function () {
+        var validationResult = {
+            isValid: true,
+            message: 'Model data is valid'
+        };
+
+        // Make sure the name is unique TODO check against server instead of locally
+        var groupName = me.groupData.cohortIdentifier;
+        var groupNameExists = student_grouping.groupListWidgetComponent.groupNameExists(groupName);
+        if (groupNameExists && me.getId() < 0) {
+            validationResult.isValid = false;
+            validationResult.message = 'The group name "' + groupName + '" already exists. Please use a different name.';
+        }
+
+        return validationResult;
+    }
+
+    /**
+     * Add new group or update a group.
      */
     this.saveGroupChanges = function (successHandler, errorHandler) {
 

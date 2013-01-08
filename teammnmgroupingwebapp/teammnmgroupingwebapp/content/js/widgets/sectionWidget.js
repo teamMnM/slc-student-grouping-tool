@@ -171,7 +171,7 @@ student_grouping.sectionWidget = function (sectionModel) {
                 
                 var groupWidget = me.groupWidgets[groupId];
                 groupWidget.remove();
-                me.pubSub.publish('add-new-group', groupModel);
+                me.pubSub.publish('add-new-group', groupModel, true);
 
                 // remove this section if there are no more groups
                 if (me.sectionModel.groupModels.length === 0) {

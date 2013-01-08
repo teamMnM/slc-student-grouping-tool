@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,9 +13,9 @@ namespace TeamMnMGroupingWebApp.Helper
 {
     public class FTPHelper
     {
-        const string ftphost = "ftp://scratch.osintegrators.com";
-        const string user = "slcftpuser";
-        const string pass = "slcFTPUs3r";
+        internal static string ftphost = ConfigurationManager.AppSettings["FtpServerUrl"];
+        internal static string user = ConfigurationManager.AppSettings["FtpServerUrl"];
+        internal static string pass = ConfigurationManager.AppSettings["FtpServerUrl"];
 
         /// <summary>
         /// Uploads the given file stream to the FTP server

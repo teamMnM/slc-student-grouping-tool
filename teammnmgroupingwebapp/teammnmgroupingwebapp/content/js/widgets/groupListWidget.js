@@ -216,7 +216,7 @@ student_grouping.groupListWidget = function () {
                         var groupHasStudent = groupWidget.hasStudent(studentId);
 
                         if (!groupHasStudent) {
-                            originalGroupWidget.removeStudent(studentId);
+                            originalGroupWidget.removeStudent(studentId, originalGroupId);
                             originalGroupWidget.markDirty();
                         }
                     }
@@ -294,6 +294,15 @@ student_grouping.groupListWidget = function () {
             // find dirty and new groups
             var groupModel = groupWidget.groupModel;
             if (groupWidget.dirty || groupModel.isNewGroup()) {
+
+                // first validate the model
+                var validation = groupModel.validateModel();
+                if (!validation.isValid) {
+                    groupWidget.showMessageAboveTitle(validation.message);
+                    // exit out of the function
+                    return;
+                }
+
                 var cohortActionObject = groupModel.prepareGroupForSaving();
                 groupsToSave.push(cohortActionObject);
                 originalGroupsToSave.push(groupWidget);
@@ -520,11 +529,12 @@ student_grouping.groupListWidget = function () {
     /**
      * Creates a new empty group object
      */
-    this.createNewGroupModel = function () {        
+    this.createNewGroupModel = function () {   
+        var groupIndex = me.lastNewGroupIndex--;
         var groupData = {
             cohort: {
-                id: me.lastNewGroupIndex--,
-                cohortIdentifier: 'New Group',
+                id: groupIndex,
+                cohortIdentifier: 'New Group ' + Math.abs(groupIndex),
                 cohortDescription: ''
             },
             students: [],
