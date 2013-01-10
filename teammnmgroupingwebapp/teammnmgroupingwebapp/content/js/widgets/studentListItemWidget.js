@@ -178,6 +178,7 @@ student_grouping.studentListItemWidget = function (studentModel) {
         var template = $(me.listItemTemplate);
         $(template).attr('data-studentId', studentModel.getId());
         $(template).find(me.nameClass).html(studentModel.getName());
+        $(template).find(me.nameClass).attr('title', studentModel.getName());
         $(template).find(me.iconClass).attr('src', '/Content/img/student-icon-male.png');
         $(template).find(me.gpaClass).html(studentModel.getProp('cumulativeGradePointAverage'));
 

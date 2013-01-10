@@ -337,7 +337,7 @@ student_grouping.groupWidget = function(groupModel){
     this.removeStudent = function (studentId, groupId) {
         // check if given student is in this group
         var studentIsInGroup = me.hasStudent(studentId);
-        if (studentIsInGroup && me.groupModel.getId().toString() === groupId) {
+        if (studentIsInGroup && me.groupModel.getId().toString() === groupId.toString()) {
             // remove from model
             me.groupModel.removeStudent(studentId);
 
@@ -1045,6 +1045,9 @@ student_grouping.groupWidget = function(groupModel){
             studentWidget.remove();
             studentWidget = null;
             delete studentWidgets[studentId];
+
+            // tell student it has been removed from this group
+            me.pubSub.publish('student-removed-from-group', studentId, me.groupModel);
         }
         me.updateNumStudentsBadge();
     }

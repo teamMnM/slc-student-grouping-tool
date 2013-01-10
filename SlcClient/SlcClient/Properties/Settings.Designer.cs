@@ -49,23 +49,5 @@ namespace SlcClient.Properties {
                 return ((string)(this["SlcSandboxUrl"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("api/rest/v1/")]
-        public string SlcApiRestV1 {
-            get {
-                return ((string)(this["SlcApiRestV1"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("api/rest/system/session/")]
-        public string SlcApiRestSession {
-            get {
-                return ((string)(this["SlcApiRestSession"]));
-            }
-        }
     }
 }

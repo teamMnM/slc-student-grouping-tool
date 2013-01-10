@@ -157,7 +157,7 @@
       }
 
 .studentListItem {
-	height: 5.2em;
+	min-height: 4.2em;
 	background-color: #F2F2F2;
     margin: 0.8em auto auto auto;
 	padding:0.8em 0.4em 0 0;
@@ -171,6 +171,9 @@
 
 .student-container {
     position: relative;
+    display:inline-block;
+    vertical-align:top;
+    width:60%;
 }
 
 .student-name {
@@ -198,9 +201,14 @@
 }
 
 .group-indicators {
-	float:left;
 	min-width:1em;
 	min-height:1em;
+    display:inline-block;
+}
+
+.student-icon-div {
+    display:inline-block;
+    vertical-align: top;
 }
 
 .student-icon {
@@ -356,6 +364,10 @@
 	margin: 2em 2em 4em 2em;
     display:inline-block;
     vertical-align: top;
+}
+
+.group-popover .antiscroll-scrollbar-vertical {
+    background:white !important;
 }
 
 .group-container {

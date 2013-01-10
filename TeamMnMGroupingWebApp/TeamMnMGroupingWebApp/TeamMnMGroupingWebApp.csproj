@@ -152,7 +152,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Content\css\groupSelection.css" />
-    <Content Include="Content\css\main.css" />
+    <Content Include="Content\css\multipleGroupsEdit.css" />
     <Content Include="Content\img\add-icon.png" />
     <Content Include="Content\img\attachment-icon.png" />
     <Content Include="Content\img\attachment-paper-small.png" />
@@ -172,9 +172,6 @@
     <Content Include="Content\img\student-icon-male.png" />
     <Content Include="Content\img\student-icon-male2.png" />
     <Content Include="Content\img\trash-icon.png" />
-    <Content Include="Content\js\fakes.js" />
-    <Content Include="Content\js\filters.js" />
-    <Content Include="Content\js\group.js" />
     <Content Include="Content\js\groupSelectionMain.js" />
     <Content Include="Content\js\groupSelection\group.js" />
     <Content Include="Content\js\groupSelection\groupDetails.js" />
@@ -183,20 +180,14 @@
     <Content Include="Content\js\groupSelection\sectionList.js" />
     <Content Include="Content\js\groupSelection\student.js" />
     <Content Include="Content\js\groupSelection\topbar.js" />
-    <Content Include="Content\js\groupsList.js" />
-    <Content Include="Content\js\main.js" />
     <Content Include="Content\js\models\groupListModel.js" />
     <Content Include="Content\js\models\groupModel.js" />
     <Content Include="Content\js\models\sectionModel.js" />
     <Content Include="Content\js\models\studentFiltersModel.js" />
     <Content Include="Content\js\models\studentModel.js" />
     <Content Include="Content\js\multipleGroupEditMain.js" />
-    <Content Include="Content\js\popovers.js" />
-    <Content Include="Content\js\student.js" />
-    <Content Include="Content\js\studentsList.js" />
-    <Content Include="Content\js\tooltipText.js" />
-    <Content Include="Content\js\topBarControls.js" />
-    <Content Include="Content\js\utils.js" />
+    <Content Include="Content\js\utils\tooltipText.js" />
+    <Content Include="Content\js\utils\utils.js" />
     <Content Include="Content\js\widgets\groupDetailsWidget.js" />
     <Content Include="Content\js\widgets\groupListItemWidget.js" />
     <Content Include="Content\js\widgets\groupListWidget.js" />
@@ -260,7 +251,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\utils\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
@@ -288,7 +278,7 @@
     <None Include="Properties\PublishProfiles\grouptest - Web Deploy.pubxml" />
     <Content Include="Views\Shared\LoginError.cshtml" />
     <Content Include="Views\Home\Group.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\MultipleGroupsEdit.cshtml" />
     <Content Include="Views\Home\GroupSelection.cshtml" />
   </ItemGroup>
   <PropertyGroup>

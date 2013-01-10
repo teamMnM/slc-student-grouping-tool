@@ -11,11 +11,5 @@
     <Setting Name="SlcSandboxUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api.sandbox.slcedu.org/</Value>
     </Setting>
-    <Setting Name="SlcApiRestV1" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">api/rest/v1/</Value>
-    </Setting>
-    <Setting Name="SlcApiRestSession" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">api/rest/system/session/</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

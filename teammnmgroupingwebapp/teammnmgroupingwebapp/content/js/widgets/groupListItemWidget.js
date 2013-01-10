@@ -278,9 +278,10 @@ student_grouping.groupListItemWidget = function (groupModel) {
     this.generatePrintableHtml = function () {
         var div = $("<div>");
         $(div).append("<h2>" + me.groupModel.groupData.cohortIdentifier + "</h2>");
-        $(div).append("<p><i>" + me.groupModel.groupData.cohortDescription + "</i></p>");
+        $(div).append("<p>Description:<i>" +
+             me.groupModel.groupData.cohortDescription !== null ? me.groupModel.groupData.cohortDescription : '' + "</i></p>");
 
-        var students = me.groupModel.students;
+        var students = me.groupModel.getOriginalStudents();
         if (students.length > 0) {
             var studentList = $("<ul style='list-style:none'>");
             var allStudents = student_grouping.groupDetailsWidgetComponent.allStudents;

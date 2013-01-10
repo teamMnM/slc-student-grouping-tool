@@ -247,7 +247,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         //[OutputCache(Duration = 1200, VaryByParam = "none")]
         public ActionResult MultipleGroupsEdit()
         {
-            return View("Index");
+            return View("MultipleGroupsEdit");
         }
 
         /// <summary>
