@@ -1,6 +1,21 @@
-﻿@{
-    ViewBag.Title = "Error";
-}
-
-<h2>Error</h2>
-Please try again.
+﻿<!DOCTYPE hmtl>
+<html>
+<head>
+    <title>Student Grouping Tool</title>
+    <script src="~/Content/vendor/jquery/js/jquery.min.js"> </script>
+    <script>
+        function logout() {
+            $.ajax({
+                url: 'Logout',
+                success: function () {
+                    window.location = 'GroupSelection';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Error</h2>
+    Please click <a href="#" onclick="logout();">here</a> to try again.
+</body>
+</html>

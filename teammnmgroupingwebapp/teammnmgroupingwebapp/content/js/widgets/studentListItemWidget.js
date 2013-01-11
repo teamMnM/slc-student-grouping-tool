@@ -38,10 +38,10 @@ student_grouping.studentListItemWidget = function (studentModel) {
 								'<div class="student-icon-div"><img class="student-icon"/></div>' +
 								'<div class="student-container">' +
 									'<p class="student-name"></p>' +
-									'<img class="hide-button student-info-btn" src="/Content/img/group-info-icon.png"></img>' +
 									'GPA <span class="gpa"></span>' +
 									'<input type="checkbox" class="student-selBox"/>' +
 								'</div>' +
+							    '<img class="hide-button student-info-btn" src="/Content/img/group-info-icon.png"></img>' +
 							'</li>';
 
     /**************************

@@ -455,6 +455,9 @@ student_grouping.groupListWidget = function () {
                 }
             }
 
+            // IE9 doesn't support uploading multiple files
+
+
             // upload those attachments to the server
             if (groupIdsWithUnsavedAttachments.length > 0) {
                 var attachmentData = firstGroupModel.attachmentData;

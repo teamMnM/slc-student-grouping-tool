@@ -173,13 +173,6 @@
     <Content Include="Content\img\student-icon-male2.png" />
     <Content Include="Content\img\trash-icon.png" />
     <Content Include="Content\js\groupSelectionMain.js" />
-    <Content Include="Content\js\groupSelection\group.js" />
-    <Content Include="Content\js\groupSelection\groupDetails.js" />
-    <Content Include="Content\js\groupSelection\main.js" />
-    <Content Include="Content\js\groupSelection\section.js" />
-    <Content Include="Content\js\groupSelection\sectionList.js" />
-    <Content Include="Content\js\groupSelection\student.js" />
-    <Content Include="Content\js\groupSelection\topbar.js" />
     <Content Include="Content\js\models\groupListModel.js" />
     <Content Include="Content\js\models\groupModel.js" />
     <Content Include="Content\js\models\sectionModel.js" />

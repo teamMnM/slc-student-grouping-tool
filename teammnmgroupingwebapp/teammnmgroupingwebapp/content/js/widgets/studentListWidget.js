@@ -54,7 +54,7 @@ student_grouping.studentListWidget = function () {
         // if firefox or IE, fix the width of the antiscroll-inner to hide the default scrollbars	
         if (!$.browser.webkit) {
             var listWidth = $('#studentListDiv').find('.antiscroll-inner').width();
-            $('#studentListDiv').find('.antiscroll-inner').css('width', listWidth + 4);
+            $('#studentListDiv').find('.antiscroll-inner').css('width', listWidth + 2);
         }
 
     }

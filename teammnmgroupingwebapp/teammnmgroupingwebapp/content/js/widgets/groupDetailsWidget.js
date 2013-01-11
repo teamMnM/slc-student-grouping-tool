@@ -589,7 +589,7 @@ student_grouping.groupDetailsWidget = function () {
      *
      */
     this.moveArrow = function () {
-        if (me.groupModel !== undefined || me.groupModel !== null) {
+        if (me.groupModel !== undefined && me.groupModel !== null) {
             var selectedGroupTop = $("#" + me.groupModel.getId()).offset().top;
             $('.group-indicator-arrow').css('top', selectedGroupTop);
         }

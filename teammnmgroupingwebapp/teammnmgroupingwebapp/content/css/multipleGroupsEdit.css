@@ -162,6 +162,7 @@
     margin: 0.8em auto auto auto;
 	padding:0.8em 0.4em 0 0;
 	font-size:0.9em;
+    position:relative;
 }
 
 .studentListItem-selected {
@@ -191,7 +192,7 @@
 	position: absolute;
     float: right;
     left: 90%;
-    top: 1em;
+    top: 2em;
     width: 2.5em;
     cursor: pointer;
 }

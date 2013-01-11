@@ -120,10 +120,11 @@ namespace TeamMnMGroupingWebApp.Controllers
                     for (int i = 0; i < groupIds.Length; i++)
                     {
                         string groupId = groupIds[i];
-                        HttpPostedFileBase hpf = files[i];
                         bool isSuccess = false;
+                        ViewDataUploadFilesResult res = new ViewDataUploadFilesResult() { CohortId = groupId };
                         try
                         {
+                            HttpPostedFileBase hpf = files[i];
                             // IE passes in the entire path, so we got to make sure we only grab the file name
                             int startIdx = hpf.FileName.LastIndexOf("\\");
                             string fileName = startIdx < 0 ? hpf.FileName : hpf.FileName.Substring(startIdx + 1);
@@ -150,20 +151,17 @@ namespace TeamMnMGroupingWebApp.Controllers
                             var result = await ProcessOneCohortUpdate(cohortActionObj);
 
                             isSuccess = result.customActionResult.isSuccess;
+                            res.Name = fileName;
+                            res.Type = hpf.ContentType;
+                            res.Length = hpf.ContentLength;
+                            res.isSuccess = isSuccess;
                         }
                         catch (Exception ex)
                         {
-                            isSuccess = false;
+                            res.isSuccess = false;
                         }
 
-                        results.Add(new ViewDataUploadFilesResult()
-                        {
-                            CohortId = groupId,
-                            Name = hpf.FileName,
-                            Length = hpf.ContentLength,
-                            Type = hpf.ContentType,
-                            isSuccess = isSuccess
-                        });
+                        results.Add(res);
                     }
 
                     // Returns json

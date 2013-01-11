@@ -124,6 +124,8 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
             var value = student.getProp(attribute.attributeId);
             if (value === null || value === undefined || value === '' || value.length === 0) {
                 value = '[no data]';
+            } else if (value instanceof Array) {
+                
             }
 
             // perform lookup for sections

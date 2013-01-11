@@ -55,6 +55,7 @@ student_grouping.groupWidget = function(groupModel){
     this.groupPrinterImgClass = '.group-printer-img';
     this.groupNumStudentsBadgeClass = '.group-num-students-badge';
     this.groupFileUploadClass = '.file-upload';
+    this.groupFileInputButton = '.fileinput-button';
     this.groupAttachmentPopoverElem = '.group-attachment-popover';
     this.groupAttachmentPopoverFileInput = '.real-upload-txt';
     this.groupAttachmentPopoverFileTxt = '.fake-upload-txt';
@@ -64,7 +65,7 @@ student_grouping.groupWidget = function(groupModel){
     this.groupAttachmentDelImgClass = '.del-attachment-img';
 
     // elems with tooltips
-    this.tooltipElems = [this.groupDownloadImgClass, this.groupAttachmentImgClass, this.groupPrinterImgClass];
+    this.tooltipElems = [this.groupDownloadImgClass, this.groupFileInputButton, this.groupPrinterImgClass];
 
     this.groupUnsavedChangesModalElem = '#group-unsaved-changes-modal';
     this.groupUnsavedChangesGroupName = '#group-unsaved-changes-group-name';
@@ -378,6 +379,11 @@ student_grouping.groupWidget = function(groupModel){
         var groupNameLbl = $(groupContainer).find(me.groupNameLblClass);
         $(groupNameLbl).html(groupData.cohortIdentifier);
 
+        // IE9 styling compat fix
+        if ($.browser.msie) {
+            $(groupNameLbl).css('line-height', '2.0em');
+        }
+
         var groupNameDiv = $(groupContainer).find(me.groupNameClass);
         $(groupNameDiv).css('background-color', color.title);
 
@@ -515,39 +521,7 @@ student_grouping.groupWidget = function(groupModel){
             $(popover).css('display', 'none');
         }
     }
-
-    /**
-	 * TODO match width of panel to width of container
-     * Popup the attachment panel
-	 */
-    this.showAttachmentPopover = function () {
-        if (!me.groupModel.hasAttachedFile() && !me.groupModel.hasUnsavedAttachment()) {
-            var groupContainerId = "gc" + me.groupModel.getId();
-            var groupContainer = $("#" + groupContainerId);
-
-            var popover = $(me.groupContainerId).find(me.groupAttachmentPopoverElem);
-            var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
-
-            // check if popover is already open
-            var notOpen = $(popover).css('display') === 'none';
-            if (notOpen || groupContainerId !== popoverGroupContainerId) {
-
-                // place the popover relative to the group container
-                var position = $(groupContainer).offset();
-                var height = $(groupContainer).height();
-
-                $(popover).attr('data-groupContainerId', groupContainerId);
-                $(popover).css('display', '');
-
-                
-
-            } else {
-                // close it
-                $(popover).css('display', 'none');
-            }
-        }
-    }
-
+    
     /**
      * Attach the selected file to the group
      * @param data - arg passed by the fileupload plugin for async upload to server
@@ -1121,14 +1095,6 @@ student_grouping.groupWidget = function(groupModel){
      */
     this.getNumberOfStudents = function () {
         return Object.keys(me.studentWidgets).length;
-    }
-
-    /**
-     * Returns true if the user has attached a file but has not clicked on the done button
-     */
-    this.hasUnattachedFile = function () {
-        var files = $(me.groupContainerId).find(me.groupAttachmentPopoverFileInput).prop('files');
-        return files.length > 0;
     }
 
     /**

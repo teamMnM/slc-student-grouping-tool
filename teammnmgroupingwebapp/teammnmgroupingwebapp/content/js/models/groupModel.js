@@ -354,7 +354,7 @@ student_grouping.groupModel = function (groupData) {
         }
         me.updateStudentList();
         
-        if (result.customActionResult.isSuccess) {
+        if (result.customActionResult !== null && result.customActionResult.isSuccess) {
             if (me.attachedFile !== null) {
                 var attachedFile = $.extend(true, {}, me.attachedFile);
                 me.serverGroup.custom.lessonPlan = attachedFile;

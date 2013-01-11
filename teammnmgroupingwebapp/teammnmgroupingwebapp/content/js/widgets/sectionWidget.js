@@ -55,7 +55,7 @@ student_grouping.sectionWidget = function (sectionModel) {
      * @param 
      */
     this.addGroup = function (groupModel) {
-        var firstGroupModel = me.sectionModel.getGroupByIndex[0];
+        var firstGroupModel = me.sectionModel.getGroupByIndex(0);
         me.sectionModel.addGroup(groupModel);
 
         var groupWidget = new student_grouping.groupListItemWidget(groupModel);
