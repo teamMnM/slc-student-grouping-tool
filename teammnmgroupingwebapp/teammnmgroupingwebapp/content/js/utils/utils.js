@@ -75,6 +75,8 @@ utils.printUtils = {
     print: function (html) {
         var w = window.open();
         w.document.write(html);
+        w.document.close();
+        w.focus();
         w.print();
         w.close();
     }

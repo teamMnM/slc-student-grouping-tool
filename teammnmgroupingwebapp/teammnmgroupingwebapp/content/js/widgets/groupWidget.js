@@ -264,7 +264,7 @@ student_grouping.groupWidget = function(groupModel){
             }
         });
 
-        var fileUploadElem = $(me.groupFileUploadClass);
+        var fileUploadElem = $(me.groupContainerId).find(me.groupFileUploadClass);
         utils.fileUtils.setupFileUpload(fileUploadElem, function (data) {
             me.attachSelectedFile(data);
         });

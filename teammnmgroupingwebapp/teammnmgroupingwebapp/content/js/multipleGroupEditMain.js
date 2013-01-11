@@ -4,6 +4,7 @@ student_grouping.multipleGroupEditMain = function () {
     var me = this;
     this.pubSub = PubSub;  
 
+    this.timeout = 1200000;
     this.mainContentClass = '.main-content';
     this.userInactivityModal = "#user-inactivity-modal";
     this.userInactivityOkBtn = ".user-inactivity-ok";
@@ -115,7 +116,7 @@ student_grouping.multipleGroupEditMain = function () {
      * warn the user and then perform a logout operation
      */
      this.setupIdleTimer = function () {
-         $.idleTimer(1200000);
+         $.idleTimer(me.timeout);
          $(document).bind('idle.idleTimer', function () {
              setTimeout(function () {
                  me.logout();

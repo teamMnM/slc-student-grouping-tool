@@ -14,8 +14,9 @@ namespace TeamMnMGroupingWebApp.Helper
     public class FTPHelper
     {
         internal static string ftphost = ConfigurationManager.AppSettings["FtpServerUrl"];
-        internal static string user = ConfigurationManager.AppSettings["FtpServerUrl"];
-        internal static string pass = ConfigurationManager.AppSettings["FtpServerUrl"];
+        internal static string user = ConfigurationManager.AppSettings["FtpServerUser"];
+        internal static string pass = ConfigurationManager.AppSettings["FtpServerPass"];
+        internal static bool useSSL = bool.Parse(ConfigurationManager.AppSettings["FtpUseSSL"]);
 
         /// <summary>
         /// Uploads the given file stream to the FTP server
@@ -34,7 +35,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 FtpWebRequest ftp = (FtpWebRequest)FtpWebRequest.Create(ftpfullpath);
                 ftp.Credentials = new NetworkCredential(user, pass);
                 //userid and password for the ftp server to given  
-                ftp.EnableSsl = true;
+                ftp.EnableSsl = useSSL;
                 ftp.KeepAlive = true;
                 ftp.UseBinary = true;
                 ftp.Method = WebRequestMethods.Ftp.UploadFile;
@@ -80,7 +81,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 // delete all the files on the directory firts
                 FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(ftpfullpath);
                 ftpRequest.Credentials =new NetworkCredential(user, pass);
-                ftpRequest.EnableSsl = true;
+                ftpRequest.EnableSsl = useSSL;
                 ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
                 FtpWebResponse listFilesResponse = (FtpWebResponse)ftpRequest.GetResponse();
                 StreamReader streamReader = new StreamReader(listFilesResponse.GetResponseStream());
@@ -93,7 +94,7 @@ namespace TeamMnMGroupingWebApp.Helper
                     string filepath = ftphost + "/" + line;
                     FtpWebRequest ftpDeleteFileReq = (FtpWebRequest)FtpWebRequest.Create(filepath);
                     ftpDeleteFileReq.Credentials = new NetworkCredential(user, pass);
-                    ftpDeleteFileReq.EnableSsl = true;
+                    ftpDeleteFileReq.EnableSsl = useSSL;
                     ftpDeleteFileReq.KeepAlive = false;
                     ftpDeleteFileReq.UseBinary = true;
                     ftpDeleteFileReq.Method = WebRequestMethods.Ftp.DeleteFile;
@@ -106,7 +107,7 @@ namespace TeamMnMGroupingWebApp.Helper
 
                 FtpWebRequest ftp = (FtpWebRequest)FtpWebRequest.Create(ftpfullpath);
                 ftp.Credentials = new NetworkCredential(user, pass);
-                ftp.EnableSsl = true;
+                ftp.EnableSsl = useSSL;
                 ftp.KeepAlive = false;
                 ftp.UseBinary = true;
                 ftp.Method = WebRequestMethods.Ftp.RemoveDirectory;
@@ -134,7 +135,7 @@ namespace TeamMnMGroupingWebApp.Helper
             FtpWebRequest ftp = (FtpWebRequest)FtpWebRequest.Create(ftpfullpath);
             ftp.Credentials = new NetworkCredential(user, pass);
             //userid and password for the ftp server to given  
-            ftp.EnableSsl = true;
+            ftp.EnableSsl = useSSL;
             ftp.KeepAlive = true;
             ftp.UseBinary = true;
             ftp.Method = WebRequestMethods.Ftp.DeleteFile;
@@ -157,7 +158,7 @@ namespace TeamMnMGroupingWebApp.Helper
             FtpWebRequest ftp = (FtpWebRequest)FtpWebRequest.Create(ftpfullpath);
             ftp.Credentials = new NetworkCredential(user, pass);
             //userid and password for the ftp server to given  
-            ftp.EnableSsl = true;
+            ftp.EnableSsl = useSSL;
             ftp.KeepAlive = true;
             ftp.UseBinary = true;
             ftp.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -181,7 +182,7 @@ namespace TeamMnMGroupingWebApp.Helper
                 requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
                 requestDir.Credentials = new NetworkCredential(user, pass);
                 requestDir.UsePassive = true;
-                requestDir.EnableSsl = true;
+                requestDir.EnableSsl = useSSL;
                 requestDir.UseBinary = true;
                 requestDir.KeepAlive = false;
                 FtpWebResponse response = (FtpWebResponse)requestDir.GetResponse();
@@ -221,7 +222,7 @@ namespace TeamMnMGroupingWebApp.Helper
                     (FtpWebRequest)WebRequest.Create(ftphost + "/" + directoryName);
                 request.Method = WebRequestMethods.Ftp.MakeDirectory;
                 request.Credentials = new NetworkCredential(user, pass);
-                request.EnableSsl = true;
+                request.EnableSsl = useSSL;
                 request.KeepAlive = false;
                 request.Method = WebRequestMethods.Ftp.PrintWorkingDirectory;
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())

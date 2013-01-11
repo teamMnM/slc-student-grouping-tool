@@ -133,9 +133,9 @@ student_grouping.sectionWidget = function (sectionModel) {
      */
     this.toggleVisible = function (visible) {
         if (visible) {
-            $(me.sectionContainerId).show();
+            $(me.containerId).show();
         } else {
-            $(me.sectionContainerId).hide();
+            $(me.containerId).hide();
         }
     }
 
