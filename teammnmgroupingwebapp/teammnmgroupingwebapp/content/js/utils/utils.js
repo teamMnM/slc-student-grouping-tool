@@ -54,6 +54,18 @@ utils.uiUtils = {
      */
     textIsEmpty: function (text) {
         return !/\S/.test(text);
+    },
+
+    /**
+     * Return the path to a student icon based on the gender
+     */
+    getStudentIcon: function (gender) {
+        var index = Math.floor(Math.random() * 3) + 1; // used to randomize the icon
+        if (gender === null) {
+            gender = 'male';
+        }
+        var iconPath = '/Content/img/student-icon-' + gender.toLowerCase() + '.png';
+        return iconPath;
     }
 }
 

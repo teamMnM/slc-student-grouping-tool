@@ -8,3 +8,5 @@ bin
 App_Data
 /SlcClient/SlcClient.v11.suo
 /TeamMnMGroupingWebApp/TeamMnMGroupingWebApp.v11.suo
+/TeamMnMGroupingWebApp/TeamMnMGroupingWebApp.Azure
+/TeamMnMGroupingWebApp/TeamMnMGroupingWebApp.Tests

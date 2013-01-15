@@ -1,5 +1,6 @@
 .main-content {
     opacity: 0.2;
+    min-width:1280px;
 }
 
 #txtRandomNumInGroup{
@@ -40,6 +41,7 @@
 	margin-bottom: 1.6em;
 	width:auto;
     background: #D7E4BD;
+    min-width:1280px;
 }
 
 .top-bar-rows {
@@ -49,6 +51,13 @@
 .top-bar-img-btn {
 	width: 1.8em;
     cursor: pointer;
+}
+
+#img-help-btn {
+    width: 2.1em;
+    margin-top: -0.17em;
+    margin-left: -0.3em;
+    cursor:pointer;
 }
 
 #img-save-btn {

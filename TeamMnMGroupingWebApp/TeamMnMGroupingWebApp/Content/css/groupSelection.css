@@ -26,6 +26,7 @@
  *********************/
 #group-selection {
     color: #7F7F7F;
+    min-width:1280px;
 }
 
 .details-section-title {	
@@ -47,6 +48,7 @@
 	width:auto;
     background: #D7E4BD;
     box-shadow: 0.5em 0.35em 1.0em #9C9C9C;
+    min-width:1280px;
 }
 
 #studentsBtnGrp {
@@ -95,6 +97,14 @@
 .add-group-btn {
 	width: 2.4em;
     cursor: pointer;
+}
+
+#help-btn {
+    width:2.1em;
+    float:left;
+    margin-top:0.4em;
+    margin-right:0.4em;
+    cursor:pointer;
 }
 
 #create-groups-ctrls {

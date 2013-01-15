@@ -12,6 +12,7 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     this.addNewGroupBtn = '#add-new-group-btn';
     this.printBtnElem = '#img-print-btn';
     this.saveAllBtnElem = '#img-save-btn';
+    this.helpBtnElem = '#img-help-btn';
     this.logoutBtnElem = '#logout-btn';
     
     this.processing = false;
@@ -48,6 +49,7 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
         $(me.addNewGroupBtn).click(me.addNewGroup);
         $(me.printBtnElem).click(me.printAllGroups);
         $(me.saveAllBtnElem).click(me.saveAllGroups);
+        $(me.helpBtnElem).click(me.showHelp);
         $(me.logoutBtnElem).click(me.logout);
     }
 
@@ -208,5 +210,12 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
         } else {
             $(me.topbarControls).hide();
         }
+    }
+
+    /**
+     * Opens up the user guide
+     */
+    this.showHelp = function () {
+        window.open('/Content/static/UserGuide.htm');
     }
 }

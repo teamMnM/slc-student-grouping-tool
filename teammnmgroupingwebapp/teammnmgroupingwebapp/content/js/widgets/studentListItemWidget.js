@@ -179,7 +179,11 @@ student_grouping.studentListItemWidget = function (studentModel) {
         $(template).attr('data-studentId', studentModel.getId());
         $(template).find(me.nameClass).html(studentModel.getName());
         $(template).find(me.nameClass).attr('title', studentModel.getName());
-        $(template).find(me.iconClass).attr('src', '/Content/img/student-icon-male.png');
+
+        // CHANGE HERE TO INCLUDE STUDENT PROFILE PICTURES
+        var studentIcon = utils.uiUtils.getStudentIcon(studentModel.getGender());
+
+        $(template).find(me.iconClass).attr('src', studentIcon);
         $(template).find(me.gpaClass).html(studentModel.getProp('cumulativeGradePointAverage'));
 
         return template;

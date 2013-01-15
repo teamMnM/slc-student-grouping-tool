@@ -162,15 +162,18 @@
     <Content Include="Content\img\group-close-icon.png" />
     <Content Include="Content\img\group-edit-icon.png" />
     <Content Include="Content\img\group-info-icon.png" />
+    <Content Include="Content\img\help-icon.png" />
     <Content Include="Content\img\printer-icon.png" />
     <Content Include="Content\img\save-icon.png" />
     <Content Include="Content\img\search-icon.png" />
     <Content Include="Content\img\sel-group-indicator-icon.png" />
     <Content Include="Content\img\student-close-icon.png" />
-    <Content Include="Content\img\student-icon-female.png" />
+    <Content Include="Content\img\student-icon-female1.png" />
     <Content Include="Content\img\student-icon-female2.png" />
-    <Content Include="Content\img\student-icon-male.png" />
+    <Content Include="Content\img\student-icon-female3.png" />
+    <Content Include="Content\img\student-icon-male1.png" />
     <Content Include="Content\img\student-icon-male2.png" />
+    <Content Include="Content\img\student-icon-male3.png" />
     <Content Include="Content\img\trash-icon.png" />
     <Content Include="Content\js\groupSelectionMain.js" />
     <Content Include="Content\js\models\groupListModel.js" />
@@ -273,6 +276,7 @@
     <Content Include="Views\Home\Group.cshtml" />
     <Content Include="Views\Home\MultipleGroupsEdit.cshtml" />
     <Content Include="Views\Home\GroupSelection.cshtml" />
+    <Content Include="Content\static\UserGuide.htm" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

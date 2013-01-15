@@ -923,6 +923,6 @@ namespace TeamMnMGroupingWebApp.Controllers
                 //error logging into SLC
                 Response.Redirect("Home/LoginError");
             }
-        }      
+        }
     }
 }

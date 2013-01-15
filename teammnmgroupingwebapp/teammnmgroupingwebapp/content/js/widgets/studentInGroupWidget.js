@@ -20,6 +20,7 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
     this.droppedElemClass = '.dropped-elem';
     this.studentAttributesClass = '.student-attributes';
     this.fullProfileLinkClass = '.student-full-profile a';
+    this.studentIconClass = '.student-icon';
     this.expandedClass = 'expanded'; // not using as selector so don't need the .
     this.collapsedClass = 'collapsed'; // not using as selector so don't need the .
     this.delBtnClass = '.del-button';
@@ -29,7 +30,7 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
 	 */
     this.droppedElemTemplate = "<div data-studentId='' class='dropped-elem'>" +
 									"<img class='del-button' src='/Content/img/student-close-icon.png'></img>" +
-									'<div class="student-icon-div"><img class="student-icon" src="/Content/img/student-icon-male.png"/></div>' +
+									'<div class="student-icon-div"><img class="student-icon"></div>' +
 									"<div class='student-name'></div>" +
 									"<div class='student-attributes'></div>" +
                                     "<div class='student-full-profile'><a href='#'>full profile</a></div>" +
@@ -102,6 +103,11 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
         var elemDiv = $(me.droppedElemTemplate);
         $(elemDiv).attr('id', 'gr-' + me.groupId + '-dr-' + me.studentModel.getId());
         $(elemDiv).attr('data-studentId', me.studentModel.getId());
+
+        // CHANGE HERE TO INCLUDE STUDENT PROFILE PICTURES
+        var studentIcon = utils.uiUtils.getStudentIcon(studentModel.getGender());
+        $(elemDiv).find(me.studentIconClass).attr('src', studentIcon);
+
         $(elemDiv).find('.student-name').html(me.studentModel.getName());
        
         return elemDiv;

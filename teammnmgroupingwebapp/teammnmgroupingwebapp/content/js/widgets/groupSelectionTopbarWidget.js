@@ -11,6 +11,7 @@ student_grouping.groupSelectionTopbarWidget = function () {
     this.groupSearchBtnClass = ".group-search-btn";
     this.groupSearchClearBtnClass = ".group-search-clear-btn";
     this.createGroupsBtn = '#create-groups-btn';
+    this.helpBtn = '#help-btn';
     this.numGroupsCreateTxt = '.num-groups-create-txt';
     this.logoutBtnClass = '.logout-btn';
 
@@ -42,6 +43,10 @@ student_grouping.groupSelectionTopbarWidget = function () {
 
         $(me.createGroupsBtn).click(function (event) {
             me.createGroups();
+        });
+
+        $(me.helpBtn).click(function (event) {
+            me.showHelp();
         });
 
         $(me.editMultipleGroupsBtn).click(function (event) {
@@ -129,5 +134,12 @@ student_grouping.groupSelectionTopbarWidget = function () {
      */
     this.toggleDirty = function (dirty) {
         me.dirty = dirty;
+    }
+
+    /**
+     * Opens up the user guide
+     */
+    this.showHelp = function () {
+        window.open('/Content/static/UserGuide.htm');
     }
 }

@@ -28,6 +28,13 @@ student_grouping.studentModel = function (studentData) {
     }
 
     /**
+     * Returns the student's gender
+     */
+    this.getGender = function () {
+        return me.serverStudent.sex;
+    }
+
+    /**
      * Generic getter for student properties, 
      * quick workaround to avoid mapping all server-side attributes
      */
