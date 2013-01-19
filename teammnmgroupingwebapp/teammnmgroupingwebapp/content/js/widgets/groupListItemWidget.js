@@ -24,6 +24,7 @@ student_grouping.groupListItemWidget = function (groupModel) {
     this.groupAttachmentIconClass = '.group-attachment-icon';
     this.groupAttachmentPrintClass = '.group-print-icon';
     this.groupDeleteIconClass = '.group-delete-icon';
+    this.tooltipElems = [this.groupDownloadLinkClass, this.groupAttachmentIconClass, this.groupAttachmentPrintClass, this.groupDeleteIconClass];
     this.groupTemplate = '<div class="group-list-item">' +
 									'<div class="group-checkbox"><input type="checkbox" class="group-checkbox"/></div>' +
 									'<div class="group-container">' +
@@ -48,6 +49,14 @@ student_grouping.groupListItemWidget = function (groupModel) {
     this.init = function () {
         me.containerId = "#" + me.groupModel.getId();
         
+        // set up the tooltips
+        var tooltipElems = this.tooltipElems;
+        _.each(tooltipElems, function (e) {
+            var tooltip = tooltipText[e];
+            var elem = $(me.containerId).find(e);
+            utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
+        });
+
         me.setupEventHandlers();
         me.setupSubscriptions();
         me.showFileAttachment();

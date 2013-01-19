@@ -65,7 +65,8 @@ student_grouping.groupWidget = function(groupModel){
     this.groupAttachmentDelImgClass = '.del-attachment-img';
 
     // elems with tooltips
-    this.tooltipElems = [this.groupDownloadImgClass, this.groupFileInputButton, this.groupPrinterImgClass];
+    this.tooltipElems = [this.groupDownloadImgClass, this.groupFileInputButton,
+        this.groupPrinterImgClass, this.groupNumStudentsBadgeClass, this.groupInfoBtnClass, this.groupCloseBtnClass];
 
     this.groupUnsavedChangesModalElem = '#group-unsaved-changes-modal';
     this.groupUnsavedChangesGroupName = '#group-unsaved-changes-group-name';

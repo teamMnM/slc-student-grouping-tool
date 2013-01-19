@@ -15,6 +15,8 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     this.helpBtnElem = '#img-help-btn';
     this.logoutBtnElem = '#logout-btn';
     
+    this.tooltipElems = [this.backBtnElem, this.saveAllBtnElem, this.helpBtnElem, this.printBtnElem];
+
     this.processing = false;
     this.groupModels = [];
 
@@ -35,6 +37,14 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
         setTimeout(function () {
             $(".select2-container").not('.span11').width('100%');
         }, 500);
+
+        // set up the tooltips
+        var tooltipElems = this.tooltipElems;
+        _.each(tooltipElems, function (e) {
+            var tooltip = tooltipText[e];
+            var elem = $(me.topbarControls).find(e);
+            utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
+        });
 
         me.setupEventHandlers();
         me.setupSubscriptions();

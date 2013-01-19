@@ -46,6 +46,7 @@ student_grouping.groupDetailsWidget = function () {
     this.lessonPlanFileName = '.lesson-plan-file-name';
     this.lessonPlanRemoveIcon = '.lesson-plan-remove-icon';
 
+    this.tooltipElems = [this.groupEditImgClass, this.groupSaveImgClass, this.lessonPlanRemoveIcon];
     this.scrollbar = null;
 
     /**************************
@@ -69,6 +70,14 @@ student_grouping.groupDetailsWidget = function () {
             $(me.modalAttributesDiv).append(checkbox);
         });
        
+        // set up the tooltips
+        var tooltipElems = this.tooltipElems;
+        _.each(tooltipElems, function (e) {
+            var tooltip = tooltipText[e];
+            var elem = $(me.groupDetails).find(e);
+            utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
+        });
+
         me.setupEventHandlers();
         me.setupSubscriptions();
 

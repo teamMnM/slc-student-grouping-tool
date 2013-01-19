@@ -15,6 +15,8 @@ student_grouping.groupSelectionTopbarWidget = function () {
     this.numGroupsCreateTxt = '.num-groups-create-txt';
     this.logoutBtnClass = '.logout-btn';
 
+    this.tooltipElems = [this.editMultipleGroupsBtn, this.helpBtn];
+
     /**************************
      * SETUP METHODS
      **************************/
@@ -22,6 +24,15 @@ student_grouping.groupSelectionTopbarWidget = function () {
      * Initialize this widget
      */
     this.init = function () {
+
+        // set up the tooltips
+        var tooltipElems = this.tooltipElems;
+        _.each(tooltipElems, function (e) {
+            var tooltip = tooltipText[e];
+            var elem = $(me.containerId).find(e);
+            utils.uiUtils.showTooltip(elem, tooltip.message, tooltip.placement, 'hover');
+        });
+
         me.setupEventHandlers();
         me.setupSubscriptions();
     }
