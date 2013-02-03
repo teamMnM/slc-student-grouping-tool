@@ -366,8 +366,11 @@ student_grouping.groupListWidget = function () {
 
             // assign id to newly created groups and notify others to add this new group
             if (groupWidget.groupModel.isNewGroup()) {
-                groupWidget.updateId(result.objectActionResult.objectId);
-                me.pubSub.publish('add-to-existing-groups', groupWidget.groupModel);
+                var newGroupSuccessfulSave = result.objectActionResult.isSuccess;
+                if (newGroupSuccessfulSave) {
+                    groupWidget.updateId(result.objectActionResult.objectId);
+                    me.pubSub.publish('add-to-existing-groups', groupWidget.groupModel);
+                }
             }
 
             // sync group original data with new changes

@@ -38,7 +38,7 @@
 }
 
 .top-bar-controls {
-	margin-bottom: 1.6em;
+    margin-bottom:0;
 	width:auto;
     background: #D7E4BD;
     min-width:1280px;

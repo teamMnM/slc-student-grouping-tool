@@ -24,7 +24,7 @@ namespace SlcClient.Entities
 
         public bool multipleBirthStatus { get; set; }
 
-        [DataType(DataType.DateTime)]
-        public DateTime stateOfBirthAbbreviation { get; set; }
+        [StringLength(30)]
+        public string stateOfBirthAbbreviation { get; set; }
     }
 }

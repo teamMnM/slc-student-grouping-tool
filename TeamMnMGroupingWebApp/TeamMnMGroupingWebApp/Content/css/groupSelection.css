@@ -43,7 +43,7 @@
  * TOP BAR
  *********************/
 .top-bar-controls {
-	margin-bottom: 1.6em;
+    margin-bottom:0;
     padding-bottom: 0.2em;
 	width:auto;
     background: #D7E4BD;
@@ -96,7 +96,6 @@
 
 .add-group-btn {
 	width: 2.4em;
-    cursor: pointer;
 }
 
 #help-btn {
