@@ -6,6 +6,7 @@ student_grouping.groupSelectionMain = function () {
 
     this.timeout = 1200000;
     this.mainContent = "#group-selection";
+    this.topbarControlClass = ".top-bar-controls";
     this.userInactivityModal = "#user-inactivity-modal";
     this.userInactivityOkBtn = ".user-inactivity-ok";
 
@@ -20,7 +21,8 @@ student_grouping.groupSelectionMain = function () {
 
         // set the size of page
         var windowHeight = $(window).height();
-        $(".main-content").height((windowHeight - 3) + 'px');
+        var topbarControlsHeight = $(me.topbarControlClass).height();
+        $(".main-content").height((windowHeight - topbarControlsHeight - 3) + 'px');
 
         me.setupIdleTimer();
 

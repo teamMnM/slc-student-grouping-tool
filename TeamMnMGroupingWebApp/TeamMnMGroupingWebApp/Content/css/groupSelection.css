@@ -74,6 +74,7 @@
 
 #edit-multiple-groups-btn, .group-search-btn, .group-search-clear-btn, #create-groups-btn {
     box-shadow: -0.05em 0.15em 0.4em #6B6B6B;
+    margin-top: 0px !important;
 }
 
 #search-student-icon {
@@ -129,7 +130,7 @@
 }
 
 .group-details {
-	padding-top: 4.5em;
+	padding-top: 0.5em;
     padding-right:0.2em;
 	height:99%;
     position:relative;
@@ -139,7 +140,7 @@
  * GROUP SECTION LIST
  *********************/
 .group-section-div {
-	padding-top: 5em;
+	padding-top: 1em;
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -310,7 +311,7 @@
 
 .group-indicator-arrow {
     position:absolute;
-    top:0%;
+    top:-20%;
     left:96%;
     height:3.0em;
     z-index:5;

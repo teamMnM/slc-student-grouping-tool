@@ -6,6 +6,7 @@ student_grouping.multipleGroupEditMain = function () {
 
     this.timeout = 1200000;
     this.mainContentClass = '.main-content';
+    this.topbarControls = ".top-bar-controls";
     this.userInactivityModal = "#user-inactivity-modal";
     this.userInactivityOkBtn = ".user-inactivity-ok";
 
@@ -97,7 +98,8 @@ student_grouping.multipleGroupEditMain = function () {
 
         // set the size of page
         var windowHeight = $(window).height();
-        $(me.mainContentClass).height((windowHeight - 3) + 'px');
+        var topbarHeight = $(me.topbarControls).height();
+        $(me.mainContentClass).height((windowHeight - topbarHeight - 3) + 'px');
         var studentCtrlHeight = $("#student-controls").height();
         var studentCtrlMargin = $("#student-controls").css('margin-bottom');
         var studentListMargin = $("#studentListDiv").css('margin-top');

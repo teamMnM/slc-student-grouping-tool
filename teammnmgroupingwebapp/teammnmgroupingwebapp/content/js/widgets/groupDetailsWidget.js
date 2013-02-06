@@ -595,11 +595,14 @@ student_grouping.groupDetailsWidget = function () {
     }
 
     /**
-     *
+     * Move the arrow to point at the selected group
      */
     this.moveArrow = function () {
         if (me.groupModel !== undefined && me.groupModel !== null) {
-            var selectedGroupTop = $("#" + me.groupModel.getId()).offset().top;
+            var groupDiv = $("#" + me.groupModel.getId());
+            var groupDivHeight = groupDiv.height();
+            // need to offset the top a little bit to align the arrow with center of div
+            var selectedGroupTop = groupDiv.position().top + groupDivHeight/2.5; 
             $('.group-indicator-arrow').css('top', selectedGroupTop);
         }
     }

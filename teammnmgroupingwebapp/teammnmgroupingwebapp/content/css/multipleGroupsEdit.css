@@ -145,7 +145,7 @@
 
 #studentListDiv {
     box-shadow: 0.2em 0.1em 1em #CCC;
-    padding: 3em 0.2em 0em 0.6em;
+    padding: 1em 0.2em 0em 0.6em;
     height: 100%;
     width: 100%;
 }
@@ -231,7 +231,7 @@
  *********************/
 .content {
     height:100%;
-    padding-top: 3em;
+    padding-top: 1em;
 }
 
 .content-row {

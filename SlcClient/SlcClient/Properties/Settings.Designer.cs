@@ -25,7 +25,7 @@ namespace SlcClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.slcedu.org/api/rest/v1/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.inbloom.org/api/rest/v1/")]
         public string SlcApiSandboxUrl {
             get {
                 return ((string)(this["SlcApiSandboxUrl"]));
@@ -34,7 +34,7 @@ namespace SlcClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.slcedu.org/api/rest/system/session/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.inbloom.org/api/rest/system/session/")]
         public string SlcApiSandboxSessionUrl {
             get {
                 return ((string)(this["SlcApiSandboxSessionUrl"]));
@@ -43,7 +43,7 @@ namespace SlcClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.slcedu.org/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.sandbox.inbloom.org/")]
         public string SlcSandboxUrl {
             get {
                 return ((string)(this["SlcSandboxUrl"]));
