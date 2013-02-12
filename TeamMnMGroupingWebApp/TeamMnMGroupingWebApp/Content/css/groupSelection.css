@@ -100,25 +100,26 @@
 }
 
 #help-btn {
+    color:white;
     width:2.1em;
-    float:left;
-    margin-top:0.4em;
     margin-right:0.4em;
     cursor:pointer;
 }
 
 #create-groups-ctrls {
     margin-top: 0.35em;
+    float:right;
 }
 
 .topbar-txt {
     margin: 0 0.4em 0 0.3em !important;
 }
 
-.logout-btn {
+#logout-btn {
     cursor:pointer;
     color:white;
     width:100%;
+    margin-right:0.4em;
 }
 
 /**********************
@@ -501,4 +502,38 @@
 .attribute-checkbox {
     margin-top:-0.15em !important;
     margin-right:0.2em !important;
+}
+
+/**********************
+ * SLC Header/Footer
+ *********************/
+.slc-header {
+    background: #000000;
+    height: 48px;
+    padding-top:5px;
+    position:relative;
+    text-align: center;
+}
+
+.header-title {
+    color: white;
+    font-size:x-large;
+    margin-left:2em;
+    margin-top:0.5em;
+    display:inline-block;
+}
+
+#inbloom-logo {
+    position: absolute;
+    left: 2em;
+}
+
+.slc-footer {
+    background: #000000;
+}
+
+.slc-trademark {
+    color:white;
+    font-size:10px;
+    margin-left:2em;
 }

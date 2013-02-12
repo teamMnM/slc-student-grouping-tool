@@ -9,6 +9,8 @@ student_grouping.multipleGroupEditMain = function () {
     this.topbarControls = ".top-bar-controls";
     this.userInactivityModal = "#user-inactivity-modal";
     this.userInactivityOkBtn = ".user-inactivity-ok";
+    this.slcHeaderClass = '.slc-header';
+    this.slcFooterClass = '.slc-footer';
 
     this.init = function () {
         // load main widgets onto app namespace
@@ -99,7 +101,9 @@ student_grouping.multipleGroupEditMain = function () {
         // set the size of page
         var windowHeight = $(window).height();
         var topbarHeight = $(me.topbarControls).height();
-        $(me.mainContentClass).height((windowHeight - topbarHeight - 3) + 'px');
+        var slcHeaderHeight = $(me.slcHeaderClass).outerHeight();
+        var slcFooterHeight = $(me.slcFooterClass).outerHeight();
+        $(me.mainContentClass).height((windowHeight - topbarHeight - slcHeaderHeight - slcFooterHeight - 3) + 'px');
         var studentCtrlHeight = $("#student-controls").height();
         var studentCtrlMargin = $("#student-controls").css('margin-bottom');
         var studentListMargin = $("#studentListDiv").css('margin-top');

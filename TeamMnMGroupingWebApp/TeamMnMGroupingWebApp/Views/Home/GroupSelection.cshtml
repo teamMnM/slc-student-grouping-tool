@@ -11,7 +11,15 @@
 	</head>
 	<body>
 		<div id="group-selection">
-			 <div class="row-fluid">                
+            <div class="slc-header row-fluid">
+                <img id="inbloom-logo" src="~/Content/img/inbloom-logo.png" alt="inBloom Logo" />                       
+                <span class="header-title">Group Selection</span>    
+                <div style="float:right; margin-top:0.8em">     
+                    <span id="help-btn">help</span>
+			        <span id="logout-btn">log out</span>
+                </div>
+            </div>
+			<div class="row-fluid">                
 	             <div class="span12 top-bar-controls navbar affix-top">                     
 					<div id="studentsBtnGrp" class="span5">
 						<div class="row-fluid">
@@ -25,18 +33,11 @@
 							</div>
 						</div>		 
 					</div>
-					<div class="span2 top-bar-title">
-						<h4>MnM</h4>
-					</div>
 					<div id="create-groups-ctrls" class="span4">
 						<img class="add-group-btn" src="~/Content/img/add-icon.png"/>
 						<span>create groups</span>
 						<input type="text" class="num-groups-create-txt topbar-txt" placeholder="# of groups to create"/>
 						<button id="create-groups-btn" class="btn btn-success">create</button>
-					</div>
-                     <div class="span1">
-                         <img src="~/Content/img/help-icon.png" id="help-btn" />
-						<h4 class="logout-btn">log out</h4>
 					</div>
 				</div>	
             </div>
@@ -122,7 +123,10 @@
                     </div>                     
                     
             </div>
-       </div>
+            <div class="slc-footer row-fluid">
+                <span class="slc-trademark">inBloom is a trademark of inBloom, Inc.</span>
+            </div>
+        </div>
        
        <div id="show-more-data-modal" class="modal hide fade" style="width:25em;">  
        	    <div class="modal-body">       			    	   		

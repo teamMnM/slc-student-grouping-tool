@@ -160,6 +160,7 @@
     <Content Include="Content\img\group-edit-icon.png" />
     <Content Include="Content\img\group-info-icon.png" />
     <Content Include="Content\img\help-icon.png" />
+    <Content Include="Content\img\inbloom-logo.png" />
     <Content Include="Content\img\printer-icon.png" />
     <Content Include="Content\img\save-icon.png" />
     <Content Include="Content\img\search-icon.png" />
