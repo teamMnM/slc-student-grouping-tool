@@ -13,7 +13,7 @@ student_grouping.groupSelectionTopbarWidget = function () {
     this.createGroupsBtn = '#create-groups-btn';
     this.helpBtn = '#help-btn';
     this.numGroupsCreateTxt = '.num-groups-create-txt';
-    this.logoutBtnClass = '.logout-btn';
+    this.logoutBtnClass = '#logout-btn';
 
     this.tooltipElems = [this.editMultipleGroupsBtn, this.helpBtn];
 

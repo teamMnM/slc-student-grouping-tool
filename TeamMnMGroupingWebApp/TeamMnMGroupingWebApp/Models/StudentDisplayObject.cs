@@ -7,7 +7,7 @@ using System.Web;
 
 namespace TeamMnMGroupingWebApp.Models
 {
-    public class StudentDisplayObject
+    public class StudentDisplayObject : IComparable<StudentDisplayObject>
     {
         public string id { get; set; }
 
@@ -79,5 +79,15 @@ namespace TeamMnMGroupingWebApp.Models
         /// assessments that the student in context has taken
         /// </summary>
         public IEnumerable<Assessment> assessments { get; set; }
+
+        /// <summary>
+        /// Used to sort a list of students by name alphabetically
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(StudentDisplayObject other)
+        {
+            return this.name.CompareTo(other.name);
+        }
     }
 }

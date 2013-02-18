@@ -61,19 +61,13 @@
     color:white;
 }
 
-#img-save-btn {
-    width: 1.46em;
-}
-
 .top-bar-divider {
-    width: 1.8em;
-    margin: 0em 0 0 0.9em;
+    width: 1.5em;
+    float:right;
 }
 
 .top-bar-buttons {
-    padding-top: 0.3em;
     text-align: right;
-    padding-right: 1em;
 }
 
 #logout-btn{
@@ -105,12 +99,12 @@
     width:45%;
 }
 
-#random-btn {
-    width:30%;
+#clear-selection-btn {
+    width:55%;
 }
+
 #random-num-btn {
-    width:15%;
-    height: 1.4em;
+    width:25px;
 }
 
 .sidebar {
@@ -687,6 +681,7 @@
     padding-top:5px;
     position:relative;
     text-align: center;
+    min-width:1280px;
 }
 
 .header-title {
@@ -705,6 +700,7 @@
 .slc-footer {
     background: #000000;
     margin-top:0.2em;
+    min-width:1280px;
 }
 
 .slc-trademark {

@@ -22,42 +22,43 @@
             <div class="row-fluid">                
                  <div class="span12 top-bar-controls navbar affix-top">                     
 					<div id="studentsBtnGrp" class="span2 btn-group">
-						<button id="select-all-btn" title="Select/deselect all students" class="student-list-btn btn btn-danger">select all</button>
-						<button id="random-btn" title="Assign random groups" class="student-list-btn btn btn-primary">random</button>
-						<div id="random-num-btn" class="btn btn-primary">
-                            <input id='random-num-txt' type='text' placeholder='#'>
-						</div>					 
+                        <button id="clear-selection-btn" title="Clear student selection" class="student-list-btn btn">clear selection</button>
+						<button id="select-all-btn" title="Select/deselect all students" class="student-list-btn btn btn-danger">select all</button>					 
 					</div>
 					<div class='span10 top-bar-rows'>
-                        <div class="span1">
-                            <button id="back-btn" class="btn btn-info">back</button>
+						<div class="span3" style="display:inline; padding-right:2em">
+                            <button id="back-btn" class="btn btn-primary">back</button>
+                            <div class="btn-group" style="float:right;">
+                                <button id="random-btn" title="Assign random groups" class="student-list-btn btn btn-success">random</button>
+						        <div id="random-num-btn" class="btn btn-success">
+                                    <input id='random-num-txt' type='text' placeholder='#'>
+						        </div>
+                            </div>
                         </div>
-                        <div class="span8">
+                        <div class="span6">
 							<div class="row-fluid">                                           
-                                <div class="span3">
+                                <div class="span4">
 							        <div class="row-fluid">
                                         <div class="span3">
                                             <button id="add-new-group-btn" class="btn btn-success">+</button>
                                         </div>
-                                        <div class="span9">
-                                            <p style="margin: 0.5em 0 0 0"> add a new group</p>
+                                        <div class="span9" style="padding-top:0.5em">
+                                            <span style="margin: 0.5em 0 0 0"> add new group</span>
+                                            <img class="top-bar-divider" src="~/Content/img/divider-icon.png" />
                                         </div>                                                    
 							        </div>
                                 </div>
-                                <div class="span1">
-                                    <img class="top-bar-divider" src="~/Content/img/divider-icon.png" />
-                                </div>
                                 <div class="span8">
                                     <div class="row-fluid">
-                                        <div class="span4">
+                                        <div class="span5">
                                             <p style="margin: 0.5em 0 0 0; text-align:right"> add an existing group</p>
                                         </div>
-							            <div class="span7" style="margin-top:0.4em;">
+							            <div class="span6" style="margin-top:0.4em;">
                                             <select id="find-group-dropdown" data-placeholder="find an existing group">
 								                <option></option>
 							                </select>
                                         </div>
-                                            <div class="span1">
+                                        <div class="span1">
 							                <button id="add-existing-group-btn" class="btn btn-success">add</button>							
                                         </div>
                                     </div>
@@ -65,8 +66,8 @@
                             </div>
                         </div>
                         <div class="span3 top-bar-buttons" >
-							<img id="img-print-btn" class="top-bar-img-btn" src="~/Content/img/printer-icon.png"/>
-							<img id="img-save-btn" class="top-bar-img-btn" src="~/Content/img/save-icon.png"/>
+							<button id="img-print-btn" class="btn btn-primary">print groups</button>
+							<button id="img-save-btn" class="btn btn-primary">save all</button>
                         </div>
                     </div>
 				</div>	

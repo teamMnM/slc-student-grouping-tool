@@ -29,16 +29,16 @@ namespace TeamMnMGroupingWebApp.Controllers
         const string SLC_USER_SESSION = "slc_user";
         const string SLC_USER_ID = "slc_user_id";
 
-        public void Index()
+        public ActionResult Index()
         {
             if (Session["access_token"] == null)
             {
-                GetToken(MAIN);
+                return GetToken(MAIN);
             }
             else
             {
                 // We have an access token in session, let's redirect to app main page.
-                Response.Redirect(MAIN);
+                return RedirectToAction(MAIN);
             }
         }
 
@@ -785,7 +785,7 @@ namespace TeamMnMGroupingWebApp.Controllers
 
                 //Get the available data elements and colors
                 var dataElements = GlobalHelper.InitializeDataElements();
-                var colors = GlobalHelper.InitializeColors();                
+                var colors = GlobalHelper.InitializeColors();
 
                 await Task.WhenAll(co, st, se);
 
@@ -805,7 +805,6 @@ namespace TeamMnMGroupingWebApp.Controllers
 
             //session has expired, refresh page
             return View("Index");
-
         }
 
         /// <summary>
@@ -823,7 +822,12 @@ namespace TeamMnMGroupingWebApp.Controllers
             //Construct a master object to for display purpose
             var data = new GroupingDisplayObject();
             data.cohorts = cohorts.Result;
-            data.students = students.Result;
+
+            IEnumerable<StudentDisplayObject> studentDisplayObjects = students.Result;
+            List<StudentDisplayObject> listOfStudents = studentDisplayObjects.ToList();
+            listOfStudents.Sort();
+
+            data.students = listOfStudents;
             data.sections = sections.Result;
             data.dataElements = dataElements.Result;
             data.colors = colors.Result;
@@ -837,6 +841,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns></returns>
         public ActionResult LoginError()
         {
+            Session.Clear();
             return View();
         }
 
@@ -852,28 +857,27 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <summary>
         /// SLC OAuth
         /// </summary>
-        /// <param name="redirectUrl">url to redirect to after successful authentication</param>
-        [NonAction]
-        private void GetToken(string redirectUrl)
+        /// <param name="redirectUrl">url to redirect to after successful authentication</param>       
+        private ActionResult GetToken(string redirectUrl)
         {
             try
             {
                 // We get a code back from the first leg of OAuth process.  If we don't have one, let's get it.
-                if (Request.QueryString["code"] == null)
+                if (Request.QueryString["code"] == null || Request.QueryString["code"] == "")
                 {
                     // Here the user will log into the SLC.
                     string authorizeUrl = string.Format(SLC_SANDBOX_LOGIN, SLC_CLIENT_ID, SLC_REDIRECT_URL);
-                    Response.Redirect(authorizeUrl);
+                    return Redirect(authorizeUrl);
                 }
                 else
                 {
-                    ProcessSecondPartOfOAuth(redirectUrl);
+                    return ProcessSecondPartOfOAuth(redirectUrl);
                 }
             }
             catch (Exception e)
             {
                 ExceptionHelper.LogCaughtException(e);
-                Response.Redirect("Home/LoginError");
+                return RedirectToAction("LoginError", new { code = "" });
             }
         }
 
@@ -881,7 +885,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// Get SLC token
         /// </summary>
         /// <param name="redirectUrl">url to redirect to after successful authentication</param>
-        private void ProcessSecondPartOfOAuth(string redirectUrl)
+        private ActionResult ProcessSecondPartOfOAuth(string redirectUrl)
         {
             // Now we have a code, we can run the second leg of OAuth process.
             string code = Request.QueryString["code"];
@@ -915,14 +919,12 @@ namespace TeamMnMGroupingWebApp.Controllers
                     Session.Add(SLC_USER_ID, staffId);
 
                     // Redirect to app main page.
-                    Response.Redirect(redirectUrl);
+                    return Redirect(redirectUrl);
                 }
             }
-            else
-            {
-                //error logging into SLC
-                Response.Redirect("Home/LoginError");
-            }
+
+            //error logging into SLC                
+            return RedirectToAction("LoginError", new { code = "" });
         }
     }
 }

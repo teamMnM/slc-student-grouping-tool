@@ -17,12 +17,11 @@ student_grouping.studentListWidget = function () {
     this.studentListAntiscrollInner = '#studentListDiv .antiscroll-inner';
     this.studentListElem = '#studentList';
     this.selectAllBtn = '#select-all-btn';
+    this.clearSelectionBtn = '#clear-selection-btn';
     this.randomBtn = '#random-btn';
     this.randomNumTxt = '#random-num-txt';
     this.studentSearchBox = '#txtStudentSearchBox';
-
-    // keep track of whether user has selected all
-    this.allSelected = false;
+   
     this.processing = false;
 
     /**************************
@@ -79,7 +78,11 @@ student_grouping.studentListWidget = function () {
         });
 
         $(me.selectAllBtn).click(function (event) {
-            me.selectAllStudents();
+            me.selectAllStudents(true);
+        });
+
+        $(me.clearSelectionBtn).click(function (event) {
+            me.selectAllStudents(false);
         });
 
         $(me.randomBtn).click(function (event) {
@@ -160,21 +163,13 @@ student_grouping.studentListWidget = function () {
     /**
 	 * Select all students in the list 
 	 */
-    this.selectAllStudents = function () {
+    this.selectAllStudents = function (selected) {
         var studentWidgets = me.studentWidgets;
         for (var studentId in studentWidgets) {
             var studentListItemWidget = studentWidgets[studentId];
             if (studentListItemWidget.visible) {
-                studentListItemWidget.toggleStudentSelection(!me.allSelected);
+                studentListItemWidget.toggleStudentSelection(selected);
             }
-        }
-
-        me.allSelected = !me.allSelected;
-
-        if (me.allSelected) {
-            $(me.selectAllBtn).html('deselect all');
-        } else {
-            $(me.selectAllBtn).html('select all');
         }
     }
 

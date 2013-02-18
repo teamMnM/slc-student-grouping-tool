@@ -109,7 +109,7 @@ student_grouping.groupWidget = function(groupModel){
                                             '</form>' +                                            
                                             '<img class="group-printer-img" src="/Content/img/printer-icon.png"/>' +
 										    '<span class="badge group-num-students-badge"></span>' +
-										    '<button class="add-data-button btn btn-link">add data</button>' +
+										    '<button class="add-data-button btn btn-link">show data</button>' +
 									    '</div>' +
 									     '<div class="group-file-attachment">' +
 										     '<a class="file-attachment-name"/>' +
@@ -443,7 +443,12 @@ student_grouping.groupWidget = function(groupModel){
             me.toggleStudentAttributeVisibility();
         });
 
-        $(me.groupContainerId).find('.student-data-wrap').antiscroll();
+        // make sure we only set antiscroll once
+        var antiscrollSet = $(popover).attr('data-antiscroll') === 'set';
+        if (!antiscrollSet) {
+            $(me.groupContainerId).find('.student-data-wrap').antiscroll();
+            $(popover).attr('data-antiscroll', 'set');
+        }
     }
 
     /**
@@ -498,7 +503,7 @@ student_grouping.groupWidget = function(groupModel){
             if (description !== null && description !== '') {
                 $(popover).find(me.groupDescriptionTxtElem).html(description);
             } else {
-                $(popover).find(me.groupDescriptionTxtElem).html('&nbsp;');
+                $(popover).find(me.groupDescriptionTxtElem).html('Type group description here');
             }
 
             // place the popover relative to the group container
@@ -612,6 +617,9 @@ student_grouping.groupWidget = function(groupModel){
 	 */
     this.makeGroupNameEditable = function () {
         var groupName = $(me.groupContainerId).find(me.groupNameLblClass).html();
+        if (groupName === 'Type group description here') {
+            groupName = '';
+        }
         $(me.groupContainerId).find(me.groupNameLblClass).hide();
         $(me.groupContainerId).find(me.groupNameTxtClass)
 			.val(groupName)

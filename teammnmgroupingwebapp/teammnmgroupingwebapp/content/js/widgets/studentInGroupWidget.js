@@ -89,7 +89,7 @@ student_grouping.studentInGroupWidget = function (groupId, studentModel) {
 
         var fullProfileLink = $(me.containerId).find(me.fullProfileLinkClass);
         $(fullProfileLink).click(function (event) {
-            window.open("https://dashboard.sandbox.slcedu.org/s/l/student/" + me.studentModel.getId());
+            window.open("https://databrowser.sandbox.inbloom.org/entities/students/" + me.studentModel.getId());
         });
     }
 

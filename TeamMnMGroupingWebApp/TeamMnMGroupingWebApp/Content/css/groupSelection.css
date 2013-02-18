@@ -513,6 +513,7 @@
     padding-top:5px;
     position:relative;
     text-align: center;
+    min-width:1280px;
 }
 
 .header-title {
@@ -530,6 +531,7 @@
 
 .slc-footer {
     background: #000000;
+    min-width:1280px;
 }
 
 .slc-trademark {

@@ -14,8 +14,9 @@ student_grouping.multipleGroupEditTopbarWidget = function () {
     this.saveAllBtnElem = '#img-save-btn';
     this.helpBtnElem = '#img-help-btn';
     this.logoutBtnElem = '#logout-btn';
+    this.randomBtn = '#random-btn';
     
-    this.tooltipElems = [this.backBtnElem, this.saveAllBtnElem, this.helpBtnElem, this.printBtnElem];
+    this.tooltipElems = [this.backBtnElem, this.helpBtnElem, this.randomBtn];
 
     this.processing = false;
     this.groupModels = [];

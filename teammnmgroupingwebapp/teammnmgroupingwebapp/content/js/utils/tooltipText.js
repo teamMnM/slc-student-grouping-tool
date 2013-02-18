@@ -2,9 +2,8 @@
 
     // MultipleGroupEditTopbar
     "#back-btn": { "placement": "bottom", "message": "Return to the Group Selection Screen" },
-    "#img-print-btn": { "placement": "bottom", "message": "Print all the groups in the view" },
-    "#img-save-btn": { "placement": "bottom", "message": "Save changes to all groups" },
     "#img-help-btn": { "placement": "bottom", "message": "Open up the User Guide" },
+    "#random-btn" : { "placement": "bottom", "message": "Assign students to groups randomly" },
 
     // GroupWidget tooltips
     ".student-selBox": { "placement": "left", "message": "Select multiple students to drag" },
