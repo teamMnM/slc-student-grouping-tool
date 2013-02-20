@@ -33,6 +33,26 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             if (Session["access_token"] == null)
             {
+                if (Request.QueryString["code"] == null || Request.QueryString["code"] == "")
+                {
+                    return View("LandingPage");
+                }
+                else
+                {
+                    return GetToken(MAIN);
+                }
+            }
+            else
+            {
+                // We have an access token in session, let's redirect to app main page.
+                return RedirectToAction(MAIN);
+            }
+        }
+
+        public ActionResult Login()
+        {
+            if (Session["access_token"] == null)
+            {
                 return GetToken(MAIN);
             }
             else

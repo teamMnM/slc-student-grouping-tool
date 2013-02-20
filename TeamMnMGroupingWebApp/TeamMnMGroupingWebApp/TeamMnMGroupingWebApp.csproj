@@ -148,7 +148,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Content\css\core.css" />
     <Content Include="Content\css\groupSelection.css" />
+    <Content Include="Content\css\landingPage.css" />
     <Content Include="Content\css\multipleGroupsEdit.css" />
     <Content Include="Content\img\add-icon.png" />
     <Content Include="Content\img\attachment-icon.png" />
@@ -351,6 +353,7 @@
     <Content Include="Content\static\UserGuide.htm" />
     <None Include="Properties\PublishProfiles\slcsgt - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\slcsgt - Web Deploy.pubxml" />
+    <Content Include="Views\Home\LandingPage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,28 @@
+﻿#logout-div {
+    float: right;
+    margin-right: 20px;
+    margin-top: -4px;
+}
+
+#logout-btn {
+    cursor: pointer;
+}
+
+#login-btn {
+    margin-top: -1.5em;
+}
+
+.landing-text {
+    padding-top: 13em;
+    text-align:center;
+    line-height: 4em;
+}
+
+.medium-text {
+    font-style: italic;
+    font-size:1.5em;
+}
+
+.large-text {
+    font-size: 3.5em;
+}
