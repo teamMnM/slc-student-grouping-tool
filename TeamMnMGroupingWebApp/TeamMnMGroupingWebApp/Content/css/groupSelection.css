@@ -328,7 +328,7 @@
 
 .group-indicator-arrow {
     position:absolute;
-    top:-20%;
+    display:none;
     left:96%;
     height:3.0em;
     z-index:5;

@@ -71,7 +71,7 @@
 
 #img-help-btn {
     width: 2.1em;
-    margin-top:0.2em;
+    vertical-align: middle;
     margin-right: 0.3em;
     cursor:pointer;
     color:white;

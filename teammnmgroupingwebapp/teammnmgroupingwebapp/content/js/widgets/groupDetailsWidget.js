@@ -620,7 +620,12 @@ student_grouping.groupDetailsWidget = function () {
             var groupDiv = $("#" + me.groupModel.getId());
             var groupDivHeight = groupDiv.height();
             // need to offset the top a little bit to align the arrow with center of div
-            var selectedGroupTop = groupDiv.position().top + groupDivHeight/2.5; 
+            var selectedGroupTop = groupDiv.position().top + groupDivHeight / 2.5;
+
+            var arrowVisible = $('.group-indicator-arrow').css('display') !== 'none';
+            if (!arrowVisible) {
+                $('.group-indicator-arrow').show();
+            }
             $('.group-indicator-arrow').css('top', selectedGroupTop);
         }
     }
