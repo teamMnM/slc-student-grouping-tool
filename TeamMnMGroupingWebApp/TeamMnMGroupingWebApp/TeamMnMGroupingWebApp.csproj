@@ -286,7 +286,6 @@
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload-ui.js" />
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload.js" />
     <Content Include="Content\vendor\fileupload\js\jquery.iframe-transport.js" />
-    <Content Include="Content\vendor\highcharts\js\highcharts.js" />
     <Content Include="Content\vendor\idletimer\js\idletimer.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />
     <Content Include="Content\vendor\jqplot\js\jqplot.donutRenderer.min.js" />
