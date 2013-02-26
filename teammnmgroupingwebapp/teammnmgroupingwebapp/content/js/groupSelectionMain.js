@@ -25,8 +25,8 @@ student_grouping.groupSelectionMain = function () {
     this.topbarControlClass = ".top-bar-controls";
     this.userInactivityModal = "#user-inactivity-modal";
     this.userInactivityOkBtn = ".user-inactivity-ok";
-    this.slcHeaderClass = '.slc-header';
-    this.slcFooterClass = '.slc-footer';
+    this.headerClass = '.inbloom-header';
+    this.footerClass = '.inbloom-footer';
 
     /**
      * Initialize the app
@@ -39,10 +39,10 @@ student_grouping.groupSelectionMain = function () {
 
         // set the size of page
         var windowHeight = $(window).height();
-        var slcHeaderHeight = $(me.slcHeaderClass).outerHeight();
-        var slcFooterHeight = $(me.slcFooterClass).outerHeight();
+        var headerHeight = $(me.headerClass).outerHeight();
+        var footerHeight = $(me.footerClass).outerHeight();
         var topbarControlsHeight = $(me.topbarControlClass).height();
-        $(".main-content").height((windowHeight - topbarControlsHeight - slcHeaderHeight - slcFooterHeight - 5) + 'px');
+        $(".main-content").height((windowHeight - topbarControlsHeight - headerHeight - footerHeight - 5) + 'px');
 
         me.setupIdleTimer();
 

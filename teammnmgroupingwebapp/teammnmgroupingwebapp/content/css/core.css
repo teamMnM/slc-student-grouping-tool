@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-/**********************
- * SLC Header/Footer
- *********************/
-.slc-header {
+/************************
+ * inBloom Header/Footer
+ ************************/
+.inbloom-header {
     background: #000000;
     height: 48px;
     padding-top:5px;
@@ -37,14 +37,14 @@
     left: 2em;
 }
 
-.slc-footer {
+.inbloom-footer {
     background: #000000;
     min-width:1280px;
     position:absolute;
     bottom:0;
 }
 
-.slc-trademark {
+.inbloom-trademark {
     color:white;
     font-size:10px;
     margin-left:2em;

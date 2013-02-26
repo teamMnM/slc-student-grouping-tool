@@ -23,8 +23,8 @@ using Newtonsoft.Json;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using SlcClient.Entities;
-using SlcClient.Services;
+using InBloomClient.Entities;
+using InBloomClient.Services;
 using TeamMnMGroupingWebApp.Controllers;
 using TeamMnMGroupingWebApp.Models;
 using TeamMnMGroupingWebApp.Helper;
@@ -42,8 +42,8 @@ namespace TeamMnMGroupingWebApp.Controllers
     public class HomeController : BaseController
     {
         const string MAIN = "/Home/GroupSelection";
-        const string SLC_USER_SESSION = "slc_user";
-        const string SLC_USER_ID = "slc_user_id";
+        const string INBLOOM_USER_SESSION = "inBloom_user";
+        const string INBLOOM_USER_ID = "inBloom_user_id";
 
         public ActionResult Index()
         {
@@ -523,14 +523,14 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];
+                var userSession = (UserSession)Session[INBLOOM_USER_SESSION];
 
-                //set temporary edorgid because it's null from the SLC API
+                //set temporary edorgid because it's null from the INBLOOM API
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
                     cohort.educationOrgId = userSession.edOrgId;
                 else
                     cohort.educationOrgId = CURRENT_ED_ORG_ID;
-                cohort.cohortType = SlcClient.Enum.CohortType.Other;
+                cohort.cohortType = InBloomClient.Enum.CohortType.Other;
 
                 var response = await cs.Create(cohort);
 
@@ -563,7 +563,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         {
             try
             {
-                var userSession = (UserSession)Session[SLC_USER_SESSION];
+                var userSession = (UserSession)Session[INBLOOM_USER_SESSION];
 
                 //user session has edOrgId == null but we need edOrgId to update a cohort
                 if (userSession != null && userSession.edOrgId != null && userSession.edOrgId != "")
@@ -693,7 +693,7 @@ namespace TeamMnMGroupingWebApp.Controllers
                     //if cohort was created successfully then continue to create associations
                     if (cohortResult.completedSuccessfully)
                     {
-                        var staffId = Session[SLC_USER_ID].ToString();
+                        var staffId = Session[INBLOOM_USER_ID].ToString();
                         await ProcessASuccessfulCohortCreate(obj, cs, cohortResult, staffId);
                     }
 
@@ -891,7 +891,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }       
 
         /// <summary>
-        /// SLC OAuth
+        /// INBLOOM OAuth
         /// </summary>
         /// <param name="redirectUrl">url to redirect to after successful authentication</param>       
         private ActionResult GetToken(string redirectUrl)
@@ -901,8 +901,8 @@ namespace TeamMnMGroupingWebApp.Controllers
                 // We get a code back from the first leg of OAuth process.  If we don't have one, let's get it.
                 if (Request.QueryString["code"] == null || Request.QueryString["code"] == "")
                 {
-                    // Here the user will log into the SLC.
-                    string authorizeUrl = string.Format(SLC_SANDBOX_LOGIN, SLC_CLIENT_ID, SLC_REDIRECT_URL);
+                    // Here the user will log into the INBLOOM.
+                    string authorizeUrl = string.Format(INBLOOM_SANDBOX_LOGIN, INBLOOM_CLIENT_ID, INBLOOM_REDIRECT_URL);
                     return Redirect(authorizeUrl);
                 }
                 else
@@ -918,7 +918,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         }
 
         /// <summary>
-        /// Get SLC token
+        /// Get inBloom token
         /// </summary>
         /// <param name="redirectUrl">url to redirect to after successful authentication</param>
         private ActionResult ProcessSecondPartOfOAuth(string redirectUrl)
@@ -927,7 +927,7 @@ namespace TeamMnMGroupingWebApp.Controllers
             string code = Request.QueryString["code"];
 
             // Set the authorization URL
-            string sessionUrl = string.Format(SLC_OAUTH_URL, SLC_CLIENT_ID, SLC_SHARED_SECRET, SLC_REDIRECT_URL, code);
+            string sessionUrl = string.Format(INBLOOM_OAUTH_URL, INBLOOM_CLIENT_ID, INBLOOM_SHARED_SECRET, INBLOOM_REDIRECT_URL, code);
 
             var client = new HttpClient();
             var response = client.GetAsync(sessionUrl).Result;
@@ -944,22 +944,22 @@ namespace TeamMnMGroupingWebApp.Controllers
                     var userSession = ss.Get().Result;
                     var staffId = ss.GetCurrentUserId().Result;
 
-                    //Get edOrg through staff service because SLC user session service call always comes back with a null edOrg
+                    //Get edOrg through staff service because inBloom user session service call always comes back with a null edOrg
                     var staffService = new StaffService(access_token);
                     var staffOrg = staffService.GetStaffEducationOrganizationAssociations(staffId).Result;
                     
                     if(staffOrg.FirstOrDefault() != null)
                         userSession.edOrgId = staffOrg.FirstOrDefault().educationOrganizationReference;
 
-                    Session.Add(SLC_USER_SESSION, userSession);
-                    Session.Add(SLC_USER_ID, staffId);
+                    Session.Add(INBLOOM_USER_SESSION, userSession);
+                    Session.Add(INBLOOM_USER_ID, staffId);
 
                     // Redirect to app main page.
                     return Redirect(redirectUrl);
                 }
             }
 
-            //error logging into SLC                
+            //error logging into inBloom                
             return RedirectToAction("LoginError", new { code = "" });
         }
     }

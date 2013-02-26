@@ -22,7 +22,7 @@ using System.Web;
 namespace TeamMnMGroupingWebApp.Models
 {
     /// <summary>
-    /// custom data to store in the SLC custom entity
+    /// custom data to store in the inBloom custom entity
     /// </summary>
     public class CohortCustom
     {

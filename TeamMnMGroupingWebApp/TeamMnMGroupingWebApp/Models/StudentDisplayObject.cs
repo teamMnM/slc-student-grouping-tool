@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using SlcClient.Entities;
-using SlcClient.Enum;
+using InBloomClient.Entities;
+using InBloomClient.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -23,8 +23,8 @@ using Newtonsoft.Json;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using SlcClient.Entities;
-using SlcClient.Services;
+using InBloomClient.Entities;
+using InBloomClient.Services;
 using TeamMnMGroupingWebApp.Controllers;
 using TeamMnMGroupingWebApp.Models;
 using TeamMnMGroupingWebApp.Helper;
@@ -37,7 +37,7 @@ namespace TeamMnMGroupingWebApp.Helper
 {
     public class CohortActionHelper
     {
-        internal string CURRENT_ED_ORG_ID = ConfigurationManager.AppSettings["CurrentEdgOrgId"]; //there's no data from SLC about the current user Ed Org, temporarily using a constant value for each environment
+        internal string CURRENT_ED_ORG_ID = ConfigurationManager.AppSettings["CurrentEdgOrgId"]; //there's no data from inBloom about the current user Ed Org, temporarily using a constant value for each environment
 
         /// <summary>
         /// Create new student cohort associations
@@ -171,10 +171,10 @@ namespace TeamMnMGroupingWebApp.Helper
         }
 
         /// <summary>
-        /// Update the Result object after custom has been updated through SLC
+        /// Update the Result object after custom has been updated through inBloom
         /// </summary>
         /// <param name="cohortResult">Result object to update</param>
-        /// <param name="cohortCustom">the SLC response message</param>
+        /// <param name="cohortCustom">the inBloom response message</param>
         /// <param name="successStatus">HttpStatusCode that indicates a successful response</param>
         public static void ProcessCustomResult(Result cohortResult, Task<HttpResponseMessage> m, HttpStatusCode successStatus, 
                                                 CohortCustom cohortCustom = null, CohortService cs = null)

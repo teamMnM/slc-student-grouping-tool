@@ -15,8 +15,8 @@
  */
 
 using Newtonsoft.Json;
-using SlcClient.Entities;
-using SlcClient.Services;
+using InBloomClient.Entities;
+using InBloomClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

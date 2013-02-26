@@ -15,8 +15,8 @@
  * 
  */
 using Newtonsoft.Json;
-using SlcClient.Entities;
-using SlcClient.Services;
+using InBloomClient.Entities;
+using InBloomClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +91,7 @@ namespace TeamMnMGroupingWebApp.Helper
             }
             catch (Exception ex)
             {
-                //when there isn't a custom yet, SLC throw a 404
+                //when there isn't a custom yet, inBloom throw a 404
                 return "";
             }
 
