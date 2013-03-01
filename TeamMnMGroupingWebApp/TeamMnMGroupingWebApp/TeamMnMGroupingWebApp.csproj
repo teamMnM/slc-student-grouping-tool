@@ -350,8 +350,6 @@
     <Content Include="Views\Home\MultipleGroupsEdit.cshtml" />
     <Content Include="Views\Home\GroupSelection.cshtml" />
     <Content Include="Content\static\UserGuide.htm" />
-    <None Include="Properties\PublishProfiles\slcsgt - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\slcsgt - Web Deploy.pubxml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
