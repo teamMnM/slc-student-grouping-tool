@@ -290,7 +290,7 @@ namespace TeamMnMGroupingWebApp.Controllers
         /// <returns></returns>
         public ActionResult GroupSelection()
         {
-            return View("GroupSelection");
+            return View("GroupSelection2");
         }
 
         /// <summary>

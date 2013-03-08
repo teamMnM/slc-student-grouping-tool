@@ -175,15 +175,20 @@
     <Content Include="Content\img\student-icon-male2.png" />
     <Content Include="Content\img\student-icon-male3.png" />
     <Content Include="Content\img\trash-icon.png" />
+    <Content Include="Content\js\config\groupSelection.js" />
     <Content Include="Content\js\groupSelectionMain.js" />
     <Content Include="Content\js\models\groupListModel.js" />
     <Content Include="Content\js\models\groupModel.js" />
+    <Content Include="Content\js\models\group.js" />
     <Content Include="Content\js\models\sectionModel.js" />
     <Content Include="Content\js\models\studentFiltersModel.js" />
     <Content Include="Content\js\models\studentModel.js" />
     <Content Include="Content\js\multipleGroupEditMain.js" />
     <Content Include="Content\js\utils\tooltipText.js" />
     <Content Include="Content\js\utils\utils.js" />
+    <Content Include="Content\js\views\groupSelection.js" />
+    <Content Include="Content\js\views\common\inBloomHeader.js" />
+    <Content Include="Content\js\views\common\userInactivityModal.js" />
     <Content Include="Content\js\widgets\groupDetailsWidget.js" />
     <Content Include="Content\js\widgets\groupListItemWidget.js" />
     <Content Include="Content\js\widgets\groupListWidget.js" />
@@ -272,6 +277,7 @@
     <Content Include="Content\vendor\antiscroll\css\antiscroll.css" />
     <Content Include="Content\vendor\antiscroll\js\antiscroll.js" />
     <Content Include="Content\vendor\antiscroll\js\jquery-mousewheel.js" />
+    <Content Include="Content\vendor\backbone\backbone.min.js" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap.css" />
@@ -286,6 +292,9 @@
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload-ui.js" />
     <Content Include="Content\vendor\fileupload\js\jquery.fileupload.js" />
     <Content Include="Content\vendor\fileupload\js\jquery.iframe-transport.js" />
+    <Content Include="Content\vendor\handlebars\handlebars.js" />
+    <Content Include="Content\vendor\handlebars\mustache.js" />
+    <Content Include="Content\vendor\handlebars\text.js" />
     <Content Include="Content\vendor\idletimer\js\idletimer.js" />
     <Content Include="Content\vendor\jqplot\css\jquery.jqplot.min.css" />
     <Content Include="Content\vendor\jqplot\js\jqplot.donutRenderer.min.js" />
@@ -295,6 +304,7 @@
     <Content Include="Content\vendor\jquery\js\jquery.min.js" />
     <Content Include="Content\vendor\multidraggable\js\jquery.ui.multidraggable.js" />
     <Content Include="Content\vendor\pubsub\js\pubsub.js" />
+    <Content Include="Content\vendor\require\require.min.js" />
     <Content Include="Content\vendor\select2\css\select2.css" />
     <Content Include="Content\vendor\select2\css\select2.png" />
     <Content Include="Content\vendor\select2\css\select2x2.png" />
@@ -341,6 +351,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\static\User Guide HTML_files\themedata.thmx" />
+    <Content Include="Content\js\config\main.js" />
+    <None Include="Content\templates\showMoreDataModal.hbs" />
+    <None Include="Content\templates\userInactivityModal.hbs" />
+    <Content Include="Content\templates\footer.handlebars" />
+    <Content Include="Content\templates\header.hbs" />
     <None Include="Properties\PublishProfiles\grouptest - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\grouptest - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\grouptest - Web Deploy %282%29.pubxml" />
@@ -351,6 +366,7 @@
     <Content Include="Views\Home\GroupSelection.cshtml" />
     <Content Include="Content\static\UserGuide.htm" />
     <Content Include="Views\Home\LandingPage.cshtml" />
+    <Content Include="Views\Home\GroupSelection2.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
